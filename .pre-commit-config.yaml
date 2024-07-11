@@ -1,0 +1,74 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+        exclude: '^(.*\.svg)$'
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+        exclude: '^(.*\.svg)$'
+      - id: trailing-whitespace
+        exclude: '^(|.*\.svg)$'
+      - id: fix-byte-order-marker
+      - id: no-commit-to-branch
+      - id: requirements-txt-fixer
+
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: clang-format
+        entry: clang-format-18
+        types_or: [c++, c]
+        language: python
+        args: ['-i']
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.6
+    hooks:
+      - id: codespell
+        args: ['-I', '.codespell_ignore', '--uri-ignore-words-list', '*']
+
+  # CMake formatting
+  - repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: "v0.6.13"
+    hooks:
+      - id: cmake-format
+      - id: cmake-lint
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.9.0
+    hooks:
+    -   id: shellcheck
+#       args: ["--severity=warning"]  # Optionally only show errors and warnings
+
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+      - id: gitlint-ci
+
+  - repo: local
+    hooks:
+    - id: shellcheck
+      name: ShellCheck
+      description: Static analysis tool for shell scripts.
+      language: system
+      entry: shellcheck
+      args: [--severity=warning]
+      types: [shell]
+      stages: [manual]
+
+
+exclude: 'vendor'
