@@ -25,23 +25,29 @@ repos:
       - id: no-commit-to-branch
       - id: requirements-txt-fixer
 
-  # - repo: local
-  #   hooks:
-  #     - id: clang-format
-  #       name: clang-format
-  #       entry: clang-format-18
-  #       types_or: [c++, c]
-  #       language: python
-  #       args: ['-i']
+  - repo: local
+    hooks:
+      - id: clang-format-fix
+        name: clang-format-fix
+        entry: clang-format-18
+        types_or: [c++, c]
+        language: python
+        args: ['-i']
+        stages: [manual]
 
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: v1.3.5
     hooks:
       - id: clang-format
-      - id: clang-tidy
       # - id: oclint
       # - id: cppcheck
       # - id: cpplint
+
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: clang-tidy
+        stages: [manual]
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
@@ -54,13 +60,16 @@ repos:
     rev: "v0.6.13"
     hooks:
       - id: cmake-format
+        additional_dependencies: [pyyaml]
+        stages: [manual]
       - id: cmake-lint
+        stages: [manual]
 
-  - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.9.0
-    hooks:
-    -   id: shellcheck
-#       args: ["--severity=warning"]  # Optionally only show errors and warnings
+  # - repo: https://github.com/koalaman/shellcheck-precommit
+  #   rev: v0.9.0
+  #   hooks:
+  #   -  id: shellcheck
+  #      args: ["--severity=warning"]  # Optionally only show errors and warnings
 
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.19.1
@@ -77,7 +86,6 @@ repos:
       entry: shellcheck
       args: [--severity=warning]
       types: [shell]
-      stages: [manual]
 
 
 exclude: 'vendor'
