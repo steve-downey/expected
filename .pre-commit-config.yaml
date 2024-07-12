@@ -25,14 +25,23 @@ repos:
       - id: no-commit-to-branch
       - id: requirements-txt-fixer
 
-  - repo: local
+  # - repo: local
+  #   hooks:
+  #     - id: clang-format
+  #       name: clang-format
+  #       entry: clang-format-18
+  #       types_or: [c++, c]
+  #       language: python
+  #       args: ['-i']
+
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
     hooks:
       - id: clang-format
-        name: clang-format
-        entry: clang-format-18
-        types_or: [c++, c]
-        language: python
-        args: ['-i']
+      - id: clang-tidy
+      # - id: oclint
+      # - id: cppcheck
+      # - id: cpplint
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
