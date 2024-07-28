@@ -1,2 +1,0 @@
---index-url https://artprod.dev.bloomberg.com/artifactory/api/pypi/bloomberg-pypi/simple
-
