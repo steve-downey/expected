@@ -15,7 +15,9 @@ platformdirs==4.2.2
 pre-commit==3.7.1
     # via -r requirements-dev/lint.in
 pyyaml==6.0.1
-    # via pre-commit
+    # via
+    #   -r requirements-dev/lint.in
+    #   pre-commit
 six==1.16.0
     # via cmakelang
 virtualenv==20.26.3

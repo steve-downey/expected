@@ -110,7 +110,7 @@ PIP := $(PYEXEC) -m pip
 
 PIP_SYNC := $(PYEXEC) -m piptools sync
 
-PIPTOOLS_COMPILE := $(PYEXEC) -m piptools compile --no-header
+PIPTOOLS_COMPILE := $(PYEXEC) -m piptools compile --no-header --strip-extras
 
 PRE_COMMIT := $(ACTIVATE) pre-commit
 
@@ -188,3 +188,6 @@ check-requirements:
 dev-shell: sync-dev-requirements
 dev-shell: ## Shell with the venv activated
 	$(ACTIVATE) bash
+
+lint: sync-dev-requirements
+	$(PRE_COMMIT) run -a
