@@ -39,6 +39,7 @@ repos:
     rev: v1.3.5
     hooks:
       - id: clang-format
+        args: [--version=18.1.8]
       # - id: oclint
       # - id: cppcheck
       # - id: cpplint
