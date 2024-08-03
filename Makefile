@@ -99,92 +99,63 @@ help: ## Show this help.
 PYEXECPATH ?= $(shell which python3.12 || which python3.11 || which python3.10 || which python3.9 || which python3.8 || which python3.7 || which python3)
 PYTHON ?= $(shell basename $(PYEXECPATH))
 VENV := .venv
-ACTIVATE := source $(VENV)/bin/activate;
+ACTIVATE := source $(VENV)/bin/activate &&
 PYEXEC := $(ACTIVATE) $(PYTHON)
-INPUT_REQS := requirements.in
-DEV_INPUT_REQS := requirements-dev.in
-ALL_REQS := $(INPUT_REQS) $(DEV_INPUT_REQS) $(wildcard requirements-dev/*.in)
-REQS_MARKER := $(VENV)/bin/.pip-sync
+MARKER=.initialized.venv.stamp
 
 PIP := $(PYEXEC) -m pip
 
 PIP_SYNC := $(PYEXEC) -m piptools sync
 
-PIPTOOLS_COMPILE := $(PYEXEC) -m piptools compile --no-header
+PIPTOOLS_COMPILE := $(PYEXEC) -m piptools compile --no-header --strip-extras
 
 PRE_COMMIT := $(ACTIVATE) pre-commit
 
-BASH := bash
 
-setup := $(PYEXEC) setup.py
+PHONY: venv
+venv: $(VENV)/$(MARKER)
 
-.PHONY: init-venv
-init-venv:
-	$(PYTHON) -m venv $(VENV)
-	$(PIP) install -U setuptools pip wheel pip-tools
-	@touch $(REQS_MARKER)
+.PHONY: clean-venv
+clean-venv:
+	-rm -rf $(VENV)
 
-.PHONY: setup_venv
-setup_venv:
-	test -f $(VENV)/bin/activate || make init-venv
+.PHONY: show-venv
+show-venv: venv
+	$(PYEXEC) -c "import sys; print('Python ' + sys.version.replace('\n',''))"
+	$(PIP) --version
+	@echo venv: $(VENV)
 
 
-.PHONY: create-venv
-create-venv: ## Create virtual environment from scratch and install all requirements.
-	rm -rf $(VENV)/*
-	make init-venv
-	test -f requirements.txt || make resolve-requirements
-	test -f requirements-dev.txt || make resolve-requirements
-	make sync-dev-requirements
+requirements.txt: requirements.in
+	$(PIPTOOLS_COMPILE) --output-file=$@ $<
 
-$(ALL_REQS) &:
-	@touch $(ALL_REQS)
+requirements-dev.txt: requirements-dev.in
+	$(PIPTOOLS_COMPILE) --output-file=$@ $<
 
-$(REQS_MARKER): $(ALL_REQS)
-	make resolve-requirements
 
-.PHONY: sync-dev-requirements
-sync-dev-requirements: setup_venv $(REQS_MARKER)
-	test -f requirements-dev.txt || make resolve-requirements
-	$(PIP_SYNC) requirements-dev.txt
+$(VENV):
+	$(PYEXECPATH) -m venv $(VENV)
+	$(PIP) install --upgrade pip setuptools wheel
+	$(PIP) install pip-tools
 
-.PHONY: sync-requirements
-sync-requirements: setup_venv $(REQS_MARKER)
-	test -f requirements.txt || make resolve-requirements
+$(VENV)/$(MARKER): requirements.txt requirements-dev.txt | $(VENV)
 	$(PIP_SYNC) requirements.txt
+	$(PIP_SYNC) requirements-dev.txt
+	touch $(VENV)/$(MARKER)
 
-.PHONY: resolve-requirements
-resolve-requirements:
-	$(PIPTOOLS_COMPILE) --output-file=requirements-dev.txt $(DEV_INPUT_REQS)
-	@echo "Updated requirements-dev.txt"
-	$(PIPTOOLS_COMPILE) --output-file=requirements.txt $(INPUT_REQS)
-	@echo "Updated requirements.txt"
-	@touch $(REQS_MARKER)
+.PHONY: shell
+shell: venv
+	$(ACTIVATE) exec $(notdir $(SHELL))
 
-.PHONY: update-requirements
-update-requirements: ## Update all requirements to latest versions.
-update-requirements:
-	$(PIPTOOLS_COMPILE) --upgrade --output-file=requirements-dev.txt $(DEV_INPUT_REQS)
-	@echo "Updated requirements-dev.txt"
-	$(PIPTOOLS_COMPILE) --upgrade --output-file=requirements.txt $(INPUT_REQS)
-	@echo "Updated requirements.txt"
-	@touch $(REQS_MARKER)
-	make sync-dev-requirements
+.PHONY: bash zsh
+bash zsh: venv
+	$(ACTIVATE)  && exec $@
 
-.PHONY: check-requirements
-check-requirements:
-	@echo "Checking requirements..."
-	$(eval REQ_TEMPDIR := $(shell mktemp -d))
-	$(PIPTOOLS_COMPILE) --output-file=$(REQ_TEMPDIR)/requirements-dev.txt $(DEV_INPUT_REQS)
-	$(PIPTOOLS_COMPILE) --output-file=$(REQ_TEMPDIR)/requirements.txt $(INPUT_REQS)
-	@diff requirements-dev.txt $(REQ_TEMPDIR)/requirements-dev.txt && \
-	diff requirements.txt $(REQ_TEMPDIR)/requirements.txt || \
-	{ echo "Requirements are not up-to-date: run 'make update-requirements' to fix them."; \
-	echo "Expected requirements.txt:"; cat $(REQ_TEMPDIR)/requirements.txt; \
-	echo "Expected requirements-dev.txt:"; cat $(REQ_TEMPDIR)/requirements-dev.txt; \
-	exit 1; }
 
 .PHONY: dev-shell
-dev-shell: sync-dev-requirements
+dev-shell: venv
 dev-shell: ## Shell with the venv activated
-	$(ACTIVATE) bash
+	$(ACTIVATE) $(notdir $(SHELL))
+
+lint: venv
+	$(PRE_COMMIT) run -a

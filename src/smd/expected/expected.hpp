@@ -8,7 +8,7 @@
 // mostly freestanding
 namespace smd::expected {
 using std::is_void_v;
-}  // namespace smd::expected
+} // namespace smd::expected
 
 namespace smd::expected {
 
@@ -32,13 +32,13 @@ inline constexpr unexpect_t unexpect{};
 
 // [expected.expected], class template expected
 template <class T, class E>
-class expected;  // partially freestanding
+class expected; // partially freestanding
 
 // [expected.void], partial specialization of expected for void types
 template <class T, class E>
-requires is_void_v<T>
-class expected<T, E>;  // partially freestanding
-}  // namespace smd::expected
+    requires is_void_v<T>
+class expected<T, E>; // partially freestanding
+} // namespace smd::expected
 
 namespace smd::expected {
 using std::in_place_t;
@@ -49,7 +49,7 @@ using std::is_nothrow_swappable_v;
 using std::is_same_v;
 using std::is_swappable_v;
 using std::remove_cvref_t;
-}  // namespace smd::expected
+} // namespace smd::expected
 
 namespace smd::expected {
 template <class E>
@@ -57,7 +57,7 @@ class unexpected {
   public:
     // [expected.un.cons], constructors
     constexpr unexpected(const unexpected&) = default;
-    constexpr unexpected(unexpected&&) = default;
+    constexpr unexpected(unexpected&&)      = default;
     template <class Err = E>
     constexpr explicit unexpected(Err&&)
         requires(is_same_v<remove_cvref_t<Err>, unexpected>);
@@ -69,19 +69,20 @@ class unexpected {
         requires(is_constructible_v<E, initializer_list<U>&, Args...>);
 
     constexpr unexpected& operator=(const unexpected&) = default;
-    constexpr unexpected& operator=(unexpected&&) = default;
+    constexpr unexpected& operator=(unexpected&&)      = default;
 
-    constexpr const E& error() const& noexcept;
-    constexpr E& error() & noexcept;
+    constexpr const E&  error() const& noexcept;
+    constexpr E&        error() & noexcept;
     constexpr const E&& error() const&& noexcept;
-    constexpr E&& error() && noexcept;
+    constexpr E&&       error() && noexcept;
 
     constexpr void swap(unexpected& other) noexcept(is_nothrow_swappable_v<E>);
 
     template <class E2>
-    friend constexpr bool operator==(const unexpected& x,
+    friend constexpr bool operator==(const unexpected&     x,
                                      const unexpected<E2>& y) {
-        static_assert(is_convertible_v<decltype(x.error() == y.error()), bool>);
+        static_assert(
+            is_convertible_v<decltype(x.error() == y.error()), bool>);
         return x.error() == y.error();
     }
 
@@ -93,32 +94,32 @@ class unexpected {
     }
 
   private:
-    E unex;  // exposition only
+    E unex; // exposition only
 };
 
 template <class E>
 unexpected(E) -> unexpected<E>;
-}  // namespace smd::expected
+} // namespace smd::expected
 
 template <class E>
 template <class Err>
 constexpr smd::expected::unexpected<E>::unexpected(Err&& e)
-requires(is_same_v<remove_cvref_t<Err>, unexpected>)
-: unex(e) {}
+    requires(is_same_v<remove_cvref_t<Err>, unexpected>)
+    : unex(e) {}
 
 template <class E>
 template <class... Args>
 constexpr smd::expected::unexpected<E>::unexpected(in_place_t, Args&&... args)
-requires(is_constructible_v<E, Args...>)
-: unex(args...) {}
+    requires(is_constructible_v<E, Args...>)
+    : unex(args...) {}
 
 template <class E>
 template <class U, class... Args>
 constexpr smd::expected::unexpected<E>::unexpected(in_place_t,
                                                    initializer_list<U> u,
                                                    Args&&... args)
-requires(is_constructible_v<E, initializer_list<U>&, Args...>)
-: unex(u, args...) {}
+    requires(is_constructible_v<E, initializer_list<U>&, Args...>)
+    : unex(u, args...) {}
 
 template <class E>
 constexpr const E& smd::expected::unexpected<E>::error() const& noexcept {
