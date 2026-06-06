@@ -6,6 +6,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "testing/types.hpp"
+
 #include <string>
 #include <type_traits>
 
@@ -399,4 +401,197 @@ TEST_CASE("expected<T,E&>: lvalue error reference compiles and is addressable", 
     int                 err = 1;
     expected<int, int&> e(unexpect, err);
     CHECK(&e.error() == &err);
+}
+
+// =============================================================================
+// Additional coverage tests: T,E& rvalue/const-rvalue monadic and traced paths
+// =============================================================================
+using namespace beman::expected::testing;
+
+// --- Monadic: and_then rvalue/const-rvalue on ERROR state ---
+TEST_CASE("and_then rvalue on error short-circuits", "[expected_ref_e]") {
+    int                 err = 5;
+    expected<int, int&> e(unexpect, err);
+    auto                r = std::move(e).and_then([](int) -> expected<int, int&> {
+        static int dummy = 0;
+        return expected<int, int&>(unexpect, dummy);
+    });
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 5);
+}
+
+TEST_CASE("and_then const rvalue on error short-circuits", "[expected_ref_e]") {
+    int                       err = 5;
+    const expected<int, int&> e(unexpect, err);
+    auto                      r = std::move(e).and_then([](int) -> expected<int, int&> {
+        static int dummy = 0;
+        return expected<int, int&>(unexpect, dummy);
+    });
+    REQUIRE(!r.has_value());
+}
+
+// --- Monadic: or_else rvalue/const-rvalue on VALUE state ---
+TEST_CASE("or_else rvalue on value short-circuits", "[expected_ref_e]") {
+    expected<int, int&> e(42);
+    auto                r = std::move(e).or_else([](int&) -> expected<int, int&> {
+        static int dummy = 0;
+        return expected<int, int&>(unexpect, dummy);
+    });
+    REQUIRE(r.has_value());
+    CHECK(*r == 42);
+}
+
+TEST_CASE("or_else const rvalue on value short-circuits", "[expected_ref_e]") {
+    const expected<int, int&> e(42);
+    auto                      r = std::move(e).or_else([](int&) -> expected<int, int&> {
+        static int dummy = 0;
+        return expected<int, int&>(unexpect, dummy);
+    });
+    REQUIRE(r.has_value());
+}
+
+// --- Monadic: transform rvalue/const-rvalue on ERROR state ---
+TEST_CASE("transform rvalue on error short-circuits", "[expected_ref_e]") {
+    int                 err = 3;
+    expected<int, int&> e(unexpect, err);
+    auto                r = std::move(e).transform([](int v) { return v * 2; });
+    REQUIRE(!r.has_value());
+}
+
+TEST_CASE("transform const rvalue on error short-circuits", "[expected_ref_e]") {
+    int                       err = 3;
+    const expected<int, int&> e(unexpect, err);
+    auto                      r = std::move(e).transform([](int v) { return v * 2; });
+    REQUIRE(!r.has_value());
+}
+
+// --- Monadic: transform_error rvalue/const-rvalue ---
+TEST_CASE("transform_error rvalue on value short-circuits", "[expected_ref_e]") {
+    expected<int, int&> e(42);
+    auto                r = std::move(e).transform_error([](int& v) { return v * 2; });
+    REQUIRE(r.has_value());
+    CHECK(*r == 42);
+}
+
+TEST_CASE("transform_error const rvalue on value short-circuits", "[expected_ref_e]") {
+    const expected<int, int&> e(42);
+    auto                      r = std::move(e).transform_error([](int& v) { return v * 2; });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("transform_error rvalue on error calls F", "[expected_ref_e]") {
+    int                 err = 5;
+    expected<int, int&> e(unexpect, err);
+    auto                r = std::move(e).transform_error([](int& v) { return v + 1; });
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 6);
+}
+
+TEST_CASE("transform_error const rvalue on error calls F", "[expected_ref_e]") {
+    int                       err = 5;
+    const expected<int, int&> e(unexpect, err);
+    auto                      r = std::move(e).transform_error([](int& v) { return v + 1; });
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 6);
+}
+
+// --- value assignment on value-state ---
+TEST_CASE("value assignment on value state", "[expected_ref_e]") {
+    expected<int, int&> e(10);
+    e = 20;
+    REQUIRE(e.has_value());
+    CHECK(*e == 20);
+}
+
+// --- Cross-type equality ---
+TEST_CASE("equality error vs value", "[expected_ref_e]") {
+    int                 err = 0;
+    expected<int, int&> a(1);
+    expected<int, int&> b(unexpect, err);
+    CHECK_FALSE(a == b);
+}
+
+// ---------------------------------------------------------------------------
+// expected<T, E&>: lvalue monadic paths with non-trivial T
+// ---------------------------------------------------------------------------
+
+TEST_CASE("ref<traced,E&>: and_then lvalue error path", "[expected_ref_e][traced]") {
+    int                    err = 5;
+    expected<traced, int&> e(unexpect, err);
+    auto                   r = e.and_then([](traced&) -> expected<traced, int&> {
+        static int dummy = 0;
+        return expected<traced, int&>(unexpect, dummy);
+    });
+    REQUIRE(!r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: or_else lvalue value path", "[expected_ref_e][traced]") {
+    expected<traced, int&> e(std::in_place, 5);
+    auto                   r = e.or_else([](int&) -> expected<traced, int&> {
+        static int dummy = 0;
+        return expected<traced, int&>(unexpect, dummy);
+    });
+    REQUIRE(r.has_value());
+    CHECK(r->val == 5);
+}
+
+TEST_CASE("ref<traced,E&>: or_else rvalue value path", "[expected_ref_e][traced]") {
+    expected<traced, int&> e(std::in_place, 5);
+    auto                   r = std::move(e).or_else([](int&) -> expected<traced, int&> {
+        static int dummy = 0;
+        return expected<traced, int&>(unexpect, dummy);
+    });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: or_else const rvalue value path", "[expected_ref_e][traced]") {
+    const expected<traced, int&> e(std::in_place, 5);
+    auto                         r = std::move(e).or_else([](int&) -> expected<traced, int&> {
+        static int dummy = 0;
+        return expected<traced, int&>(unexpect, dummy);
+    });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: transform lvalue value path", "[expected_ref_e][traced]") {
+    expected<traced, int&> e(std::in_place, 3);
+    auto                   r = e.transform([](traced& v) { return traced(v.val + 1); });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: transform rvalue value path", "[expected_ref_e][traced]") {
+    expected<traced, int&> e(std::in_place, 3);
+    auto                   r = std::move(e).transform([](traced&& v) { return traced(v.val + 1); });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: transform const rvalue value path", "[expected_ref_e][traced]") {
+    const expected<traced, int&> e(std::in_place, 3);
+    auto                         r = std::move(e).transform([](const traced& v) { return traced(v.val + 1); });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: transform_error lvalue value path", "[expected_ref_e][traced]") {
+    expected<traced, int&> e(std::in_place, 5);
+    auto                   r = e.transform_error([](int& v) { return v * 2; });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: transform_error rvalue value path", "[expected_ref_e][traced]") {
+    expected<traced, int&> e(std::in_place, 5);
+    auto                   r = std::move(e).transform_error([](int& v) { return v * 2; });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: transform_error const rvalue value path", "[expected_ref_e][traced]") {
+    const expected<traced, int&> e(std::in_place, 5);
+    auto                         r = std::move(e).transform_error([](int& v) { return v * 2; });
+    REQUIRE(r.has_value());
+}
+
+TEST_CASE("ref<traced,E&>: equality error vs value", "[expected_ref_e][traced]") {
+    int                    err = 0;
+    expected<traced, int&> a(std::in_place, 1);
+    expected<traced, int&> b(unexpect, err);
+    CHECK_FALSE(a == b);
 }
