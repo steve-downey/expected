@@ -225,12 +225,21 @@ Everything is in `expected.hpp`. The `unexpected.hpp` and `bad_expected_access.h
 
 ---
 
-## How to Structure Your Review
+## How to Approach Your Review
 
-For each decision above, state:
+When giving feedback, focus on the rationale behind these macro-level decisions rather than just line-by-line nitpicks. Consider the following when leaving comments:
 
-1. **Agree / Disagree / Need More Information**
-2. **If disagree:** What alternative would you propose, and what is its cost?
-3. **If agree:** Is the implementation faithful to the stated design intent?
+- **If something feels off:** What alternative design would you prefer, and what trade-offs does it bring?
+- **If you agree with a constraint:** Did we actually implement it faithfully, or are there hidden loopholes?
+- **Ergonomics:** Will standard C++ developers be able to understand the error messages and API bounds?
 
-Do not review this code as if it were a typical pull request. Review it as proposed standard library wording rendered into C++. The question is not "does it compile and pass tests" — it does. The question is "should this be how `expected<T&, E>` works for every C++ programmer for the next 30 years."
+Please don't review this code as if it were a typical pull request. Review it as proposed standard library wording rendered into C++. The core question is not just "does it compile and pass tests?" — it does. The question is: *"Should this be how `expected<T&, E>` works for every C++ programmer for the next 30 years?"* Your human perspective and architectural judgment are exactly what we need to answer that.
+
+---
+
+## References & Citations
+
+- **P2988 (`std::optional<T&>`)**: [https://wg21.link/p2988](https://wg21.link/p2988) — The baseline proposal establishing rebind semantics and shallow const for reference wrappers.
+- **P3168 (Give `std::optional` Range Support)**: [https://wg21.link/p3168](https://wg21.link/p3168) — Related context by JeanHeyd Meneide on the widespread failures of assign-through semantics in practice.
+- **P2573 (`= delete("should have a reason");`)**: [https://wg21.link/p2573](https://wg21.link/p2573) — The C++26 feature enabling customized diagnostic messages on deleted functions.
+- **P2255 (A type trait to detect reference binding to temporary)**: [https://wg21.link/p2255](https://wg21.link/p2255) — The C++23 feature (`reference_constructs_from_temporary_v`) used for dangling reference prevention.

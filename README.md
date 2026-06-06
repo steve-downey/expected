@@ -13,6 +13,12 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 **Status**: [Under development and not yet ready for production use.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#under-development-and-not-yet-ready-for-production-use)
 
+## Review Guides
+
+As this implementation proposes extensions targeting standard library adoption (notably supporting reference semantics in `std::expected`), two rigorous review guides have been prepared:
+- **[LLM Code Review Guide](docs/llm-code-review-guide.md)**: Specialized prompt instructions and strict standardese criteria for automated reviewers to mechanically verify C++26 constraints and mandates.
+- **[Human Design Review Guide](docs/human-design-review-guide.md)**: An analytical guide for human contributors highlighting the compromises, architectural semantics (like assignment-through vs rebinding), and abstraction structures.  We encourage reviewers to read this guide before contributing to standard wording or feature requests.
+
 ## License
 
 `beman.expected` is licensed under the Apache License v2.0 with LLVM Exceptions.
