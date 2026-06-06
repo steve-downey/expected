@@ -2028,7 +2028,7 @@ class expected<T&, E> {
     // Constructors
     // -------------------------------------------------------------------------
 
-    expected() = delete ("expected<T&,E>: no default constructor; T& cannot be null");
+    expected() = delete;
 
     // Copy constructor (trivial path)
     constexpr expected(const expected&)
@@ -2062,8 +2062,7 @@ class expected<T&, E> {
 
     // Deleted: no in-place value constructor — T& cannot be constructed in-place
     template <class... Args>
-    constexpr expected(std::in_place_t, Args&&...) =
-        delete ("expected<T&,E>: no in_place value constructor; use expected(lvalue_ref) to bind T&");
+    constexpr expected(std::in_place_t, Args&&...) = delete;
 
     // Value constructor — takes U that can bind to T&
     template <class U = T>
@@ -2079,7 +2078,7 @@ class expected<T&, E> {
     // Deleted: binding a temporary to T& creates a dangling reference
     template <class U>
         requires(detail::reference_constructs_from_temporary_v<T&, U>)
-    constexpr expected(U&&) = delete ("expected<T&,E>: binding a temporary to T& creates a dangling reference");
+    constexpr expected(U&&) = delete;
 
     // Converting constructor from expected<U&, G> (copy)
     template <class U, class G>
@@ -2790,22 +2789,18 @@ class expected<T, E&> {
     // Deleted: argument cannot bind to E& (covers rvalue, const lvalue, and temp-creating cases)
     template <class G>
         requires(detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr expected(unexpect_t, G&&) =
-        delete ("expected<T,E&>: argument type cannot bind to non-const E&; provide a mutable lvalue of type E");
+    constexpr expected(unexpect_t, G&&) = delete;
 
     template <class G>
         requires(!std::is_constructible_v<E&, G &&> && !detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr expected(unexpect_t, G&&) =
-        delete ("expected<T,E&>: argument type cannot bind to non-const E&; provide a mutable lvalue of type E");
+    constexpr expected(unexpect_t, G&&) = delete;
 
     // Deleted: no constructor from unexpected<G> (would bind E& to temporary storage in unexpected)
     template <class G>
-    constexpr expected(const unexpected<G>&) =
-        delete ("expected<T,E&>: no constructor from unexpected<G>; use (unexpect, lvalue_ref)");
+    constexpr expected(const unexpected<G>&) = delete;
 
     template <class G>
-    constexpr expected(unexpected<G>&&) =
-        delete ("expected<T,E&>: no constructor from unexpected<G>; use (unexpect, lvalue_ref)");
+    constexpr expected(unexpected<G>&&) = delete;
 
     // Converting constructor from expected<U, G&> (copy) — mirrors expected<T&,E>'s from expected<U&,G>
     template <class U, class G>
@@ -2926,12 +2921,10 @@ class expected<T, E&> {
 
     // Deleted: no assignment from unexpected<G> (would rebind E& to temporary storage)
     template <class G>
-    constexpr expected& operator=(const unexpected<G>&) =
-        delete ("expected<T,E&>: no assignment from unexpected<G>; copy-assign from another expected<T,E&>");
+    constexpr expected& operator=(const unexpected<G>&) = delete;
 
     template <class G>
-    constexpr expected& operator=(unexpected<G>&&) =
-        delete ("expected<T,E&>: no assignment from unexpected<G>; copy-assign from another expected<T,E&>");
+    constexpr expected& operator=(unexpected<G>&&) = delete;
 
     // emplace — construct T in-place (nothrow required for exception safety when T is destroyed)
     template <class... Args>
@@ -3414,7 +3407,7 @@ class expected<T&, E&> {
     // Constructors
     // -------------------------------------------------------------------------
 
-    expected() = delete ("expected<T&,E&>: no default constructor; T& cannot be null");
+    expected() = delete;
 
     // Copy/move constructors — trivial (union holds only pointers + bool has_val_)
     constexpr expected(const expected&) = default;
@@ -3422,8 +3415,7 @@ class expected<T&, E&> {
 
     // Deleted: no in-place value constructor — T& cannot be constructed in-place
     template <class... Args>
-    constexpr expected(std::in_place_t, Args&&...) =
-        delete ("expected<T&,E&>: no in_place value constructor; use expected(lvalue_ref) to bind T&");
+    constexpr expected(std::in_place_t, Args&&...) = delete;
 
     // Value constructor — binds T& from lvalue (dangling prevention via deleted rvalue overload)
     template <class U = T>
@@ -3438,7 +3430,7 @@ class expected<T&, E&> {
     // Deleted: binding a temporary to T& creates a dangling reference
     template <class U>
         requires(detail::reference_constructs_from_temporary_v<T&, U>)
-    constexpr expected(U&&) = delete ("expected<T&,E&>: binding a temporary to T& creates a dangling reference");
+    constexpr expected(U&&) = delete;
 
     // Error constructor — binds E& (no temporary allowed)
     template <class G = E>
@@ -3451,22 +3443,18 @@ class expected<T&, E&> {
     // Deleted: argument cannot bind to E& (covers rvalue, const lvalue, and temp-creating cases)
     template <class G>
         requires(detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr expected(unexpect_t, G&&) =
-        delete ("expected<T&,E&>: argument type cannot bind to non-const E&; provide a mutable lvalue of type E");
+    constexpr expected(unexpect_t, G&&) = delete;
 
     template <class G>
         requires(!std::is_constructible_v<E&, G &&> && !detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr expected(unexpect_t, G&&) =
-        delete ("expected<T&,E&>: argument type cannot bind to non-const E&; provide a mutable lvalue of type E");
+    constexpr expected(unexpect_t, G&&) = delete;
 
     // Deleted: no constructor from unexpected<G> (would bind E& to temporary storage in unexpected)
     template <class G>
-    constexpr expected(const unexpected<G>&) =
-        delete ("expected<T&,E&>: no constructor from unexpected<G>; use (unexpect, lvalue_ref)");
+    constexpr expected(const unexpected<G>&) = delete;
 
     template <class G>
-    constexpr expected(unexpected<G>&&) =
-        delete ("expected<T&,E&>: no constructor from unexpected<G>; use (unexpect, lvalue_ref)");
+    constexpr expected(unexpected<G>&&) = delete;
 
     // Converting constructor from expected<U&, G&> (copy)
     template <class U, class G>
@@ -3528,12 +3516,10 @@ class expected<T&, E&> {
 
     // Deleted: no assignment from unexpected<G>
     template <class G>
-    constexpr expected& operator=(const unexpected<G>&) =
-        delete ("expected<T&,E&>: no assignment from unexpected<G>; copy-assign from another expected<T&,E&>");
+    constexpr expected& operator=(const unexpected<G>&) = delete;
 
     template <class G>
-    constexpr expected& operator=(unexpected<G>&&) =
-        delete ("expected<T&,E&>: no assignment from unexpected<G>; copy-assign from another expected<T&,E&>");
+    constexpr expected& operator=(unexpected<G>&&) = delete;
 
     // emplace — rebind T& (pointer transition is trivial)
     template <class U = T>
@@ -3981,13 +3967,11 @@ class expected<void, E&> {
     // Deleted: argument cannot bind to E& (covers rvalue, const lvalue, and temp-creating cases)
     template <class G>
         requires(detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr expected(unexpect_t, G&&) =
-        delete ("expected<void,E&>: argument type cannot bind to non-const E&; provide a mutable lvalue of type E");
+    constexpr expected(unexpect_t, G&&) = delete;
 
     template <class G>
         requires(!std::is_constructible_v<E&, G &&> && !detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr expected(unexpect_t, G&&) =
-        delete ("expected<void,E&>: argument type cannot bind to non-const E&; provide a mutable lvalue of type E");
+    constexpr expected(unexpect_t, G&&) = delete;
 
     // Converting constructor from expected<void, G&>
     template <class G>
@@ -4087,7 +4071,7 @@ class expected<void, E&> {
     // -------------------------------------------------------------------------
     // Deleted: value_or is not available for void expected
     template <class U>
-    constexpr void value_or(U&&) const = delete ("expected<void,E&>: no value_or for void specialization");
+    constexpr void value_or(U&&) const = delete;
 
     // Monadic operations — void value + E& error
     // -------------------------------------------------------------------------
