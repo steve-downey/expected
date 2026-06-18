@@ -1209,9 +1209,8 @@ constexpr auto expected<T, E>::transform_error(F&& f) const&& {
 // [expected.void] Partial specialization for void value type
 // =============================================================================
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-class expected<T, E> {
+template <class E>
+class expected<void, E> {
     static_assert(!std::is_reference_v<E>, "E must not be a reference");
     static_assert(!std::is_void_v<E>, "E must not be void");
     static_assert(!std::is_array_v<E>, "E must not be an array type");
@@ -1219,7 +1218,7 @@ class expected<T, E> {
     static_assert(!detail::is_unexpected_specialization<E>::value, "E must not be an unexpected<X> specialization");
 
   public:
-    using value_type      = T;
+    using value_type      = void;
     using error_type      = E;
     using unexpected_type = unexpected<E>;
 
@@ -1476,79 +1475,71 @@ class expected<T, E> {
 // [expected.void.cons] Out-of-line constructor definitions
 // =============================================================================
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr expected<T, E>::expected(const expected& rhs)
+template <class E>
+constexpr expected<void, E>::expected(const expected& rhs)
     requires(std::is_copy_constructible_v<E> && !std::is_trivially_copy_constructible_v<E>)
     : has_val_(rhs.has_val_) {
     if (!has_val_)
         std::construct_at(std::addressof(unex_), rhs.unex_);
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr expected<T, E>::expected(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<E>)
+template <class E>
+constexpr expected<void, E>::expected(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<E>)
     requires(std::is_move_constructible_v<E> && !std::is_trivially_move_constructible_v<E>)
     : has_val_(rhs.has_val_) {
     if (!has_val_)
         std::construct_at(std::addressof(unex_), std::move(rhs.unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class U, class G>
     requires(std::is_void_v<U> && std::is_constructible_v<E, const G&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G> &&>)
-constexpr expected<T, E>::expected(const expected<U, G>& rhs) : has_val_(rhs.has_value()) {
+constexpr expected<void, E>::expected(const expected<U, G>& rhs) : has_val_(rhs.has_value()) {
     if (!has_val_)
         std::construct_at(std::addressof(unex_), rhs.error());
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class U, class G>
     requires(std::is_void_v<U> && std::is_constructible_v<E, G> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G> &&>)
-constexpr expected<T, E>::expected(expected<U, G>&& rhs) : has_val_(rhs.has_value()) {
+constexpr expected<void, E>::expected(expected<U, G>&& rhs) : has_val_(rhs.has_value()) {
     if (!has_val_)
         std::construct_at(std::addressof(unex_), std::move(rhs.error()));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class G>
     requires std::is_constructible_v<E, const G&>
-constexpr expected<T, E>::expected(const unexpected<G>& e) : has_val_(false) {
+constexpr expected<void, E>::expected(const unexpected<G>& e) : has_val_(false) {
     std::construct_at(std::addressof(unex_), e.error());
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class G>
     requires std::is_constructible_v<E, G>
-constexpr expected<T, E>::expected(unexpected<G>&& e) : has_val_(false) {
+constexpr expected<void, E>::expected(unexpected<G>&& e) : has_val_(false) {
     std::construct_at(std::addressof(unex_), std::move(e.error()));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class... Args>
     requires std::is_constructible_v<E, Args...>
-constexpr expected<T, E>::expected(unexpect_t, Args&&... args) : has_val_(false) {
+constexpr expected<void, E>::expected(unexpect_t, Args&&... args) : has_val_(false) {
     std::construct_at(std::addressof(unex_), std::forward<Args>(args)...);
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class U, class... Args>
     requires std::is_constructible_v<E, std::initializer_list<U>&, Args...>
-constexpr expected<T, E>::expected(unexpect_t, std::initializer_list<U> il, Args&&... args) : has_val_(false) {
+constexpr expected<void, E>::expected(unexpect_t, std::initializer_list<U> il, Args&&... args) : has_val_(false) {
     std::construct_at(std::addressof(unex_), il, std::forward<Args>(args)...);
 }
 
@@ -1556,9 +1547,8 @@ constexpr expected<T, E>::expected(unexpect_t, std::initializer_list<U> il, Args
 // [expected.void.dtor] Out-of-line destructor
 // =============================================================================
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr expected<T, E>::~expected()
+template <class E>
+constexpr expected<void, E>::~expected()
     requires(!std::is_trivially_destructible_v<E>)
 {
     if (!has_val_)
@@ -1569,9 +1559,8 @@ constexpr expected<T, E>::~expected()
 // [expected.void.assign] Out-of-line assignment definitions
 // =============================================================================
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr expected<T, E>& expected<T, E>::operator=(const expected& rhs)
+template <class E>
+constexpr expected<void, E>& expected<void, E>::operator=(const expected& rhs)
     requires(std::is_copy_constructible_v<E> && std::is_copy_assignable_v<E> &&
              !(std::is_trivially_copy_constructible_v<E> && std::is_trivially_copy_assignable_v<E> &&
                std::is_trivially_destructible_v<E>))
@@ -1592,10 +1581,10 @@ constexpr expected<T, E>& expected<T, E>::operator=(const expected& rhs)
     return *this;
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr expected<T, E>& expected<T, E>::operator=(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<E> &&
-                                                                             std::is_nothrow_move_assignable_v<E>)
+template <class E>
+constexpr expected<void, E>&
+expected<void, E>::operator=(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<E> &&
+                                                      std::is_nothrow_move_assignable_v<E>)
     requires(std::is_move_constructible_v<E> && std::is_move_assignable_v<E> &&
              !(std::is_trivially_move_constructible_v<E> && std::is_trivially_move_assignable_v<E> &&
                std::is_trivially_destructible_v<E>))
@@ -1616,11 +1605,10 @@ constexpr expected<T, E>& expected<T, E>::operator=(expected&& rhs) noexcept(std
     return *this;
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class G>
     requires(std::is_constructible_v<E, const G&> && std::is_assignable_v<E&, const G&>)
-constexpr expected<T, E>& expected<T, E>::operator=(const unexpected<G>& e) {
+constexpr expected<void, E>& expected<void, E>::operator=(const unexpected<G>& e) {
     if (!has_val_) {
         unex_ = e.error();
     } else {
@@ -1630,11 +1618,10 @@ constexpr expected<T, E>& expected<T, E>::operator=(const unexpected<G>& e) {
     return *this;
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class G>
     requires(std::is_constructible_v<E, G> && std::is_assignable_v<E&, G>)
-constexpr expected<T, E>& expected<T, E>::operator=(unexpected<G>&& e) {
+constexpr expected<void, E>& expected<void, E>::operator=(unexpected<G>&& e) {
     if (!has_val_) {
         unex_ = std::move(e.error());
     } else {
@@ -1644,9 +1631,8 @@ constexpr expected<T, E>& expected<T, E>::operator=(unexpected<G>&& e) {
     return *this;
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr void expected<T, E>::emplace() noexcept {
+template <class E>
+constexpr void expected<void, E>::emplace() noexcept {
     if (!has_val_) {
         std::destroy_at(std::addressof(unex_));
         has_val_ = true;
@@ -1657,10 +1643,9 @@ constexpr void expected<T, E>::emplace() noexcept {
 // [expected.void.swap] Out-of-line swap definition
 // =============================================================================
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr void expected<T, E>::swap(expected& rhs) noexcept(std::is_nothrow_move_constructible_v<E> &&
-                                                            std::is_nothrow_swappable_v<E>)
+template <class E>
+constexpr void expected<void, E>::swap(expected& rhs) noexcept(std::is_nothrow_move_constructible_v<E> &&
+                                                               std::is_nothrow_swappable_v<E>)
     requires(std::is_swappable_v<E> && std::is_move_constructible_v<E>)
 {
     if (has_val_ && rhs.has_val_) {
@@ -1684,27 +1669,24 @@ constexpr void expected<T, E>::swap(expected& rhs) noexcept(std::is_nothrow_move
 // [expected.void.obs] Out-of-line observer definitions
 // =============================================================================
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr void expected<T, E>::value() const& {
+template <class E>
+constexpr void expected<void, E>::value() const& {
     static_assert(std::is_copy_constructible_v<E>, "value() requires is_copy_constructible_v<E>");
     if (!has_val_)
         throw bad_expected_access<E>(unex_);
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
-constexpr void expected<T, E>::value() && {
+template <class E>
+constexpr void expected<void, E>::value() && {
     static_assert(std::is_copy_constructible_v<E> && std::is_move_constructible_v<E>,
                   "value() && requires E be copy-constructible and move-constructible");
     if (!has_val_)
         throw bad_expected_access<E>(std::move(unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class G>
-constexpr E expected<T, E>::error_or(G&& def) const& {
+constexpr E expected<void, E>::error_or(G&& def) const& {
     static_assert(std::is_copy_constructible_v<E>, "error_or requires is_copy_constructible_v<E>");
     static_assert(std::is_convertible_v<G, E>, "error_or requires is_convertible_v<G, E>");
     if (!has_val_)
@@ -1712,10 +1694,9 @@ constexpr E expected<T, E>::error_or(G&& def) const& {
     return static_cast<E>(std::forward<G>(def));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class G>
-constexpr E expected<T, E>::error_or(G&& def) && {
+constexpr E expected<void, E>::error_or(G&& def) && {
     static_assert(std::is_move_constructible_v<E>, "error_or requires is_move_constructible_v<E>");
     static_assert(std::is_convertible_v<G, E>, "error_or requires is_convertible_v<G, E>");
     if (!has_val_)
@@ -1727,11 +1708,10 @@ constexpr E expected<T, E>::error_or(G&& def) && {
 // [expected.void.monadic] Out-of-line monadic operation definitions
 // =============================================================================
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, E&>
-constexpr auto expected<T, E>::and_then(F&& f) & {
+constexpr auto expected<void, E>::and_then(F&& f) & {
     using U = std::remove_cvref_t<std::invoke_result_t<F>>;
     static_assert(detail::is_expected_specialization<U>::value,
                   "and_then: F must return a specialization of expected");
@@ -1742,11 +1722,10 @@ constexpr auto expected<T, E>::and_then(F&& f) & {
     return U(unexpect, unex_);
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, E&&>
-constexpr auto expected<T, E>::and_then(F&& f) && {
+constexpr auto expected<void, E>::and_then(F&& f) && {
     using U = std::remove_cvref_t<std::invoke_result_t<F>>;
     static_assert(detail::is_expected_specialization<U>::value,
                   "and_then: F must return a specialization of expected");
@@ -1757,11 +1736,10 @@ constexpr auto expected<T, E>::and_then(F&& f) && {
     return U(unexpect, std::move(unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, const E&>
-constexpr auto expected<T, E>::and_then(F&& f) const& {
+constexpr auto expected<void, E>::and_then(F&& f) const& {
     using U = std::remove_cvref_t<std::invoke_result_t<F>>;
     static_assert(detail::is_expected_specialization<U>::value,
                   "and_then: F must return a specialization of expected");
@@ -1772,11 +1750,10 @@ constexpr auto expected<T, E>::and_then(F&& f) const& {
     return U(unexpect, unex_);
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, const E&&>
-constexpr auto expected<T, E>::and_then(F&& f) const&& {
+constexpr auto expected<void, E>::and_then(F&& f) const&& {
     using U = std::remove_cvref_t<std::invoke_result_t<F>>;
     static_assert(detail::is_expected_specialization<U>::value,
                   "and_then: F must return a specialization of expected");
@@ -1787,63 +1764,58 @@ constexpr auto expected<T, E>::and_then(F&& f) const&& {
     return U(unexpect, std::move(unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::or_else(F&& f) & {
+constexpr auto expected<void, E>::or_else(F&& f) & {
     using G = std::remove_cvref_t<std::invoke_result_t<F, E&>>;
     static_assert(detail::is_expected_specialization<G>::value, "or_else: F must return a specialization of expected");
-    static_assert(std::is_same_v<typename G::value_type, T>,
+    static_assert(std::is_same_v<typename G::value_type, void>,
                   "or_else: F must return expected with the same value_type");
     if (has_val_)
         return G();
     return std::invoke(std::forward<F>(f), unex_);
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::or_else(F&& f) && {
+constexpr auto expected<void, E>::or_else(F&& f) && {
     using G = std::remove_cvref_t<std::invoke_result_t<F, E&&>>;
     static_assert(detail::is_expected_specialization<G>::value, "or_else: F must return a specialization of expected");
-    static_assert(std::is_same_v<typename G::value_type, T>,
+    static_assert(std::is_same_v<typename G::value_type, void>,
                   "or_else: F must return expected with the same value_type");
     if (has_val_)
         return G();
     return std::invoke(std::forward<F>(f), std::move(unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::or_else(F&& f) const& {
+constexpr auto expected<void, E>::or_else(F&& f) const& {
     using G = std::remove_cvref_t<std::invoke_result_t<F, const E&>>;
     static_assert(detail::is_expected_specialization<G>::value, "or_else: F must return a specialization of expected");
-    static_assert(std::is_same_v<typename G::value_type, T>,
+    static_assert(std::is_same_v<typename G::value_type, void>,
                   "or_else: F must return expected with the same value_type");
     if (has_val_)
         return G();
     return std::invoke(std::forward<F>(f), unex_);
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::or_else(F&& f) const&& {
+constexpr auto expected<void, E>::or_else(F&& f) const&& {
     using G = std::remove_cvref_t<std::invoke_result_t<F, const E&&>>;
     static_assert(detail::is_expected_specialization<G>::value, "or_else: F must return a specialization of expected");
-    static_assert(std::is_same_v<typename G::value_type, T>,
+    static_assert(std::is_same_v<typename G::value_type, void>,
                   "or_else: F must return expected with the same value_type");
     if (has_val_)
         return G();
     return std::invoke(std::forward<F>(f), std::move(unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, E&>
-constexpr auto expected<T, E>::transform(F&& f) & {
+constexpr auto expected<void, E>::transform(F&& f) & {
     using U = std::remove_cv_t<std::invoke_result_t<F>>;
     if constexpr (!std::is_void_v<U>) {
         static_assert(!std::is_array_v<U>, "transform: U must not be an array type");
@@ -1865,11 +1837,10 @@ constexpr auto expected<T, E>::transform(F&& f) & {
     }
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, E&&>
-constexpr auto expected<T, E>::transform(F&& f) && {
+constexpr auto expected<void, E>::transform(F&& f) && {
     using U = std::remove_cv_t<std::invoke_result_t<F>>;
     if constexpr (!std::is_void_v<U>) {
         static_assert(!std::is_array_v<U>, "transform: U must not be an array type");
@@ -1891,11 +1862,10 @@ constexpr auto expected<T, E>::transform(F&& f) && {
     }
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, const E&>
-constexpr auto expected<T, E>::transform(F&& f) const& {
+constexpr auto expected<void, E>::transform(F&& f) const& {
     using U = std::remove_cv_t<std::invoke_result_t<F>>;
     if constexpr (!std::is_void_v<U>) {
         static_assert(!std::is_array_v<U>, "transform: U must not be an array type");
@@ -1917,11 +1887,10 @@ constexpr auto expected<T, E>::transform(F&& f) const& {
     }
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
     requires std::is_constructible_v<E, const E&&>
-constexpr auto expected<T, E>::transform(F&& f) const&& {
+constexpr auto expected<void, E>::transform(F&& f) const&& {
     using U = std::remove_cv_t<std::invoke_result_t<F>>;
     if constexpr (!std::is_void_v<U>) {
         static_assert(!std::is_array_v<U>, "transform: U must not be an array type");
@@ -1943,10 +1912,9 @@ constexpr auto expected<T, E>::transform(F&& f) const&& {
     }
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::transform_error(F&& f) & {
+constexpr auto expected<void, E>::transform_error(F&& f) & {
     using G = std::remove_cv_t<std::invoke_result_t<F, E&>>;
     static_assert(std::is_object_v<G>, "transform_error: G must be an object type");
     static_assert(!std::is_array_v<G>, "transform_error: G must not be an array type");
@@ -1954,14 +1922,13 @@ constexpr auto expected<T, E>::transform_error(F&& f) & {
     static_assert(!detail::is_unexpected_specialization<G>::value,
                   "transform_error: G must not be a specialization of unexpected");
     if (has_val_)
-        return expected<T, G>();
-    return expected<T, G>(unexpect, std::invoke(std::forward<F>(f), unex_));
+        return expected<void, G>();
+    return expected<void, G>(unexpect, std::invoke(std::forward<F>(f), unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::transform_error(F&& f) && {
+constexpr auto expected<void, E>::transform_error(F&& f) && {
     using G = std::remove_cv_t<std::invoke_result_t<F, E&&>>;
     static_assert(std::is_object_v<G>, "transform_error: G must be an object type");
     static_assert(!std::is_array_v<G>, "transform_error: G must not be an array type");
@@ -1969,14 +1936,13 @@ constexpr auto expected<T, E>::transform_error(F&& f) && {
     static_assert(!detail::is_unexpected_specialization<G>::value,
                   "transform_error: G must not be a specialization of unexpected");
     if (has_val_)
-        return expected<T, G>();
-    return expected<T, G>(unexpect, std::invoke(std::forward<F>(f), std::move(unex_)));
+        return expected<void, G>();
+    return expected<void, G>(unexpect, std::invoke(std::forward<F>(f), std::move(unex_)));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::transform_error(F&& f) const& {
+constexpr auto expected<void, E>::transform_error(F&& f) const& {
     using G = std::remove_cv_t<std::invoke_result_t<F, const E&>>;
     static_assert(std::is_object_v<G>, "transform_error: G must be an object type");
     static_assert(!std::is_array_v<G>, "transform_error: G must not be an array type");
@@ -1984,14 +1950,13 @@ constexpr auto expected<T, E>::transform_error(F&& f) const& {
     static_assert(!detail::is_unexpected_specialization<G>::value,
                   "transform_error: G must not be a specialization of unexpected");
     if (has_val_)
-        return expected<T, G>();
-    return expected<T, G>(unexpect, std::invoke(std::forward<F>(f), unex_));
+        return expected<void, G>();
+    return expected<void, G>(unexpect, std::invoke(std::forward<F>(f), unex_));
 }
 
-template <class T, class E>
-    requires(std::is_void_v<T> && !std::is_reference_v<E>)
+template <class E>
 template <class F>
-constexpr auto expected<T, E>::transform_error(F&& f) const&& {
+constexpr auto expected<void, E>::transform_error(F&& f) const&& {
     using G = std::remove_cv_t<std::invoke_result_t<F, const E&&>>;
     static_assert(std::is_object_v<G>, "transform_error: G must be an object type");
     static_assert(!std::is_array_v<G>, "transform_error: G must not be an array type");
@@ -1999,8 +1964,8 @@ constexpr auto expected<T, E>::transform_error(F&& f) const&& {
     static_assert(!detail::is_unexpected_specialization<G>::value,
                   "transform_error: G must not be a specialization of unexpected");
     if (has_val_)
-        return expected<T, G>();
-    return expected<T, G>(unexpect, std::invoke(std::forward<F>(f), std::move(unex_)));
+        return expected<void, G>();
+    return expected<void, G>(unexpect, std::invoke(std::forward<F>(f), std::move(unex_)));
 }
 
 // =============================================================================
