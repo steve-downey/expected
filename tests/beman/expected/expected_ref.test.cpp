@@ -404,6 +404,8 @@ TEST_CASE("expected<T&>: or_else passes error to callable", "[expected_ref]") {
         return unexpected(v);
     });
     CHECK(x == 99);
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 99);
 }
 
 TEST_CASE("expected<T&>: or_else on value returns value", "[expected_ref]") {

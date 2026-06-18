@@ -1210,7 +1210,7 @@ constexpr auto expected<T, E>::transform_error(F&& f) const&& {
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 class expected<T, E> {
     static_assert(!std::is_reference_v<E>, "E must not be a reference");
     static_assert(!std::is_void_v<E>, "E must not be void");
@@ -1477,7 +1477,7 @@ class expected<T, E> {
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr expected<T, E>::expected(const expected& rhs)
     requires(std::is_copy_constructible_v<E> && !std::is_trivially_copy_constructible_v<E>)
     : has_val_(rhs.has_val_) {
@@ -1486,7 +1486,7 @@ constexpr expected<T, E>::expected(const expected& rhs)
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr expected<T, E>::expected(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<E>)
     requires(std::is_move_constructible_v<E> && !std::is_trivially_move_constructible_v<E>)
     : has_val_(rhs.has_val_) {
@@ -1495,7 +1495,7 @@ constexpr expected<T, E>::expected(expected&& rhs) noexcept(std::is_nothrow_move
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class U, class G>
     requires(std::is_void_v<U> && std::is_constructible_v<E, const G&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
@@ -1508,7 +1508,7 @@ constexpr expected<T, E>::expected(const expected<U, G>& rhs) : has_val_(rhs.has
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class U, class G>
     requires(std::is_void_v<U> && std::is_constructible_v<E, G> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
@@ -1521,7 +1521,7 @@ constexpr expected<T, E>::expected(expected<U, G>&& rhs) : has_val_(rhs.has_valu
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class G>
     requires std::is_constructible_v<E, const G&>
 constexpr expected<T, E>::expected(const unexpected<G>& e) : has_val_(false) {
@@ -1529,7 +1529,7 @@ constexpr expected<T, E>::expected(const unexpected<G>& e) : has_val_(false) {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class G>
     requires std::is_constructible_v<E, G>
 constexpr expected<T, E>::expected(unexpected<G>&& e) : has_val_(false) {
@@ -1537,7 +1537,7 @@ constexpr expected<T, E>::expected(unexpected<G>&& e) : has_val_(false) {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class... Args>
     requires std::is_constructible_v<E, Args...>
 constexpr expected<T, E>::expected(unexpect_t, Args&&... args) : has_val_(false) {
@@ -1545,7 +1545,7 @@ constexpr expected<T, E>::expected(unexpect_t, Args&&... args) : has_val_(false)
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class U, class... Args>
     requires std::is_constructible_v<E, std::initializer_list<U>&, Args...>
 constexpr expected<T, E>::expected(unexpect_t, std::initializer_list<U> il, Args&&... args) : has_val_(false) {
@@ -1557,7 +1557,7 @@ constexpr expected<T, E>::expected(unexpect_t, std::initializer_list<U> il, Args
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr expected<T, E>::~expected()
     requires(!std::is_trivially_destructible_v<E>)
 {
@@ -1570,7 +1570,7 @@ constexpr expected<T, E>::~expected()
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr expected<T, E>& expected<T, E>::operator=(const expected& rhs)
     requires(std::is_copy_constructible_v<E> && std::is_copy_assignable_v<E> &&
              !(std::is_trivially_copy_constructible_v<E> && std::is_trivially_copy_assignable_v<E> &&
@@ -1593,7 +1593,7 @@ constexpr expected<T, E>& expected<T, E>::operator=(const expected& rhs)
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr expected<T, E>& expected<T, E>::operator=(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<E> &&
                                                                              std::is_nothrow_move_assignable_v<E>)
     requires(std::is_move_constructible_v<E> && std::is_move_assignable_v<E> &&
@@ -1617,7 +1617,7 @@ constexpr expected<T, E>& expected<T, E>::operator=(expected&& rhs) noexcept(std
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class G>
     requires(std::is_constructible_v<E, const G&> && std::is_assignable_v<E&, const G&>)
 constexpr expected<T, E>& expected<T, E>::operator=(const unexpected<G>& e) {
@@ -1631,7 +1631,7 @@ constexpr expected<T, E>& expected<T, E>::operator=(const unexpected<G>& e) {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class G>
     requires(std::is_constructible_v<E, G> && std::is_assignable_v<E&, G>)
 constexpr expected<T, E>& expected<T, E>::operator=(unexpected<G>&& e) {
@@ -1645,7 +1645,7 @@ constexpr expected<T, E>& expected<T, E>::operator=(unexpected<G>&& e) {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr void expected<T, E>::emplace() noexcept {
     if (!has_val_) {
         std::destroy_at(std::addressof(unex_));
@@ -1658,7 +1658,7 @@ constexpr void expected<T, E>::emplace() noexcept {
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr void expected<T, E>::swap(expected& rhs) noexcept(std::is_nothrow_move_constructible_v<E> &&
                                                             std::is_nothrow_swappable_v<E>)
     requires(std::is_swappable_v<E> && std::is_move_constructible_v<E>)
@@ -1685,7 +1685,7 @@ constexpr void expected<T, E>::swap(expected& rhs) noexcept(std::is_nothrow_move
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr void expected<T, E>::value() const& {
     static_assert(std::is_copy_constructible_v<E>, "value() requires is_copy_constructible_v<E>");
     if (!has_val_)
@@ -1693,7 +1693,7 @@ constexpr void expected<T, E>::value() const& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 constexpr void expected<T, E>::value() && {
     static_assert(std::is_copy_constructible_v<E> && std::is_move_constructible_v<E>,
                   "value() && requires E be copy-constructible and move-constructible");
@@ -1702,7 +1702,7 @@ constexpr void expected<T, E>::value() && {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class G>
 constexpr E expected<T, E>::error_or(G&& def) const& {
     static_assert(std::is_copy_constructible_v<E>, "error_or requires is_copy_constructible_v<E>");
@@ -1713,7 +1713,7 @@ constexpr E expected<T, E>::error_or(G&& def) const& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class G>
 constexpr E expected<T, E>::error_or(G&& def) && {
     static_assert(std::is_move_constructible_v<E>, "error_or requires is_move_constructible_v<E>");
@@ -1728,7 +1728,7 @@ constexpr E expected<T, E>::error_or(G&& def) && {
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, E&>
 constexpr auto expected<T, E>::and_then(F&& f) & {
@@ -1743,7 +1743,7 @@ constexpr auto expected<T, E>::and_then(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, E&&>
 constexpr auto expected<T, E>::and_then(F&& f) && {
@@ -1758,7 +1758,7 @@ constexpr auto expected<T, E>::and_then(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, const E&>
 constexpr auto expected<T, E>::and_then(F&& f) const& {
@@ -1773,7 +1773,7 @@ constexpr auto expected<T, E>::and_then(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, const E&&>
 constexpr auto expected<T, E>::and_then(F&& f) const&& {
@@ -1788,7 +1788,7 @@ constexpr auto expected<T, E>::and_then(F&& f) const&& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::or_else(F&& f) & {
     using G = std::remove_cvref_t<std::invoke_result_t<F, E&>>;
@@ -1801,7 +1801,7 @@ constexpr auto expected<T, E>::or_else(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::or_else(F&& f) && {
     using G = std::remove_cvref_t<std::invoke_result_t<F, E&&>>;
@@ -1814,7 +1814,7 @@ constexpr auto expected<T, E>::or_else(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::or_else(F&& f) const& {
     using G = std::remove_cvref_t<std::invoke_result_t<F, const E&>>;
@@ -1827,7 +1827,7 @@ constexpr auto expected<T, E>::or_else(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::or_else(F&& f) const&& {
     using G = std::remove_cvref_t<std::invoke_result_t<F, const E&&>>;
@@ -1840,7 +1840,7 @@ constexpr auto expected<T, E>::or_else(F&& f) const&& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, E&>
 constexpr auto expected<T, E>::transform(F&& f) & {
@@ -1866,7 +1866,7 @@ constexpr auto expected<T, E>::transform(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, E&&>
 constexpr auto expected<T, E>::transform(F&& f) && {
@@ -1892,7 +1892,7 @@ constexpr auto expected<T, E>::transform(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, const E&>
 constexpr auto expected<T, E>::transform(F&& f) const& {
@@ -1918,7 +1918,7 @@ constexpr auto expected<T, E>::transform(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
     requires std::is_constructible_v<E, const E&&>
 constexpr auto expected<T, E>::transform(F&& f) const&& {
@@ -1944,7 +1944,7 @@ constexpr auto expected<T, E>::transform(F&& f) const&& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::transform_error(F&& f) & {
     using G = std::remove_cv_t<std::invoke_result_t<F, E&>>;
@@ -1959,7 +1959,7 @@ constexpr auto expected<T, E>::transform_error(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::transform_error(F&& f) && {
     using G = std::remove_cv_t<std::invoke_result_t<F, E&&>>;
@@ -1974,7 +1974,7 @@ constexpr auto expected<T, E>::transform_error(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::transform_error(F&& f) const& {
     using G = std::remove_cv_t<std::invoke_result_t<F, const E&>>;
@@ -1989,7 +1989,7 @@ constexpr auto expected<T, E>::transform_error(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_void_v<T>
+    requires(std::is_void_v<T> && !std::is_reference_v<E>)
 template <class F>
 constexpr auto expected<T, E>::transform_error(F&& f) const&& {
     using G = std::remove_cv_t<std::invoke_result_t<F, const E&&>>;

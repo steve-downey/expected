@@ -319,6 +319,8 @@ TEST_CASE("expected<void,E&>: or_else propagates E& to F", "[expected_void_ref_e
         return expected<void, int&>(unexpect, v);
     });
     CHECK(seen == &err);
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 5);
 }
 
 TEST_CASE("expected<void,E&>: or_else short-circuits on success", "[expected_void_ref_e]") {
