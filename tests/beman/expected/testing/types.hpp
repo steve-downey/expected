@@ -24,7 +24,7 @@ struct traced {
         return *this;
     }
     constexpr traced& operator=(traced&& o) noexcept {
-        val = o.val;
+        val   = o.val;
         o.val = -1;
         return *this;
     }
@@ -45,7 +45,7 @@ struct move_only {
     constexpr explicit move_only(int v = 0) : val(v) {}
     constexpr move_only(move_only&& o) noexcept : val(o.val) { o.val = -1; }
     constexpr move_only& operator=(move_only&& o) noexcept {
-        val = o.val;
+        val   = o.val;
         o.val = -1;
         return *this;
     }
@@ -122,7 +122,7 @@ struct eq_a {
 struct eq_b {
     int val;
     constexpr explicit eq_b(int v = 0) : val(v) {}
-    constexpr bool operator==(const eq_b& o) const { return val == o.val; }
+    constexpr bool        operator==(const eq_b& o) const { return val == o.val; }
     friend constexpr bool operator==(const eq_a& a, const eq_b& b) { return a.val == b.val; }
 };
 
