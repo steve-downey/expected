@@ -1,5 +1,5 @@
 # Standard answers and internal state managed by Copier
-_commit: 2.0.0-322-gc3c230c
+_commit: v2.4.0-40-g8bf7fea
 _src_path: https://github.com/steve-downey/exemplar.git
 description: Expected Over References
 maintainer: steve-downey
