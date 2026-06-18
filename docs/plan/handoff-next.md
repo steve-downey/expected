@@ -73,34 +73,26 @@ Read `docs/plan/step8-expected-ref-e.md` for the full specification.
 
 ### Key differences from Step 7
 
-Step 8 is the mirror image: value is owned (same as primary template), error
-is a reference (pointer to error object). The union is:
+The `expected-over-references` branch now has a fully conformant `expected<T,E>`
+and `expected<void,E>` (modulo the extensions noted in the audit as conforming).
+All constraint, Mandates, trivial SMF, monadic SFINAE, and precondition gaps
+identified in the audit are resolved.
 
-```cpp
-union {
-    T val_;       // active when has_val_ == true
-    E* unex_ptr_; // active when has_val_ == false
-};
-bool has_val_;
-```
+## Upstream Merge (2026-06-02)
 
-### What to reuse from Step 7
+Branch `merge-upstream` merged 94 commits from `bemanproject/sandbox-expected`
+main and landed portability fixes for the full CI matrix. Now merged to `main`.
 
-- `detail::reference_constructs_from_temporary_v` — already exists, reuse for
-  preventing temporaries binding to `E&`
-- Mandate static_asserts pattern for T (T must not be reference, void, array,
-  cv-qual — same as primary template); add E constraints for reference case
-- Same monadic operation structure (2 ref-qual overloads each)
-- Same negative-compile test pattern (CMakeLists, WILL_FAIL)
+Key changes in the merge:
+- Upstream dependabot bumps (harden-runner v2.19.4, codeql-action v4.36.0)
+- `BEMAN_EXPECTED_CONSTEXPR_EXCEPTION` macro gating constexpr on
+  `__cpp_lib_constexpr_exceptions` (std::exception not yet constexpr)
+- `BEMAN_EXPECTED_TRAP()` macro for MSVC portability (`__debugbreak`)
+- Module include guards (`BEMAN_EXPECTED_INCLUDED_FROM_INTERFACE_UNIT`)
+- Inlined `unexpected<E>` bodies and `expected(U&&)` / `operator=(U&&)` for
+  MSVC out-of-line requires-clause matching
+- MSVC presets bumped to C++23 (avoids deprecated `std::unexpected` conflict)
+- Dropped C++17 from CI matrix (implementation requires C++20 concepts)
+- ASCII test names (MSVC/CTest garbles UTF-8 in filters)
 
-### New test file
-
-`tests/beman/expected/expected_ref_e.test.cpp` — analogous to expected_ref.test.cpp
-but testing the error-reference behavior:
-- Error rebind: assigning `unexpected(new_err)` changes what error is pointed
-  to, does not assign through the error reference
-- `error()` returns `E&` (dereferencing `unex_ptr_`)
-- Shallow const on error: `const expected<T, int&>` still lets you mutate
-  through `.error()`
-- Default constructor: works (has_value == true, value-inits T)
-- Dangling: construction from temporary via `unexpect_t` must be deleted
+**Start the next worktree from `origin/main` (post-merge).** All CI is green.
