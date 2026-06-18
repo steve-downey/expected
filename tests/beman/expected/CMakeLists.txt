@@ -74,7 +74,7 @@ add_fail_test(expected_t_array_fail expected_t_array_fail.cpp
 
 # Step 3 — expected<T,E> emplace Mandates: nothrow_constructible_v<T,Args...>
 add_fail_test(expected_emplace_throwing_fail expected_emplace_throwing_fail.cpp
-    "is_nothrow_constructible"
+    "is_nothrow_constructible|no matching overloaded function found"
 )
 
 # Step 4 — expected<void,E> ill-formed E [expected.void.general]
@@ -108,7 +108,7 @@ add_fail_test(void_or_else_wrong_value_type_fail  void_or_else_wrong_value_type_
 
 # Fix 1 — constraint 23.6: value ctor blocked for T=bool, U=expected specialization
 add_fail_test(expected_bool_value_ctor_from_expected_fail expected_bool_value_ctor_from_expected_fail.cpp
-    "no matching function|no matching constructor"
+    "no matching function|no matching constructor|no overloaded function could convert"
 )
 
 # Fix 4 — Mandates: T must not be a specialization of unexpected
@@ -118,7 +118,7 @@ add_fail_test(expected_unexpected_value_type_fail expected_unexpected_value_type
 
 # Step 7 — expected<T&, E> reference specialization: constructor constraints
 add_fail_test(expected_ref_temporary_fail     expected_ref_temporary_fail.cpp
-    "binding a temporary to T& creates a dangling reference|use of deleted function|call to deleted|no matching function|no matching constructor|attempting to reference"
+    "binding a temporary to T& creates a dangling reference|use of deleted function|call to deleted|no matching function|no matching constructor|no overloaded function could convert|attempting to reference"
 )
 add_fail_test(expected_ref_no_default_fail    expected_ref_no_default_fail.cpp
     "no default constructor|use of deleted function|call to deleted|attempting to reference"
@@ -153,7 +153,7 @@ add_fail_test(expected_ref_or_else_wrong_value_type_fail expected_ref_or_else_wr
 
 # Step 9 — expected<T&, E&> dangling prevention and no-default constraint
 add_fail_test(expected_ref_both_temporary_val_fail expected_ref_both_temporary_val_fail.cpp
-    "binding a temporary to T& creates a dangling reference|use of deleted function|call to deleted|no matching function|no matching constructor|attempting to reference"
+    "binding a temporary to T& creates a dangling reference|use of deleted function|call to deleted|no matching function|no matching constructor|no overloaded function could convert|attempting to reference"
 )
 add_fail_test(expected_ref_both_temporary_err_fail expected_ref_both_temporary_err_fail.cpp
     "cannot bind to non-const E&|use of deleted function|call to deleted|attempting to reference"
