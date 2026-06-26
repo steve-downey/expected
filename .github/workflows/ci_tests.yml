@@ -9,7 +9,7 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    - cron: '41 17 * * 0'
+    - cron: '15 12 * * 2'
 
 concurrency:
   group: ${{format('{0}:{1}', github.repository, github.ref)}}

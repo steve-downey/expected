@@ -1,6 +1,8 @@
 # tests/beman/expected/CMakeLists.txt                               -*-cmake-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
+find_package(Catch2 3 REQUIRED)
+
 add_executable(beman.expected.tests.expected)
 target_sources(
     beman.expected.tests.expected
