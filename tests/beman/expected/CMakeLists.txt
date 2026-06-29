@@ -288,6 +288,14 @@ add_fail_test(expected_void_ref_e_no_value_or_fail
     expected_void_ref_e_no_value_or_fail.cpp
     "no value_or for void|use of deleted function|call to deleted|attempting to reference"
 )
+add_fail_test(expected_void_ref_e_construct_from_unexpected_fail
+    expected_void_ref_e_construct_from_unexpected_fail.cpp
+    "no constructor from unexpected|use of deleted function|call to deleted|invokes a deleted function|attempting to reference"
+)
+add_fail_test(expected_void_ref_e_assign_unexpected_fail
+    expected_void_ref_e_assign_unexpected_fail.cpp
+    "no assignment from unexpected|use of deleted function|call to deleted|selected deleted operator|attempting to reference"
+)
 
 # =============================================================================
 # Hardened precondition tests (compiled with -DBEMAN_EXPECTED_HARDENED)
