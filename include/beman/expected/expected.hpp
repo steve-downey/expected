@@ -1973,7 +1973,6 @@ constexpr auto expected<void, E>::transform_error(F&& f) const&& {
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 class expected<T&, E> {
     static_assert(!std::is_reference_v<E>, "E must not be a reference");
     static_assert(!std::is_void_v<E>, "E must not be void");
@@ -2292,8 +2291,7 @@ class expected<T&, E> {
     }
 
     constexpr T& value() && {
-        static_assert(std::is_copy_constructible_v<E> && std::is_move_constructible_v<E>,
-                      "value() && requires E be copy and move constructible");
+        static_assert(std::is_move_constructible_v<E>, "value() && requires is_move_constructible_v<E>");
         if (!has_val_)
             throw bad_expected_access<E>(std::move(unex_));
         return *val_;
@@ -3896,30 +3894,21 @@ class expected<void, E&> {
     // -------------------------------------------------------------------------
 
     // Default constructor — void/success state
-    constexpr expected() noexcept : unex_ptr_(nullptr), has_val_(true) {}
+    constexpr expected() noexcept : has_val_(true), unex_ptr_(nullptr) {}
 
     // Copy/move — trivial (just pointer + bool)
     constexpr expected(const expected&)     = default;
     constexpr expected(expected&&) noexcept = default;
 
     // In-place value constructor
-    constexpr explicit expected(std::in_place_t) noexcept : unex_ptr_(nullptr), has_val_(true) {}
+    constexpr explicit expected(std::in_place_t) noexcept : has_val_(true), unex_ptr_(nullptr) {}
 
-    // Error constructor from unexpected<G> const& — E& binds to G's stored value via its lvalue accessor
+    // Deleted: no constructor from unexpected<G> (would bind E& to temporary storage in unexpected)
     template <class G>
-        requires(std::is_constructible_v<E&, G&> && !detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr explicit(!std::is_convertible_v<G&, E&>) expected(const unexpected<G>& e) noexcept : has_val_(false) {
-        E& r      = const_cast<G&>(e.error());
-        unex_ptr_ = std::addressof(r);
-    }
+    constexpr expected(const unexpected<G>&) = delete;
 
-    // Error constructor from unexpected<G>&& (non-const lvalue accessor gives G&, binds to E&)
     template <class G>
-        requires(std::is_constructible_v<E&, G&> && !detail::reference_constructs_from_temporary_v<E&, G>)
-    constexpr explicit(!std::is_convertible_v<G&, E&>) expected(unexpected<G>&& e) noexcept : has_val_(false) {
-        E& r      = e.error();
-        unex_ptr_ = std::addressof(r);
-    }
+    constexpr expected(unexpected<G>&&) = delete;
 
     // In-place error constructor — binds E& directly (no temporary allowed)
     template <class G = E>
@@ -3962,6 +3951,13 @@ class expected<void, E&> {
     // Copy/move — trivial
     constexpr expected& operator=(const expected&)     = default;
     constexpr expected& operator=(expected&&) noexcept = default;
+
+    // Deleted: no assignment from unexpected<G> (would rebind E& to temporary storage)
+    template <class G>
+    constexpr expected& operator=(const unexpected<G>&) = delete;
+
+    template <class G>
+    constexpr expected& operator=(unexpected<G>&&) = delete;
 
     // emplace — transition to void success state (always noexcept)
     constexpr void emplace() noexcept { has_val_ = true; }
@@ -4009,9 +4005,8 @@ class expected<void, E&> {
     }
 
     constexpr void value() && {
-        static_assert(std::is_copy_constructible_v<std::remove_cv_t<E>> &&
-                          std::is_move_constructible_v<std::remove_cv_t<E>>,
-                      "value() && requires E to be copy and move constructible");
+        static_assert(std::is_copy_constructible_v<std::remove_cv_t<E>>,
+                      "value() && requires is_copy_constructible_v<E>");
         if (!has_val_)
             throw bad_expected_access<std::remove_cv_t<E>>(*unex_ptr_);
     }
@@ -4305,8 +4300,8 @@ class expected<void, E&> {
     }
 
   private:
-    E*   unex_ptr_;
     bool has_val_;
+    E*   unex_ptr_;
 };
 
 } // namespace expected
