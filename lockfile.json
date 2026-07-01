@@ -1,14 +1,10 @@
 {
   "dependencies": [
     {
-      "name": "catch2",
+      "name": "Catch2",
       "package_name": "Catch2",
       "git_repository": "https://github.com/catchorg/Catch2.git",
-      "git_tag": "fee81626d2a4811095c3a39d20fb355eeb954101",
-      "cmake_args": {
-        "CATCH_INSTALL_DOCS": "OFF",
-        "CATCH_BUILD_TESTING": "OFF"
-      }
+      "git_tag": "25319fd3047c6bdcf3c0170e76fa526c77f99ca9"
     }
   ]
 }

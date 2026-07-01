@@ -1,0 +1,386 @@
+\documentclass[a4paper,10pt,oneside,openany,final,article]{memoir}
+\input{common}
+\settocdepth{chapter}
+\usepackage{minted}
+\usepackage{fontspec}
+% \setromanfont{Source Serif Pro}
+% \setsansfont{Source Sans Pro}
+% \setmonofont{Source Code Pro}
+
+\begin{document}
+\title{std::expected<T\&, E>}
+\author{
+  Steve Downey \small<\href{mailto:sdowney@gmail.com}{sdowney@gmail.com}> \\
+}
+\date{} %unused. Type date explicitly below.
+\maketitle
+
+\begin{flushright}
+  \begin{tabular}{ll}
+    Document \#: & D4280R0 \\
+    Date: & \today \\
+    Project: & Programming Language C++ \\
+    Audience: & LEWG
+  \end{tabular}
+\end{flushright}
+
+\begin{abstract}
+  We propose to add a partial specialization of \tcode{std::expected} for
+  lvalue reference types as the value type: \tcode{expected<T\&, E>}.
+  The specialization holds a pointer to \tcode{T} when engaged and stores
+  \tcode{E} by value when in error. Assignment has rebind semantics ---
+  assigning to an engaged \tcode{expected<T\&, E>} always rebinds the
+  reference, never assigns through to the referent. Construction from
+  temporaries that would dangle is deleted. This mirrors the design of
+  \tcode{optional<T\&>} accepted in \cite{P2988R12} and completes reference
+  support across the standard library's principal sum types.
+\end{abstract}
+
+\tableofcontents*
+
+\chapter*{Changes Since Last Version}
+
+\begin{itemize}
+\item \textbf{R0} Initial revision.
+\end{itemize}
+
+\chapter{Comparison table}
+
+\section{Using a raw pointer for a fallible lookup}
+
+The conventional idiom for a function that searches a container and may fail
+is to return a raw pointer, or to take an out-parameter.  Neither approach
+captures the error reason.
+
+\begin{tabular}{ lr }
+  \begin{minipage}[t]{0.45\columnwidth}
+    \begin{minted}[fontsize=\small]{c++}
+Cat* find_cat(std::string_view name);
+
+Cat* cat = find_cat("Fido");
+if (cat != nullptr) {
+    return doit(*cat);
+}
+// error reason lost
+    \end{minted}
+  \end{minipage}
+  &
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[fontsize=\small]{c++}
+auto find_cat(std::string_view name)
+    -> std::expected<Cat&, Error>;
+
+auto cat = find_cat("Fido");
+return cat.and_then(doit);
+      \end{minted}
+    \end{minipage}
+\end{tabular}
+
+\section{Using \tcode{expected<Cat*, E>} as a substitute}
+
+Returning \tcode{expected<Cat*, E>} is a common workaround.  It forces an
+extra dereference through the pointer on the happy path, and the interface
+still permits a null pointer to escape as a ``success''.
+
+\begin{tabular}{ lr }
+  \begin{minipage}[t]{0.45\columnwidth}
+    \begin{minted}[fontsize=\small]{c++}
+auto find_cat(std::string_view name)
+    -> std::expected<Cat*, Error>;
+
+auto cat = find_cat("Fido");
+if (cat && *cat) {      // two checks
+    return doit(**cat); // two derefs
+}
+    \end{minted}
+  \end{minipage}
+  &
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[fontsize=\small]{c++}
+auto find_cat(std::string_view name)
+    -> std::expected<Cat&, Error>;
+
+auto cat = find_cat("Fido");
+return cat.and_then(doit);
+      \end{minted}
+    \end{minipage}
+\end{tabular}
+
+\section{Using \tcode{expected<reference\_wrapper<Cat>, E>}}
+
+\tcode{std::reference_wrapper} avoids the null-pointer escape but is verbose
+and requires \tcode{.get()} everywhere the reference is used.
+
+\begin{tabular}{ lr }
+  \begin{minipage}[t]{0.45\columnwidth}
+    \begin{minted}[fontsize=\small]{c++}
+auto find_cat(std::string_view name)
+    -> std::expected<
+           std::reference_wrapper<Cat>,
+           Error>;
+
+auto cat = find_cat("Fido");
+if (cat) {
+    return doit(cat->get());
+}
+    \end{minted}
+  \end{minipage}
+  &
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[fontsize=\small]{c++}
+auto find_cat(std::string_view name)
+    -> std::expected<Cat&, Error>;
+
+auto cat = find_cat("Fido");
+return cat.and_then(doit);
+      \end{minted}
+    \end{minipage}
+\end{tabular}
+
+\section{Monadic composition}
+
+The monadic API of \tcode{expected} works uniformly whether \tcode{T} is a
+value type or a reference type, letting callers chain operations without
+breaking out of the expected idiom.
+
+\begin{tabular}{ lr }
+  \begin{minipage}[t]{0.45\columnwidth}
+    \begin{minted}[fontsize=\small]{c++}
+Cat* cat = find_cat("Fido");
+if (!cat) return make_error();
+std::string* name = get_name(*cat);
+if (!name) return make_error();
+return process(*name);
+    \end{minted}
+  \end{minipage}
+  &
+    \begin{minipage}[t]{0.45\columnwidth}
+      \begin{minted}[fontsize=\small]{c++}
+return find_cat("Fido")
+    .and_then(get_name)
+    .and_then(process);
+      \end{minted}
+    \end{minipage}
+\end{tabular}
+
+\chapter{Motivation}
+
+\tcode{std::expected<T, E>} \cite{P0323R12}, added in \CppXXIII{}, is a sum
+type holding either a value of type \tcode{T} or an error of type \tcode{E}.
+Like \tcode{std::optional} before it, the primary template explicitly
+prohibits reference types for \tcode{T}; the current working draft contains
+the static assertion:
+
+\begin{minted}[fontsize=\small]{c++}
+static_assert(!std::is_reference_v<T>,
+    "T must not be a reference (use expected<T&,E> specialization)");
+\end{minted}
+
+The comment points toward the natural next step.
+
+\tcode{std::optional<T\&>} has been accepted as \cite{P2988R12}.  Its
+motivation section observes:
+
+\begin{quote}
+  Thus, we expect future papers to propose \tcode{std::expected<T\&,E>} and
+  \tcode{std::variant} with the ability to hold references.
+\end{quote}
+
+This paper delivers the first of those two promises.
+
+The design rationale for preferring rebind semantics over assign-through
+semantics is well established by \cite{P2988R12} and the research surveyed
+in \cite{P1683R0}.  All library implementations that have attempted
+assign-through semantics for optional-like types over references have
+eventually abandoned that approach due to the bug-prone behavior it
+introduces.  The same applies to \tcode{expected<T\&, E>}.
+
+Lookup functions that return references to elements of a container are
+common in high-performance code precisely because they avoid copying
+potentially large objects.  When such a lookup can fail, there is no
+satisfying workaround available today:
+
+\begin{itemize}
+\item A raw pointer loses the error value and type safety.
+\item \tcode{expected<T*, E>} requires two checks and two dereferences on
+  the happy path, and does not prevent the caller from returning a null
+  \tcode{T*} in the success channel.
+\item \tcode{expected<std::reference_wrapper<T>, E>} works but is verbose;
+  \tcode{.get()} is required everywhere the value is used, and
+  \tcode{reference_wrapper} does not participate in the monadic API as
+  naturally as a reference would.
+\end{itemize}
+
+\tcode{expected<T\&, E>} fills this gap cleanly.  It participates in the
+monadic API of \tcode{expected} (\tcode{and_then}, \tcode{transform},
+\tcode{or_else}, \tcode{transform_error}) without any awkward adapters.
+
+There is a principled reason the standard chose to disallow reference types
+for sum types: the semantics of assignment differ subtly between value types
+and reference types.  For the primary template, \tcode{optional<T>} has pure
+value semantics; assignment copies or moves the stored value.  For
+\tcode{optional<T\&>}, assignment rebinds the pointer.  The observable
+behavior is different.  However, this difference is not a defect --- it is
+the same distinction that exists between \tcode{int} and \tcode{int*}, or
+between \tcode{tuple<int>} and \tcode{tuple<int\&>}.  The standard already
+accommodates reference types in \tcode{std::tuple}, \tcode{std::pair}, and
+\tcode{std::reference_wrapper}.  Sum types should be no different.
+
+The relationship between sum types and product types matters here.
+\tcode{optional<T>} is equivalent to \tcode{variant<T, monostate>};
+\tcode{expected<T, E>} is equivalent to \tcode{variant<T, E>}.  Neither
+\tcode{variant} nor \tcode{tuple} can hold references today, but that is a
+separate defect to address separately.  \tcode{expected<T\&, E>} can be
+defined precisely and usefully now, following the exact same pattern as
+\tcode{optional<T\&>}.
+
+\chapter{Design}
+
+The design of \tcode{expected<T\&, E>} follows \tcode{optional<T\&>}
+\cite{P2988R12} closely.  Where the designs diverge it is because
+\tcode{expected} carries an error value rather than simply being absent.
+
+\section{Storage}
+
+\tcode{expected<T\&, E>} stores a \tcode{T*} pointer when engaged and an
+\tcode{E} value in-place when in the error state.  The default constructor
+is deleted --- an engaged \tcode{expected<T\&, E>} must always hold a valid
+reference, and there is no default reference.
+
+\section{Rebind Semantics on Assignment}
+
+Assignment always rebinds the pointer, never assigns through to the referent.
+This is the only semantics that is not a source of latent bugs
+\cite{P1683R0}.  Because an \tcode{expected<T\&, E>} in the value state
+holds only a pointer, any assignment in the value-to-value case is equivalent
+to pointer copy, and the full set of converting assignments can be
+synthesized from copy-assignment via implicit construction of a temporary
+\tcode{expected<T\&, E>} on the right-hand side.
+
+\section{Dangling Prevention}
+
+Constructors from types \tcode{U} that would bind \tcode{T\&} to a
+temporary --- as defined by \tcode{reference_constructs_from_temporary} --- are
+explicitly deleted.  This mirrors the approach taken for
+\tcode{optional<T\&>} \cite{P2988R12}.
+
+Deletion of these constructors can cause ambiguity in overload resolution
+in the same way it does for \tcode{optional<T\&>}.  The design follows the
+precedent set by \tcode{std::tuple} and \tcode{std::pair}: make dangling
+calls ill-formed rather than silently eliding candidates.
+
+\section{Value Access}
+
+\tcode{operator*()} and \tcode{value()} return \tcode{T\&}.  Value category
+is shallow: the reference stored in the \tcode{expected} is not propagated.
+An \tcode{expected<T\&, E>\&\&} does not steal from the referent; it copies
+the pointer.  This matches the behavior of \tcode{optional<T\&>}.
+
+\section{Error Access}
+
+\tcode{error()} returns a reference to the stored \tcode{E}, with the same
+cv-ref qualifications as the primary template.
+
+\section{value\_or}
+
+\tcode{value_or} returns \tcode{T} by value, for the same reasons as in
+\tcode{optional<T\&>::value_or} \cite{P2988R12}: returning a reference
+would require the alternative to be of type \tcode{T\&} or compatible, which
+is overly restrictive.  Free-function alternatives such as
+\tcode{std::reference_or} \cite{P1255R12} and \tcode{std::reference_or}
+\cite{D4270R0} provide reference-returning variants over all nullable types
+for callers who need that behavior.
+
+\section{Monadic Operations}
+
+\tcode{and_then(f)}: calls \tcode{f} with \tcode{T\&}; returns the result of
+\tcode{f}, which must be an \tcode{expected} specialization.
+
+\tcode{transform(f)}: calls \tcode{f} with \tcode{T\&}; wraps the result in
+an \tcode{expected}.
+
+\tcode{or_else(f)}: calls \tcode{f} with the error \tcode{E}; returns the
+result of \tcode{f}, which must be an \tcode{expected} specialization.
+
+\tcode{transform_error(f)}: calls \tcode{f} with the error \tcode{E}; wraps
+the new error in an \tcode{expected<T\&, G>}.
+
+All four operations propagate the value or error, whichever is not being
+processed, without modification.
+
+\section{In-Place Construction}
+
+\tcode{expected(std::in_place_t, Args...)} is deleted.  There is no place to
+construct a \tcode{T} in an \tcode{expected<T\&, E>}.  In-place error
+construction via \tcode{unexpect_t} works as in the primary template, because
+the error type \tcode{E} is stored by value.
+
+\section{Shallow vs Deep \tcode{const}}
+
+\tcode{const expected<T\&, E>} permits modification of the referent through
+\tcode{operator*()}.  Constness is shallow, consistent with the pointer model.
+If deep constness is desired, use \tcode{expected<const T\&, E>}.
+
+\section{Relationship to \tcode{expected<void, E>} and \tcode{expected<T, E>}}
+
+The three specializations --- primary (\tcode{T} object type), void value
+(\tcode{expected<void, E>}), and lvalue reference (\tcode{expected<T\&, E>})
+--- share the same error-handling API.  Conversion from
+\tcode{expected<U\&, G>} to \tcode{expected<T\&, E>} follows the same
+constraints as conversion between \tcode{optional<U\&>} and
+\tcode{optional<T\&>}.
+
+\section{Feature Test Macro}
+
+A feature test macro \tcode{__cpp_lib_expected_ref} is proposed, allowing
+code to detect the availability of the reference specializations.
+
+\chapter{Proposal}
+
+Add a partial specialization \tcode{expected<T\&, E>} to the \tcode{<expected>}
+header, with the design described above.
+
+The reference implementation is available as part of the Beman Project's
+\tcode{beman.expected26} library \cite{Downey_beman_expected}.
+
+\chapter{Impact on the standard}
+
+A pure library extension.  No changes to the language are required.  No
+existing well-formed code is made ill-formed.
+
+The change adds a new partial specialization of \tcode{expected}; code that
+currently relies on the absence of such a specialization (e.g., by static
+assertion) will need to be updated, but such code would necessarily have been
+deliberately excluding a feature rather than relying on normal program
+behavior.
+
+\chapter{Wording}
+
+Wording to follow in a subsequent revision.
+
+\chapter{Acknowledgments}
+
+The design of \tcode{expected<T\&, E>} is a direct extension of the work on
+\tcode{optional<T\&>} \cite{P2988R12} by Steve Downey and Peter Sommerlad.
+Many thanks to JeanHeyd Meneide for the foundational research in
+\cite{P1683R0} and \cite{REFBIND}.
+
+Thanks to the contributors to the Beman Project's \tcode{beman.expected26}
+reference implementation \cite{Downey_beman_expected}.
+
+\chapter*{Document history}
+
+\begin{itemize}
+\item \textbf{R0} Initial revision.
+\end{itemize}
+
+\renewcommand{\bibname}{References}
+\bibliographystyle{abstract}
+\bibliography{wg21,mybiblio}
+
+\backmatter
+\chapter*{Implementation}
+
+\inputminted{c++}{../include/beman/expected/expected.hpp}
+
+\end{document}

@@ -91,6 +91,14 @@ TEST_CASE("expected<T&>: copy construct error state", "[expected_ref]") {
     CHECK(b.error() == "oops");
 }
 
+TEST_CASE("expected<T&>: copy construct value state (non-trivial E)", "[expected_ref]") {
+    int                         x = 42;
+    expected<int&, std::string> a(x);
+    expected<int&, std::string> b = a;
+    REQUIRE(b.has_value());
+    CHECK(&*b == &x);
+}
+
 TEST_CASE("expected<T&>: construct from derived expected<U&, G>", "[expected_ref]") {
     struct Base {
         virtual ~Base() = default;
@@ -177,6 +185,39 @@ TEST_CASE("expected<T&>: copy assignment error-to-value", "[expected_ref]") {
     a = b;
     REQUIRE(a.has_value());
     CHECK(&*a == &x);
+}
+
+TEST_CASE("expected<T&>: move assignment value-to-value (non-trivial E)", "[expected_ref]") {
+    int                         x1 = 1, x2 = 2;
+    expected<int&, std::string> a(x1), b(x2);
+    a = std::move(b);
+    REQUIRE(a.has_value());
+    CHECK(&*a == &x2);
+}
+
+TEST_CASE("expected<T&>: move assignment value-to-error (non-trivial E)", "[expected_ref]") {
+    int                         x = 5;
+    expected<int&, std::string> a(x);
+    expected<int&, std::string> b(unexpect, "moved-err");
+    a = std::move(b);
+    REQUIRE(!a.has_value());
+    CHECK(a.error() == "moved-err");
+}
+
+TEST_CASE("expected<T&>: move assignment error-to-value (non-trivial E)", "[expected_ref]") {
+    int                         x = 5;
+    expected<int&, std::string> a(unexpect, "old-err");
+    expected<int&, std::string> b(x);
+    a = std::move(b);
+    REQUIRE(a.has_value());
+    CHECK(&*a == &x);
+}
+
+TEST_CASE("expected<T&>: assign from unexpected&& when already has error", "[expected_ref]") {
+    expected<int&, int> e = unexpected(1);
+    e                     = unexpected(2);
+    REQUIRE(!e.has_value());
+    CHECK(e.error() == 2);
 }
 
 // =============================================================================
@@ -441,6 +482,24 @@ TEST_CASE("expected<T&>: transform to void", "[expected_ref]") {
     CHECK(out == 5);
 }
 
+TEST_CASE("expected<T&>: transform to void on error - propagates", "[expected_ref]") {
+    expected<int&, int> e(unexpect, 5);
+    bool                called = false;
+    auto                r      = e.transform([&](int&) { called = true; });
+    CHECK(!called);
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 5);
+}
+
+TEST_CASE("expected<T&>: const transform to void on error - propagates", "[expected_ref]") {
+    const expected<int&, int> e(unexpect, 5);
+    bool                      called = false;
+    auto                      r      = e.transform([&](int&) { called = true; });
+    CHECK(!called);
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 5);
+}
+
 // =============================================================================
 // const-qualified monadic operations
 // =============================================================================
@@ -459,6 +518,27 @@ TEST_CASE("expected<T&>: const transform", "[expected_ref]") {
     auto                      r = e.transform([](int& v) { return v * 3; });
     REQUIRE(r.has_value());
     CHECK(*r == 9);
+}
+
+TEST_CASE("expected<T&>: const transform on error - propagates", "[expected_ref]") {
+    const expected<int&, int> e(unexpect, 5);
+    bool                       called = false;
+    auto                       r      = e.transform([&](int&) {
+        called = true;
+        return 0;
+    });
+    CHECK(!called);
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 5);
+}
+
+TEST_CASE("expected<T&>: const transform to void - calls F", "[expected_ref]") {
+    int                       x   = 3;
+    int                       out = 0;
+    const expected<int&, int> e(x);
+    auto                      r = e.transform([&](int& v) { out = v; });
+    REQUIRE(r.has_value());
+    CHECK(out == 3);
 }
 
 // =============================================================================
@@ -543,6 +623,17 @@ TEST_CASE("or_else rvalue on error calls F", "[expected_ref]") {
     CHECK(*r == 30);
 }
 
+TEST_CASE("or_else const rvalue on error calls F", "[expected_ref]") {
+    const expected<int&, int> e(unexpect, 3);
+    auto                      r = std::move(e).or_else([](int v) -> expected<int&, int> {
+        static int result = 0;
+        result            = v * 10;
+        return expected<int&, int>(result);
+    });
+    REQUIRE(r.has_value());
+    CHECK(*r == 30);
+}
+
 // --- Monadic: transform rvalue/const-rvalue on ERROR state ---
 TEST_CASE("transform rvalue on error short-circuits", "[expected_ref]") {
     expected<int&, std::string> e(unexpect, "err");
@@ -585,6 +676,13 @@ TEST_CASE("transform_error const rvalue on value short-circuits", "[expected_ref
 TEST_CASE("transform_error const rvalue on error calls F", "[expected_ref]") {
     const expected<int&, int> e(unexpect, 7);
     auto                      r = std::move(e).transform_error([](int v) { return v + 1; });
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 8);
+}
+
+TEST_CASE("transform_error const lvalue on error calls F", "[expected_ref]") {
+    const expected<int&, int> e(unexpect, 7);
+    auto                      r = e.transform_error([](int v) { return v + 1; });
     REQUIRE(!r.has_value());
     CHECK(r.error() == 8);
 }

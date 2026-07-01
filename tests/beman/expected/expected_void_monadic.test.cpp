@@ -127,6 +127,16 @@ TEST_CASE("transform void: F returns void - expected<void, E>()", "[expected_voi
     CHECK(count == 1);
 }
 
+TEST_CASE("transform void: has error, F returns void - propagates", "[expected_void_monadic]") {
+    expected<void, int> e(unexpect, 5);
+    int                 count = 0;
+    auto                r     = e.transform([&]() { ++count; });
+    static_assert(std::is_same_v<decltype(r), expected<void, int>>);
+    CHECK(count == 0);
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 5);
+}
+
 TEST_CASE("transform void: rvalue overload", "[expected_void_monadic]") {
     expected<void, std::string> e;
     auto                        r = std::move(e).transform([]() -> std::string { return "done"; });
@@ -260,6 +270,20 @@ TEST_CASE("or_else const rvalue on value short-circuits", "[expected_void_monadi
     const expected<void, int> e;
     auto                      r = std::move(e).or_else([](int) -> expected<void, int> { return {}; });
     REQUIRE(r.has_value());
+}
+
+TEST_CASE("or_else rvalue on error calls F", "[expected_void_monadic]") {
+    expected<void, int> e(unexpect, 5);
+    auto                r = std::move(e).or_else([](int v) -> expected<void, int> { return unexpected(v + 1); });
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 6);
+}
+
+TEST_CASE("or_else const rvalue on error calls F", "[expected_void_monadic]") {
+    const expected<void, int> e(unexpect, 5);
+    auto                       r = std::move(e).or_else([](int v) -> expected<void, int> { return unexpected(v + 1); });
+    REQUIRE(!r.has_value());
+    CHECK(r.error() == 6);
 }
 
 // --- Monadic: transform rvalue/const-rvalue on ERROR state ---
