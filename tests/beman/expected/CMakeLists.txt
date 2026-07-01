@@ -183,7 +183,7 @@ add_fail_test(expected_ref_both_or_else_wrong_value_type_fail
 
 # Step 7 — expected<T&, E> Mandates: E constraints
 add_fail_test(expected_ref_e_ref_fail   expected_ref_e_ref_fail.cpp
-    "E must not be a reference"
+    "E must not be an rvalue reference"
 )
 add_fail_test(expected_ref_e_void_fail  expected_ref_e_void_fail.cpp
     "E must not be void"
