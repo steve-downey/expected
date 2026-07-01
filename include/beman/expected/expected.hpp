@@ -1348,17 +1348,21 @@ class expected<void, E> {
         requires(std::is_move_constructible_v<unexpected<E>> &&
                  !std::is_trivially_move_constructible_v<unexpected<E>>);
 
-    // Converting constructor from expected<U, G> where is_void_v<U>
+    // Converting constructor from expected<U, G> where is_void_v<U>. Excludes U,G exactly
+    // matching this class's own void,E (the real copy/move constructors already handle that
+    // case) — instantiating this template for the self-referential case would otherwise probe
+    // unexpected<E>'s constructibility from this very class, which some standard library
+    // implementations of reference_constructs_from_temporary_v resolve as a circular constraint.
     template <class U, class G>
-        requires(std::is_void_v<U> && std::is_constructible_v<E, const G&> &&
-                 !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
+        requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected> &&
+                 std::is_constructible_v<E, const G&> && !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
                  !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
                  !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
                  !std::is_constructible_v<unexpected<E>, const expected<U, G> &&>)
     constexpr explicit(!std::is_convertible_v<const G&, E>) expected(const expected<U, G>& rhs);
 
     template <class U, class G>
-        requires(std::is_void_v<U> && std::is_constructible_v<E, G> &&
+        requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected> && std::is_constructible_v<E, G> &&
                  !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
                  !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
                  !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
@@ -1617,7 +1621,8 @@ constexpr expected<void, E>::expected(expected&& rhs) noexcept(std::is_nothrow_m
 
 template <class E>
 template <class U, class G>
-    requires(std::is_void_v<U> && std::is_constructible_v<E, const G&> &&
+    requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected<void, E>> &&
+             std::is_constructible_v<E, const G&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
@@ -1629,7 +1634,7 @@ constexpr expected<void, E>::expected(const expected<U, G>& rhs) : has_val_(rhs.
 
 template <class E>
 template <class U, class G>
-    requires(std::is_void_v<U> && std::is_constructible_v<E, G> &&
+    requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected<void, E>> && std::is_constructible_v<E, G> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
