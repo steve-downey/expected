@@ -340,6 +340,13 @@ TEST_CASE("expected: assign from unexpected&& when has value (state change)", "[
     CHECK(e.error() == "fail");
 }
 
+TEST_CASE("expected: assign from unexpected&& when already has error", "[ExpectedTest]") {
+    expt::expected<int, std::string> e(expt::unexpected<std::string>("first"));
+    e = expt::unexpected<std::string>("second");
+    CHECK_FALSE(e.has_value());
+    CHECK(e.error() == "second");
+}
+
 // =============================================================================
 // emplace
 // =============================================================================
