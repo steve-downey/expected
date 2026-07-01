@@ -127,7 +127,7 @@ class unexpected<E&> {
     constexpr unexpected(const unexpected&) = default;
     constexpr unexpected(unexpected&&)      = default;
 
-    // Binds E& directly; dangling prevention mirrors expected<T,E&>'s unexpect_t,G&& constructor.
+    // Binds E& directly to the referenced object; deleted below when G would bind to a temporary.
     template <class G = E>
         requires(!std::is_same_v<std::remove_cvref_t<G>, unexpected> &&
                  !std::is_same_v<std::remove_cvref_t<G>, std::in_place_t> && std::is_constructible_v<E&, G&&> &&

@@ -187,7 +187,7 @@ class expected {
             std::construct_at(std::addressof(unex_), std::move(rhs.unex_));
     }
 
-    // Converting copy constructor from expected<U, G> — value-E path (works as today)
+    // Converting copy constructor from expected<U, G> — value-E path
     template <class U, class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<T, const U&> &&
                  std::is_constructible_v<E, const G&> &&
@@ -205,7 +205,7 @@ class expected {
             std::construct_at(std::addressof(unex_), rhs.error());
     }
 
-    // Converting move constructor from expected<U, G> — value-E path (works as today)
+    // Converting move constructor from expected<U, G> — value-E path
     template <class U, class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<T, U> && std::is_constructible_v<E, G> &&
                  (std::is_same_v<bool, std::remove_cv_t<T>> || !detail::converts_from_any_cvref<T, expected<U, G>>) &&
@@ -221,8 +221,8 @@ class expected {
             std::construct_at(std::addressof(unex_), std::move(rhs.error()));
     }
 
-    // Converting constructor from expected<U, G> — reference-E path (mirrors pre-merge
-    // expected<T,E&>, which only accepted sources whose error type is also a reference)
+    // Converting constructor from expected<U, G> — reference-E path: only accepts sources
+    // whose error type G is itself a reference convertible to E.
     template <class U, class G>
         requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<T, const U&> &&
                  std::is_convertible_v<G, E>)
@@ -259,7 +259,7 @@ class expected {
         std::construct_at(std::addressof(val_), std::forward<U>(v));
     }
 
-    // Constructor from unexpected<G> const& / && — value-E path (SFINAE'd, works as today)
+    // Constructor from unexpected<G> const& / && — value-E path
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&>)
     constexpr explicit(!std::is_convertible_v<const G&, E>) expected(const unexpected<G>& e) : has_val_(false) {
@@ -273,7 +273,7 @@ class expected {
     }
 
     // Deleted for reference E: unexpected<G> stores G by value; binding E& to it would create a
-    // dangling reference once the unexpected<G> temporary is destroyed (mirrors pre-merge expected<T,E&>).
+    // dangling reference once the unexpected<G> temporary is destroyed.
     template <class G>
         requires std::is_reference_v<E>
     constexpr expected(const unexpected<G>&) = delete;
@@ -309,8 +309,7 @@ class expected {
     constexpr expected(unexpect_t, Args&&...) = delete;
 
     // Deleted catch-all: reference E, argument neither constructible nor a dangling case
-    // (e.g. binding a non-const E& from a const lvalue) — mirrors the pre-merge reference
-    // specializations' three-overload dangling-prevention pattern.
+    // (e.g. binding a non-const E& from a const lvalue).
     template <class... Args>
         requires(std::is_reference_v<E> && !std::is_constructible_v<E, Args...> &&
                  !detail::unexpect_dangles_v<E, Args...>)
@@ -429,7 +428,7 @@ class expected {
         return *this;
     }
 
-    // Assignment from unexpected<G> — value-E path (SFINAE'd, works as today)
+    // Assignment from unexpected<G> — value-E path
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&> &&
                  std::is_assignable_v<E&, const G&> &&
@@ -459,8 +458,7 @@ class expected {
         return *this;
     }
 
-    // Deleted for reference E: would rebind E& to unexpected<G>'s temporary storage (mirrors
-    // pre-merge expected<T,E&>).
+    // Deleted for reference E: would rebind E& to unexpected<G>'s temporary storage.
     template <class G>
         requires std::is_reference_v<E>
     constexpr expected& operator=(const unexpected<G>&) = delete;
@@ -1080,7 +1078,7 @@ class expected<void, E> {
             std::construct_at(std::addressof(unex_), std::move(rhs.error()));
     }
 
-    // Constructor from unexpected<G> const& / && — value-E path (SFINAE'd, works as today)
+    // Constructor from unexpected<G> const& / && — value-E path
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&>)
     constexpr explicit(!std::is_convertible_v<const G&, E>) expected(const unexpected<G>& e) : has_val_(false) {
@@ -1093,8 +1091,9 @@ class expected<void, E> {
         std::construct_at(std::addressof(unex_), std::move(e.error()));
     }
 
-    // Constructor from unexpected<G> const& / && — reference-E path (mirrors pre-merge expected<void,E&>,
-    // including its use of const_cast to bind E& through G's lvalue accessor)
+    // Constructor from unexpected<G> const& / && — reference-E path. The const_cast strips the
+    // constness introduced by binding e as `const unexpected<G>&`; the referenced G object itself
+    // is not const, so this does not violate constness of the object actually being pointed to.
     template <class G>
         requires(std::is_reference_v<E> && std::is_constructible_v<E, G&> &&
                  !detail::reference_constructs_from_temporary_v<E, G>)
@@ -1125,8 +1124,7 @@ class expected<void, E> {
     constexpr expected(unexpect_t, Args&&...) = delete;
 
     // Deleted catch-all: reference E, argument neither constructible nor a dangling case
-    // (e.g. binding a non-const E& from a const lvalue) — mirrors the pre-merge reference
-    // specializations' three-overload dangling-prevention pattern.
+    // (e.g. binding a non-const E& from a const lvalue).
     template <class... Args>
         requires(std::is_reference_v<E> && !std::is_constructible_v<E, Args...> &&
                  !detail::unexpect_dangles_v<E, Args...>)
@@ -1139,7 +1137,7 @@ class expected<void, E> {
         std::construct_at(std::addressof(unex_), std::in_place, il, std::forward<Args>(args)...);
     }
 
-    // Converting constructor from expected<void, G&> (reference-E path only, mirrors pre-merge expected<void,E&>)
+    // Converting constructor from expected<void, G&> — reference-E path only
     template <class G>
         requires(std::is_reference_v<E> && std::is_convertible_v<G&, E>)
     constexpr explicit(!std::is_convertible_v<G&, E>) expected(const expected<void, G&>& rhs)
@@ -1224,8 +1222,7 @@ class expected<void, E> {
         return *this;
     }
 
-    // Assignment from unexpected<G> — value-E only; reference-E has no such assignment (matches pre-merge
-    // expected<void,E&>, which never declared one)
+    // Assignment from unexpected<G> — value-E only; no such overload is declared for reference E
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&> &&
                  std::is_assignable_v<E&, const G&>)
@@ -1356,9 +1353,8 @@ class expected<void, E> {
         return static_cast<error_value_type>(std::forward<G>(def));
     }
 
-    // Deleted: value_or is not available for void expected. Gated to reference E only so it plays no role
-    // (and adds no overload) when E is a value type — matches pre-merge expected<void,E>'s total absence of
-    // value_or, while preserving pre-merge expected<void,E&>'s explicit deletion.
+    // Deleted: value_or is not available for void expected. Gated to reference E only so that,
+    // for value E, no value_or overload is declared at all (there is nothing to delete against).
     template <class U>
         requires std::is_reference_v<E>
     constexpr void value_or(U&&) const = delete;
@@ -1723,7 +1719,7 @@ class expected<T&, E> {
         requires(detail::reference_constructs_from_temporary_v<T&, U>)
     constexpr expected(U&&) = delete;
 
-    // Converting constructor from expected<U&, G> (copy) — value-E path (works as today)
+    // Converting constructor from expected<U&, G> (copy) — value-E path
     template <class U, class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<T&, U&> && std::is_constructible_v<E, const G&> &&
                  !detail::reference_constructs_from_temporary_v<T&, U&>)
@@ -1738,7 +1734,7 @@ class expected<T&, E> {
         }
     }
 
-    // Converting constructor from expected<U&, G> (move) — value-E path (works as today)
+    // Converting constructor from expected<U&, G> (move) — value-E path
     template <class U, class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<T&, U&> && std::is_constructible_v<E, G> &&
                  !detail::reference_constructs_from_temporary_v<T&, U&>)
@@ -1752,8 +1748,8 @@ class expected<T&, E> {
         }
     }
 
-    // Converting constructor from expected<U&, G&> (copy/move) — reference-E path (mirrors
-    // pre-merge expected<T&,E&>, which only accepted sources whose error type is also a reference)
+    // Converting constructor from expected<U&, G&> (copy/move) — reference-E path: only accepts
+    // sources whose error type G is itself a reference convertible to E.
     template <class U, class G>
         requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<T&, U&> &&
                  std::is_convertible_v<G, E> && !detail::reference_constructs_from_temporary_v<T&, U&>)
@@ -1782,7 +1778,7 @@ class expected<T&, E> {
         }
     }
 
-    // Constructor from unexpected<G> const& / && — value-E path (SFINAE'd, works as today)
+    // Constructor from unexpected<G> const& / && — value-E path
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&>)
     constexpr explicit(!std::is_convertible_v<const G&, E>) expected(const unexpected<G>& e) : has_val_(false) {
@@ -1796,7 +1792,7 @@ class expected<T&, E> {
     }
 
     // Deleted for reference E: unexpected<G> stores G by value; binding E& to it would create a
-    // dangling reference once the unexpected<G> temporary is destroyed (mirrors pre-merge expected<T&,E&>).
+    // dangling reference once the unexpected<G> temporary is destroyed.
     template <class G>
         requires std::is_reference_v<E>
     constexpr expected(const unexpected<G>&) = delete;
@@ -1926,7 +1922,7 @@ class expected<T&, E> {
         return *this;
     }
 
-    // Assignment from unexpected<G> — value-E path (SFINAE'd, works as today)
+    // Assignment from unexpected<G> — value-E path
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&> &&
                  std::is_assignable_v<E&, const G&>)
@@ -1952,8 +1948,7 @@ class expected<T&, E> {
         return *this;
     }
 
-    // Deleted for reference E: would rebind E& to unexpected<G>'s temporary storage (mirrors
-    // pre-merge expected<T&,E&>).
+    // Deleted for reference E: would rebind E& to unexpected<G>'s temporary storage.
     template <class G>
         requires std::is_reference_v<E>
     constexpr expected& operator=(const unexpected<G>&) = delete;
