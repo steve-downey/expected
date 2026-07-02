@@ -33,17 +33,11 @@ struct is_unexpected_specialization<unexpected<E>> : std::true_type {};
 #ifdef __cpp_lib_reference_from_temporary
 using std::reference_constructs_from_temporary_v;
 using std::reference_converts_from_temporary_v;
-#else
-template <class To, class From>
-concept reference_converts_from_temporary_v =
-    std::is_reference_v<To> &&
-    ((!std::is_reference_v<From> && std::is_convertible_v<std::remove_cvref_t<From>*, std::remove_cvref_t<To>*>) ||
-     (std::is_lvalue_reference_v<To> && std::is_const_v<std::remove_reference_t<To>> &&
-      std::is_convertible_v<From, const std::remove_cvref_t<To>&&> &&
-      !std::is_convertible_v<From, std::remove_cvref_t<To>&>));
-
-template <class To, class From>
-concept reference_constructs_from_temporary_v = reference_converts_from_temporary_v<To, From>;
+#elif __has_builtin(__reference_constructs_from_temporary)
+template <class T, class U>
+inline constexpr bool reference_constructs_from_temporary_v = __reference_constructs_from_temporary(T, U);
+template <class T, class U>
+inline constexpr bool reference_converts_from_temporary_v = __reference_converts_from_temporary(T, U);
 #endif
 
 } // namespace detail
