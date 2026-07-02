@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 find_package(Catch2 3 REQUIRED)
+list(APPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
 
 add_executable(beman.expected.tests.expected)
 target_sources(
@@ -296,7 +297,7 @@ add_fail_test(expected_void_ref_e_construct_from_unexpected_fail
 )
 add_fail_test(expected_void_ref_e_assign_unexpected_fail
     expected_void_ref_e_assign_unexpected_fail.cpp
-    "no assignment from unexpected|use of deleted function|call to deleted|selected deleted operator|attempting to reference"
+    "no assignment from unexpected|use of deleted function|call to deleted|invokes a deleted function|selected deleted operator|attempting to reference"
 )
 
 # =============================================================================

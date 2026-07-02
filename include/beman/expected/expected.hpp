@@ -1354,7 +1354,7 @@ class expected<void, E> {
     // unexpected<E>'s constructibility from this very class, which some standard library
     // implementations of reference_constructs_from_temporary_v resolve as a circular constraint.
     template <class U, class G>
-        requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected> &&
+        requires(std::is_void_v<U> && !std::is_same_v<G, E> &&
                  std::is_constructible_v<E, const G&> && !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
                  !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
                  !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
@@ -1362,7 +1362,7 @@ class expected<void, E> {
     constexpr explicit(!std::is_convertible_v<const G&, E>) expected(const expected<U, G>& rhs);
 
     template <class U, class G>
-        requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected> && std::is_constructible_v<E, G> &&
+        requires(std::is_void_v<U> && !std::is_same_v<G, E> && std::is_constructible_v<E, G> &&
                  !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
                  !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
                  !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
@@ -1378,18 +1378,15 @@ class expected<void, E> {
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
     constexpr explicit(!std::is_convertible_v<G, E>) expected(unexpected<G>&& e);
 
-    // Constructor from unexpected<G> const& / && — reference-E path. The const_cast strips the
-    // constness introduced by binding e as `const unexpected<G>&`; the referenced G object itself
-    // is not const, so this does not violate constness of the object actually being pointed to.
+    // Deleted: constructing expected<void, E&> from unexpected<G> would bind E& to storage
+    // inside the temporary unexpected — creating a dangling reference when it's destroyed.
     template <class G>
-        requires(std::is_reference_v<E> && std::is_constructible_v<E, G&> &&
-                 !detail::reference_constructs_from_temporary_v<E, G>)
-    constexpr explicit(!std::is_convertible_v<G&, E>) expected(const unexpected<G>& e) noexcept;
+        requires std::is_reference_v<E>
+    constexpr expected(const unexpected<G>&) = delete;
 
     template <class G>
-        requires(std::is_reference_v<E> && std::is_constructible_v<E, G&> &&
-                 !detail::reference_constructs_from_temporary_v<E, G>)
-    constexpr explicit(!std::is_convertible_v<G&, E>) expected(unexpected<G>&& e) noexcept;
+        requires std::is_reference_v<E>
+    constexpr expected(unexpected<G>&&) = delete;
 
     // In-place constructor for value (no args, just marks has-value)
     constexpr explicit expected(std::in_place_t) noexcept;
@@ -1506,11 +1503,13 @@ class expected<void, E> {
     constexpr E&&       error() && noexcept;
 
     template <class G = error_value_type>
-        requires(std::is_copy_constructible_v<error_value_type> && std::is_convertible_v<G, error_value_type>)
+        requires(std::is_copy_constructible_v<std::remove_cv_t<std::remove_reference_t<E>>> &&
+                 std::is_convertible_v<G, std::remove_cv_t<std::remove_reference_t<E>>>)
     constexpr error_value_type error_or(G&& def) const&;
 
     template <class G = error_value_type>
-        requires(std::is_move_constructible_v<error_value_type> && std::is_convertible_v<G, error_value_type>)
+        requires(std::is_move_constructible_v<std::remove_cv_t<std::remove_reference_t<E>>> &&
+                 std::is_convertible_v<G, std::remove_cv_t<std::remove_reference_t<E>>>)
     constexpr error_value_type error_or(G&& def) &&;
 
     // Deleted: value_or is not available for void expected. Gated to reference E only so that,
@@ -1621,9 +1620,8 @@ constexpr expected<void, E>::expected(expected&& rhs) noexcept(std::is_nothrow_m
 
 template <class E>
 template <class U, class G>
-    requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected<void, E>> &&
-             std::is_constructible_v<E, const G&> &&
-             !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
+    requires(std::is_void_v<U> && !std::is_same_v<G, E> &&
+             std::is_constructible_v<E, const G&> && !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G> &&>)
@@ -1634,7 +1632,7 @@ constexpr expected<void, E>::expected(const expected<U, G>& rhs) : has_val_(rhs.
 
 template <class E>
 template <class U, class G>
-    requires(std::is_void_v<U> && !std::is_same_v<expected<U, G>, expected<void, E>> && std::is_constructible_v<E, G> &&
+    requires(std::is_void_v<U> && !std::is_same_v<G, E> && std::is_constructible_v<E, G> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G>&> &&
              !std::is_constructible_v<unexpected<E>, expected<U, G> &&> &&
              !std::is_constructible_v<unexpected<E>, const expected<U, G>&> &&
@@ -1658,21 +1656,6 @@ constexpr expected<void, E>::expected(unexpected<G>&& e) : has_val_(false) {
     std::construct_at(std::addressof(unex_), std::move(e.error()));
 }
 
-template <class E>
-template <class G>
-    requires(std::is_reference_v<E> && std::is_constructible_v<E, G&> &&
-             !detail::reference_constructs_from_temporary_v<E, G>)
-constexpr expected<void, E>::expected(const unexpected<G>& e) noexcept : has_val_(false) {
-    std::construct_at(std::addressof(unex_), const_cast<G&>(e.error()));
-}
-
-template <class E>
-template <class G>
-    requires(std::is_reference_v<E> && std::is_constructible_v<E, G&> &&
-             !detail::reference_constructs_from_temporary_v<E, G>)
-constexpr expected<void, E>::expected(unexpected<G>&& e) noexcept : has_val_(false) {
-    std::construct_at(std::addressof(unex_), e.error());
-}
 
 template <class E>
 template <class... Args>
@@ -1888,8 +1871,8 @@ constexpr E&& expected<void, E>::error() && noexcept {
 
 template <class E>
 template <class G>
-    requires(std::is_copy_constructible_v<typename expected<void, E>::error_value_type> &&
-             std::is_convertible_v<G, typename expected<void, E>::error_value_type>)
+    requires(std::is_copy_constructible_v<std::remove_cv_t<std::remove_reference_t<E>>> &&
+             std::is_convertible_v<G, std::remove_cv_t<std::remove_reference_t<E>>>)
 constexpr typename expected<void, E>::error_value_type expected<void, E>::error_or(G&& def) const& {
     if (!has_val_)
         return unex_.error();
@@ -1898,8 +1881,8 @@ constexpr typename expected<void, E>::error_value_type expected<void, E>::error_
 
 template <class E>
 template <class G>
-    requires(std::is_move_constructible_v<typename expected<void, E>::error_value_type> &&
-             std::is_convertible_v<G, typename expected<void, E>::error_value_type>)
+    requires(std::is_move_constructible_v<std::remove_cv_t<std::remove_reference_t<E>>> &&
+             std::is_convertible_v<G, std::remove_cv_t<std::remove_reference_t<E>>>)
 constexpr typename expected<void, E>::error_value_type expected<void, E>::error_or(G&& def) && {
     if (!has_val_)
         return std::move(unex_).error();
@@ -2231,10 +2214,13 @@ class expected<T&, E> {
     // Value constructor — takes U that can bind to T&
     template <class U = T>
         requires(!std::is_same_v<std::remove_cvref_t<U>, std::in_place_t> &&
-                 !std::is_same_v<std::remove_cvref_t<U>, expected> &&
+                 !std::is_same_v<std::remove_cvref_t<U>, expected<T&, E>> &&
                  !detail::is_unexpected_specialization<std::remove_cvref_t<U>>::value &&
                  std::is_constructible_v<T&, U> && !detail::reference_constructs_from_temporary_v<T&, U>)
-    constexpr explicit(!std::is_convertible_v<U, T&>) expected(U&& u) noexcept;
+    constexpr explicit(!std::is_convertible_v<U, T&>) expected(U&& u) noexcept : has_val_(true) {
+        T& r = std::forward<U>(u);
+        val_ = std::addressof(r);
+    }
 
     // Deleted: binding a temporary to T& creates a dangling reference
     template <class U>
@@ -2354,10 +2340,21 @@ class expected<T&, E> {
 
     // Rebind reference from lvalue
     template <class U = T>
-        requires(!std::is_same_v<std::remove_cvref_t<U>, expected> &&
+        requires(!std::is_same_v<std::remove_cvref_t<U>, expected<T&, E>> &&
                  !detail::is_unexpected_specialization<std::remove_cvref_t<U>>::value &&
                  std::is_constructible_v<T&, U> && !detail::reference_constructs_from_temporary_v<T&, U>)
-    constexpr expected& operator=(U&& u);
+    constexpr expected& operator=(U&& u) {
+        if (has_val_) {
+            T& r = std::forward<U>(u);
+            val_ = std::addressof(r);
+        } else {
+            std::destroy_at(std::addressof(unex_));
+            T& r     = std::forward<U>(u);
+            val_     = std::addressof(r);
+            has_val_ = true;
+        }
+        return *this;
+    }
 
     // Assignment from unexpected<G> — value-E path
     template <class G>
@@ -2510,7 +2507,6 @@ class expected<T&, E> {
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr expected<T&, E>::expected(const expected& rhs) noexcept(std::is_nothrow_copy_constructible_v<unexpected<E>>)
     requires(std::is_copy_constructible_v<unexpected<E>> && !std::is_trivially_copy_constructible_v<unexpected<E>>)
     : has_val_(rhs.has_val_) {
@@ -2521,7 +2517,6 @@ constexpr expected<T&, E>::expected(const expected& rhs) noexcept(std::is_nothro
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr expected<T&, E>::expected(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<unexpected<E>>)
     requires(std::is_move_constructible_v<unexpected<E>> && !std::is_trivially_move_constructible_v<unexpected<E>>)
     : has_val_(rhs.has_val_) {
@@ -2531,20 +2526,8 @@ constexpr expected<T&, E>::expected(expected&& rhs) noexcept(std::is_nothrow_mov
         std::construct_at(std::addressof(unex_), std::move(rhs.unex_));
 }
 
-template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
-template <class U>
-    requires(!std::is_same_v<std::remove_cvref_t<U>, std::in_place_t> &&
-             !std::is_same_v<std::remove_cvref_t<U>, expected<T&, E>> &&
-             !detail::is_unexpected_specialization<std::remove_cvref_t<U>>::value && std::is_constructible_v<T&, U> &&
-             !detail::reference_constructs_from_temporary_v<T&, U>)
-constexpr expected<T&, E>::expected(U&& u) noexcept : has_val_(true) {
-    T& r = std::forward<U>(u);
-    val_ = std::addressof(r);
-}
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class U, class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<T&, U&> && std::is_constructible_v<E, const G&> &&
              !detail::reference_constructs_from_temporary_v<T&, U&>)
@@ -2558,7 +2541,6 @@ constexpr expected<T&, E>::expected(const expected<U&, G>& rhs) : has_val_(rhs.h
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class U, class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<T&, U&> && std::is_constructible_v<E, G> &&
              !detail::reference_constructs_from_temporary_v<T&, U&>)
@@ -2572,7 +2554,6 @@ constexpr expected<T&, E>::expected(expected<U&, G>&& rhs) : has_val_(rhs.has_va
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class U, class G>
     requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<T&, U&> &&
              std::is_convertible_v<G, E> && !detail::reference_constructs_from_temporary_v<T&, U&>)
@@ -2586,7 +2567,6 @@ constexpr expected<T&, E>::expected(const expected<U&, G>& rhs) : has_val_(rhs.h
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class U, class G>
     requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<T&, U&> &&
              std::is_convertible_v<G, E> && !detail::reference_constructs_from_temporary_v<T&, U&>)
@@ -2600,7 +2580,6 @@ constexpr expected<T&, E>::expected(expected<U&, G>&& rhs) : has_val_(rhs.has_va
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&>)
 constexpr expected<T&, E>::expected(const unexpected<G>& e) : has_val_(false) {
@@ -2608,7 +2587,6 @@ constexpr expected<T&, E>::expected(const unexpected<G>& e) : has_val_(false) {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
 constexpr expected<T&, E>::expected(unexpected<G>&& e) : has_val_(false) {
@@ -2616,7 +2594,6 @@ constexpr expected<T&, E>::expected(unexpected<G>&& e) : has_val_(false) {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class... Args>
     requires(std::is_constructible_v<E, Args...> && !detail::unexpect_dangles_v<E, Args...>)
 constexpr expected<T&, E>::expected(unexpect_t, Args&&... args) : has_val_(false) {
@@ -2624,7 +2601,6 @@ constexpr expected<T&, E>::expected(unexpect_t, Args&&... args) : has_val_(false
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class U, class... Args>
     requires std::is_constructible_v<E, std::initializer_list<U>&, Args...>
 constexpr expected<T&, E>::expected(unexpect_t, std::initializer_list<U> il, Args&&... args) : has_val_(false) {
@@ -2636,7 +2612,6 @@ constexpr expected<T&, E>::expected(unexpect_t, std::initializer_list<U> il, Arg
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr expected<T&, E>::~expected()
     requires(!std::is_trivially_destructible_v<unexpected<E>>)
 {
@@ -2649,7 +2624,6 @@ constexpr expected<T&, E>::~expected()
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr expected<T&, E>& expected<T&, E>::operator=(const expected& rhs)
     requires(std::is_copy_constructible_v<unexpected<E>> && std::is_copy_assignable_v<unexpected<E>> &&
              !(std::is_trivially_copy_constructible_v<unexpected<E>> &&
@@ -2671,7 +2645,6 @@ constexpr expected<T&, E>& expected<T&, E>::operator=(const expected& rhs)
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr expected<T&, E>&
 expected<T&, E>::operator=(expected&& rhs) noexcept(std::is_nothrow_move_constructible_v<unexpected<E>> &&
                                                     std::is_nothrow_move_assignable_v<unexpected<E>>)
@@ -2694,27 +2667,8 @@ expected<T&, E>::operator=(expected&& rhs) noexcept(std::is_nothrow_move_constru
     return *this;
 }
 
-template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
-template <class U>
-    requires(!std::is_same_v<std::remove_cvref_t<U>, expected<T&, E>> &&
-             !detail::is_unexpected_specialization<std::remove_cvref_t<U>>::value && std::is_constructible_v<T&, U> &&
-             !detail::reference_constructs_from_temporary_v<T&, U>)
-constexpr expected<T&, E>& expected<T&, E>::operator=(U&& u) {
-    if (has_val_) {
-        T& r = std::forward<U>(u);
-        val_ = std::addressof(r);
-    } else {
-        std::destroy_at(std::addressof(unex_));
-        T& r     = std::forward<U>(u);
-        val_     = std::addressof(r);
-        has_val_ = true;
-    }
-    return *this;
-}
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&> && std::is_assignable_v<E&, const G&>)
 constexpr expected<T&, E>& expected<T&, E>::operator=(const unexpected<G>& e) {
@@ -2728,7 +2682,6 @@ constexpr expected<T&, E>& expected<T&, E>::operator=(const unexpected<G>& e) {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G> && std::is_assignable_v<E&, G>)
 constexpr expected<T&, E>& expected<T&, E>::operator=(unexpected<G>&& e) {
@@ -2742,7 +2695,6 @@ constexpr expected<T&, E>& expected<T&, E>::operator=(unexpected<G>&& e) {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class U>
     requires(std::is_constructible_v<T&, U> && !detail::reference_constructs_from_temporary_v<T&, U>)
 constexpr T& expected<T&, E>::emplace(U&& u) noexcept {
@@ -2760,7 +2712,6 @@ constexpr T& expected<T&, E>::emplace(U&& u) noexcept {
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr void expected<T&, E>::swap(expected& rhs) noexcept(
     std::is_nothrow_move_constructible_v<unexpected<E>> && (std::is_reference_v<E> || std::is_nothrow_swappable_v<E>))
     requires((std::is_reference_v<E> || std::is_swappable_v<E>) && std::is_move_constructible_v<unexpected<E>>)
@@ -2788,7 +2739,6 @@ constexpr void expected<T&, E>::swap(expected& rhs) noexcept(
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr T* expected<T&, E>::operator->() const noexcept {
 #if defined(BEMAN_EXPECTED_HARDENED)
     if (!has_val_)
@@ -2798,7 +2748,6 @@ constexpr T* expected<T&, E>::operator->() const noexcept {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr T& expected<T&, E>::operator*() const noexcept {
 #if defined(BEMAN_EXPECTED_HARDENED)
     if (!has_val_)
@@ -2808,19 +2757,16 @@ constexpr T& expected<T&, E>::operator*() const noexcept {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr expected<T&, E>::operator bool() const noexcept {
     return has_val_;
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr bool expected<T&, E>::has_value() const noexcept {
     return has_val_;
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr T& expected<T&, E>::value() const& {
     static_assert(std::is_copy_constructible_v<error_value_type>, "value() requires is_copy_constructible_v<E>");
     if (!has_val_)
@@ -2829,7 +2775,6 @@ constexpr T& expected<T&, E>::value() const& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr T& expected<T&, E>::value() && {
     if constexpr (std::is_reference_v<E>) {
         static_assert(std::is_copy_constructible_v<error_value_type>, "value() requires E to be copy constructible");
@@ -2843,7 +2788,6 @@ constexpr T& expected<T&, E>::value() && {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr const E& expected<T&, E>::error() const& noexcept {
 #if defined(BEMAN_EXPECTED_HARDENED)
     if (has_val_)
@@ -2853,7 +2797,6 @@ constexpr const E& expected<T&, E>::error() const& noexcept {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr E& expected<T&, E>::error() & noexcept {
 #if defined(BEMAN_EXPECTED_HARDENED)
     if (has_val_)
@@ -2863,7 +2806,6 @@ constexpr E& expected<T&, E>::error() & noexcept {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr const E&& expected<T&, E>::error() const&& noexcept {
 #if defined(BEMAN_EXPECTED_HARDENED)
     if (has_val_)
@@ -2873,7 +2815,6 @@ constexpr const E&& expected<T&, E>::error() const&& noexcept {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 constexpr E&& expected<T&, E>::error() && noexcept {
 #if defined(BEMAN_EXPECTED_HARDENED)
     if (has_val_)
@@ -2883,7 +2824,6 @@ constexpr E&& expected<T&, E>::error() && noexcept {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class U>
     requires(std::is_object_v<T> && !std::is_array_v<T>)
 constexpr std::remove_cv_t<T> expected<T&, E>::value_or(U&& def) const {
@@ -2896,7 +2836,6 @@ constexpr std::remove_cv_t<T> expected<T&, E>::value_or(U&& def) const {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class G>
 constexpr typename expected<T&, E>::error_value_type expected<T&, E>::error_or(G&& def) const& {
     static_assert(std::is_copy_constructible_v<error_value_type>, "error_or requires is_copy_constructible_v<E>");
@@ -2907,7 +2846,6 @@ constexpr typename expected<T&, E>::error_value_type expected<T&, E>::error_or(G
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class G>
 constexpr typename expected<T&, E>::error_value_type expected<T&, E>::error_or(G&& def) && {
     static_assert(std::is_move_constructible_v<error_value_type>, "error_or requires is_move_constructible_v<E>");
@@ -2922,7 +2860,6 @@ constexpr typename expected<T&, E>::error_value_type expected<T&, E>::error_or(G
 // =============================================================================
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, E&>
 constexpr auto expected<T&, E>::and_then(F&& f) & {
@@ -2937,7 +2874,6 @@ constexpr auto expected<T&, E>::and_then(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, E&&>
 constexpr auto expected<T&, E>::and_then(F&& f) && {
@@ -2952,7 +2888,6 @@ constexpr auto expected<T&, E>::and_then(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, const E&>
 constexpr auto expected<T&, E>::and_then(F&& f) const& {
@@ -2967,7 +2902,6 @@ constexpr auto expected<T&, E>::and_then(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, const E&&>
 constexpr auto expected<T&, E>::and_then(F&& f) const&& {
@@ -2982,7 +2916,6 @@ constexpr auto expected<T&, E>::and_then(F&& f) const&& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::or_else(F&& f) & {
     using G = std::remove_cvref_t<std::invoke_result_t<F, E&>>;
@@ -2995,7 +2928,6 @@ constexpr auto expected<T&, E>::or_else(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::or_else(F&& f) && {
     using G = std::remove_cvref_t<std::invoke_result_t<F, E&&>>;
@@ -3008,7 +2940,6 @@ constexpr auto expected<T&, E>::or_else(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::or_else(F&& f) const& {
     using G = std::remove_cvref_t<std::invoke_result_t<F, const E&>>;
@@ -3021,7 +2952,6 @@ constexpr auto expected<T&, E>::or_else(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::or_else(F&& f) const&& {
     using G = std::remove_cvref_t<std::invoke_result_t<F, const E&&>>;
@@ -3034,7 +2964,6 @@ constexpr auto expected<T&, E>::or_else(F&& f) const&& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, E&>
 constexpr auto expected<T&, E>::transform(F&& f) & {
@@ -3060,7 +2989,6 @@ constexpr auto expected<T&, E>::transform(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, E&&>
 constexpr auto expected<T&, E>::transform(F&& f) && {
@@ -3086,7 +3014,6 @@ constexpr auto expected<T&, E>::transform(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, const E&>
 constexpr auto expected<T&, E>::transform(F&& f) const& {
@@ -3112,7 +3039,6 @@ constexpr auto expected<T&, E>::transform(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
     requires std::is_constructible_v<E, const E&&>
 constexpr auto expected<T&, E>::transform(F&& f) const&& {
@@ -3138,7 +3064,6 @@ constexpr auto expected<T&, E>::transform(F&& f) const&& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::transform_error(F&& f) & {
     using G = std::remove_cv_t<std::invoke_result_t<F, E&>>;
@@ -3153,7 +3078,6 @@ constexpr auto expected<T&, E>::transform_error(F&& f) & {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::transform_error(F&& f) && {
     using G = std::remove_cv_t<std::invoke_result_t<F, E&&>>;
@@ -3168,7 +3092,6 @@ constexpr auto expected<T&, E>::transform_error(F&& f) && {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::transform_error(F&& f) const& {
     using G = std::remove_cv_t<std::invoke_result_t<F, const E&>>;
@@ -3183,7 +3106,6 @@ constexpr auto expected<T&, E>::transform_error(F&& f) const& {
 }
 
 template <class T, class E>
-    requires std::is_lvalue_reference_v<T&>
 template <class F>
 constexpr auto expected<T&, E>::transform_error(F&& f) const&& {
     using G = std::remove_cv_t<std::invoke_result_t<F, const E&&>>;

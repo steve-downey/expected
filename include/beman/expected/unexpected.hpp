@@ -5,6 +5,7 @@
 
 #ifndef BEMAN_EXPECTED_INCLUDED_FROM_INTERFACE_UNIT
     #include <initializer_list>
+    #include <memory>
     #include <type_traits>
     #include <utility>
 #endif
