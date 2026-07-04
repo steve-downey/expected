@@ -82,7 +82,7 @@ Each reference specialization should offer the **same user-facing operations** a
 | Default ctor | yes | **deleted** | yes | **deleted** | yes |
 | Copy/move ctor | yes | yes | yes | yes | yes |
 | Converting ctor | yes | yes (from U&) | yes | yes (from U&,G&) | yes |
-| unexpected\<G\> ctor | yes | yes | **deleted** | **deleted** | **deleted** |
+| unexpected\<G\> ctor | yes | yes | from `<G&>` only | from `<G&>` only | from `<G&>` only |
 | unexpect_t ctor | yes | yes | yes | yes | yes |
 | in_place_t ctor | yes | **deleted** | yes | **deleted** | N/A (void) |
 | Value assignment | yes | rebind | yes | yes | N/A |
@@ -98,6 +98,8 @@ Each reference specialization should offer the **same user-facing operations** a
 | equality | yes | yes | yes | yes | yes |
 
 Verify each cell. Pay special attention to the **deleted** entries — each should have a `= delete("message")` with a clear diagnostic and a corresponding negative compile test.
+
+For the `from <G&> only` cells: construction from `unexpected<G>` is permitted for reference `E` **only when `G` is itself a reference** (`unexpected<E&>`, which holds a pointer to an external object). Construction from a value-typed `unexpected<G>` stays `= delete`d (it would dangle), and rebinding *assignment* from `unexpected<G>` is not offered for reference `E`. Verify: `is_constructible_v<expected<int, int&>, unexpected<int&>>` is true, `is_constructible_v<expected<int, int&>, unexpected<int>>` is false, and `unexpected<const int&>` → `int&` is rejected (const drop).
 
 #### 2. Dangling Prevention
 
@@ -150,6 +152,16 @@ Under `#if defined(BEMAN_EXPECTED_HARDENED)`:
 - `operator*` and `operator->` trap when `!has_value()`
 - `error()` traps when `has_value()`
 - Verify these guards exist in ALL specializations, not just the primary
+
+#### Value Category in Converting Operations (deref-then-move anti-pattern)
+
+Every converting constructor/assignment from `expected<U, G>` or `unexpected<G>` must build the target value/error by **moving the wrapper, then accessing** — `*std::move(rhs)`, `std::move(rhs).error()`, `std::move(e).error()` — never by **accessing, then moving** — `std::move(*rhs)`, `std::move(rhs.error())`, `std::move(e.error())`.
+
+The deref-then-move form is a defect for reference specializations: the accessor is shallow and returns a reference to an **external** object, and the `std::move` then steals from it — the `boost::optional<T&>` move-steal bug. Both forms compile and are **indistinguishable by eye**, so verify by behavior, not inspection:
+- `std::string s="bar"; expected<std::string&,int> r{s}; expected<std::string,int> o{std::move(r)};` must leave `s == "bar"` (copied, not stolen). Same for the error axis (`expected<int,std::string&>` → `expected<int,std::string>`) and for `unexpected<E&>` sources, on both construction and assignment.
+- A genuine value source (`expected<std::string,int>`/`unexpected<std::string>` rvalue) must **still move** (source left empty).
+
+Mechanical audit: grep the header for `std::move(*` and `std::move(<ident>.value()/error())` — every hit is a candidate defect; the safe forms wrap the whole object (`*std::move(x)`, `std::move(x).accessor()`). This rests on the invariant that rvalue accessors are shallow for reference specializations and deep for value ones (Phase 2 accessor checks).
 
 ---
 
