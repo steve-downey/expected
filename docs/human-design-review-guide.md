@@ -113,7 +113,7 @@ This supersedes the original blanket deletion ("Option A"): the earlier design d
 
 ### What to discuss
 
-- **Assignment symmetry.** Construction from `unexpected<E&>` works, but rebinding *assignment* (`e = unexpected<int&>(g)`) is still absent. Adding it is a clean follow-up but was deferred deliberately: any new synthesis path must be checked against the move-steal hazard in Decision 11.
+- **Assignment symmetry.** Rebinding *assignment* from `unexpected<E&>` (`e = unexpected<int&>(g)`) is now supported alongside construction, with the same reference-`G`-only rule (value `G` and const-drop are rejected). Its body repoints `unex_` via `construct_at` rather than `unex_.error() = …` (which would mutate the old pointee), and copies the pointer with no move — see the move-steal hazard in Decision 11.
 - **The value-`G` cliff.** `expected<T,E&>(unexpected<int&>(g))` works; `expected<T,E&>(unexpected(42))` does not. The distinction (reference vs. value `G`) is principled but still a likely FAQ; the `= delete` diagnostic should name it.
 
 ---
