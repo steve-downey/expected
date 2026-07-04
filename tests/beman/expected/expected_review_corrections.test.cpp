@@ -1,0 +1,149 @@
+// tests/beman/expected/expected_review_corrections.test.cpp            -*-C++-*-
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+// Regression tests for the PR #57 review corrections (findings F3-F7).
+// F1/F2/F8 were addressed separately; the construction rule below is the
+// Option-B resolution of F6 (accommodate the safe unexpected<E&> use case).
+
+#include <beman/expected/expected.hpp>
+
+#include <catch2/catch_test_macros.hpp>
+
+#include <string>
+#include <type_traits>
+
+using namespace beman::expected;
+
+// =============================================================================
+// F6 (Option B) — construction from unexpected<G> for reference E.
+//
+// Allowed when G is itself a reference (the source holds a reference to an
+// external object, so binding E& cannot dangle). Deleted when G is a value
+// type (referent lives inside the wrapper) or would drop const.
+// =============================================================================
+
+// Allowed: reference G, across all three specializations.
+static_assert(std::is_constructible_v<expected<void, int&>, unexpected<int&>>);
+static_assert(std::is_constructible_v<expected<int, int&>, unexpected<int&>>);
+static_assert(std::is_constructible_v<expected<int&, int&>, unexpected<int&>>);
+
+// Allowed: binding a more-const reference (const int& <- int&).
+static_assert(std::is_constructible_v<expected<void, const int&>, unexpected<int&>>);
+static_assert(std::is_constructible_v<expected<int, const int&>, unexpected<int&>>);
+
+// Deleted: value G would dangle once a temporary unexpected is destroyed.
+static_assert(!std::is_constructible_v<expected<void, int&>, unexpected<int>>);
+static_assert(!std::is_constructible_v<expected<int, int&>, unexpected<int>>);
+static_assert(!std::is_constructible_v<expected<int&, int&>, unexpected<int>>);
+
+// Deleted: dropping const (int& <- const int&) is not constructible.
+static_assert(!std::is_constructible_v<expected<void, int&>, unexpected<const int&>>);
+static_assert(!std::is_constructible_v<expected<int, int&>, unexpected<const int&>>);
+
+// Value-E construction is unaffected.
+static_assert(std::is_constructible_v<expected<int, std::string>, unexpected<std::string>>);
+
+TEST_CASE("reference-error construction from unexpected<E&> binds an external object", "[ref][unexpected]") {
+    int err = 41;
+
+    // A temporary unexpected<int&> is fine: it only holds a pointer to err.
+    expected<void, int&> a{unexpected<int&>(err)};
+    expected<int, int&>  b{unexpected<int&>(err)};
+    expected<int&, int&> c{unexpected<int&>(err)};
+
+    REQUIRE(&a.error() == &err);
+    REQUIRE(&b.error() == &err);
+    REQUIRE(&c.error() == &err);
+
+    err = 99; // mutating the external object is visible through the stored reference
+    REQUIRE(a.error() == 99);
+    REQUIRE(b.error() == 99);
+    REQUIRE(c.error() == 99);
+}
+
+// =============================================================================
+// F4 / F5 — value constructor and emplace are noexcept only when the reference
+// bind cannot throw, so a throwing conversion propagates instead of terminating.
+// =============================================================================
+
+namespace {
+struct ThrowingRef {
+    operator int&() const { throw 42; }
+};
+} // namespace
+
+static_assert(std::is_nothrow_constructible_v<expected<int&, int>, int&>);
+static_assert(!std::is_nothrow_constructible_v<expected<int&, int>, ThrowingRef>);
+
+TEST_CASE("value constructor propagates a throwing reference conversion", "[ref][noexcept]") {
+    int caught = 0;
+    try {
+        expected<int&, int> e{ThrowingRef{}};
+        (void)e;
+    } catch (int v) {
+        caught = v;
+    }
+    REQUIRE(caught == 42);
+}
+
+TEST_CASE("emplace propagates a throwing reference conversion", "[ref][emplace][noexcept]") {
+    int target = 5;
+    expected<int&, int> e{target};
+    int caught = 0;
+    try {
+        e.emplace(ThrowingRef{});
+    } catch (int v) {
+        caught = v;
+    }
+    REQUIRE(caught == 42);
+    REQUIRE(e.has_value()); // still holds the original value; emplace did not corrupt state
+    REQUIRE(&e.value() == &target);
+}
+
+// =============================================================================
+// F3 — assignment that rebinds through a throwing conversion must leave the
+// error state intact and destroy the error exactly once (no double-destroy).
+// =============================================================================
+
+namespace {
+int g_dtor_count = 0;
+struct CountingErr {
+    int value;
+    explicit CountingErr(int v) : value(v) {}
+    CountingErr(const CountingErr&) = default;
+    ~CountingErr() { ++g_dtor_count; }
+};
+} // namespace
+
+TEST_CASE("throwing rebind assignment does not double-destroy the error", "[ref][assign][exception-safety]") {
+    CountingErr seed{7};
+    int         caught = 0;
+    {
+        expected<int&, CountingErr> e{unexpect, seed};
+        g_dtor_count = 0; // count only destructions of e's stored error from here on
+        try {
+            e = ThrowingRef{}; // was-error branch: rebind throws
+        } catch (int v) {
+            caught = v;
+        }
+        REQUIRE(caught == 42);
+        REQUIRE_FALSE(e.has_value()); // error state preserved
+        REQUIRE(e.error().value == 7);
+        REQUIRE(g_dtor_count == 0); // not destroyed yet
+    }
+    REQUIRE(g_dtor_count == 1); // destroyed exactly once, at end of scope
+}
+
+// =============================================================================
+// F7 — error_or is SFINAE-friendly (constraints in a requires-clause, not a
+// runtime static_assert).
+// =============================================================================
+
+namespace {
+template <class Ex, class Arg>
+concept has_error_or = requires(Ex e, Arg a) { e.error_or(a); };
+struct NotConvertible {};
+} // namespace
+
+static_assert(has_error_or<expected<int&, std::string>&, const char*>);
+static_assert(!has_error_or<expected<int&, std::string>&, NotConvertible>);

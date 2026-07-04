@@ -227,14 +227,28 @@ class expected {
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
     constexpr explicit(!std::is_convertible_v<G, E>) expected(unexpected<G>&& e);
 
-    // Deleted for reference E: unexpected<G> stores G by value; binding E& to it would create a
-    // dangling reference once the unexpected<G> temporary is destroyed.
+    // Constructor from unexpected<G> — reference-E path. Allowed only when G is itself a reference,
+    // i.e. the source unexpected holds a reference to an external object, so binding E& to e.error()
+    // cannot dangle regardless of the source's value category. No const_cast is needed.
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!std::is_convertible_v<G, E>) expected(const unexpected<G>& e) noexcept;
+
+    template <class G>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!std::is_convertible_v<G, E>) expected(unexpected<G>&& e) noexcept;
+
+    // Deleted for reference E with value G: the referent lives inside the unexpected<G> object, so
+    // binding E& to it would dangle once a temporary source is destroyed. Use (unexpect, lvalue), or
+    // an unexpected<E&> holding an external object, instead.
+    template <class G>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected(const unexpected<G>&) = delete;
 
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected(unexpected<G>&&) = delete;
 
     // In-place constructor for value
@@ -614,6 +628,22 @@ template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
 constexpr expected<T, E>::expected(unexpected<G>&& e) : has_val_(false) {
     std::construct_at(std::addressof(unex_), std::move(e.error()));
+}
+
+template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T, E>::expected(const unexpected<G>& e) noexcept : has_val_(false) {
+    std::construct_at(std::addressof(unex_), e.error());
+}
+
+template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T, E>::expected(unexpected<G>&& e) noexcept : has_val_(false) {
+    std::construct_at(std::addressof(unex_), e.error());
 }
 
 template <class T, class E>
@@ -1378,14 +1408,26 @@ class expected<void, E> {
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
     constexpr explicit(!std::is_convertible_v<G, E>) expected(unexpected<G>&& e);
 
-    // Deleted: constructing expected<void, E&> from unexpected<G> would bind E& to storage
-    // inside the temporary unexpected — creating a dangling reference when it's destroyed.
+    // Constructor from unexpected<G> — reference-E path. Allowed only when G is itself a reference,
+    // so e.error() refers to an external object and binding E& cannot dangle. No const_cast needed.
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!std::is_convertible_v<G, E>) expected(const unexpected<G>& e) noexcept;
+
+    template <class G>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!std::is_convertible_v<G, E>) expected(unexpected<G>&& e) noexcept;
+
+    // Deleted for reference E with value G: the referent lives inside the temporary unexpected<G>, so
+    // binding E& to it would dangle once the source is destroyed. Use (unexpect, lvalue) instead.
+    template <class G>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected(const unexpected<G>&) = delete;
 
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected(unexpected<G>&&) = delete;
 
     // In-place constructor for value (no args, just marks has-value)
@@ -1654,6 +1696,22 @@ template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
 constexpr expected<void, E>::expected(unexpected<G>&& e) : has_val_(false) {
     std::construct_at(std::addressof(unex_), std::move(e.error()));
+}
+
+template <class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<void, E>::expected(const unexpected<G>& e) noexcept : has_val_(false) {
+    std::construct_at(std::addressof(unex_), e.error());
+}
+
+template <class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<void, E>::expected(unexpected<G>&& e) noexcept : has_val_(false) {
+    std::construct_at(std::addressof(unex_), e.error());
 }
 
 
@@ -2217,7 +2275,9 @@ class expected<T&, E> {
                  !std::is_same_v<std::remove_cvref_t<U>, expected<T&, E>> &&
                  !detail::is_unexpected_specialization<std::remove_cvref_t<U>>::value &&
                  std::is_constructible_v<T&, U> && !detail::reference_constructs_from_temporary_v<T&, U>)
-    constexpr explicit(!std::is_convertible_v<U, T&>) expected(U&& u) noexcept : has_val_(true) {
+    constexpr explicit(!std::is_convertible_v<U, T&>) expected(U&& u) noexcept(
+        std::is_nothrow_constructible_v<T&, U>)
+        : has_val_(true) {
         T& r = std::forward<U>(u);
         val_ = std::addressof(r);
     }
@@ -2263,14 +2323,28 @@ class expected<T&, E> {
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
     constexpr explicit(!std::is_convertible_v<G, E>) expected(unexpected<G>&& e);
 
-    // Deleted for reference E: unexpected<G> stores G by value; binding E& to it would create a
-    // dangling reference once the unexpected<G> temporary is destroyed.
+    // Constructor from unexpected<G> — reference-E path. Allowed only when G is itself a reference,
+    // i.e. the source unexpected holds a reference to an external object, so binding E& to e.error()
+    // cannot dangle regardless of the source's value category. No const_cast is needed.
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!std::is_convertible_v<G, E>) expected(const unexpected<G>& e) noexcept;
+
+    template <class G>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!std::is_convertible_v<G, E>) expected(unexpected<G>&& e) noexcept;
+
+    // Deleted for reference E with value G: the referent lives inside the unexpected<G> object, so
+    // binding E& to it would dangle once a temporary source is destroyed. Use (unexpect, lvalue), or
+    // an unexpected<E&> holding an external object, instead.
+    template <class G>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected(const unexpected<G>&) = delete;
 
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected(unexpected<G>&&) = delete;
 
     // In-place constructor for error
@@ -2348,8 +2422,8 @@ class expected<T&, E> {
             T& r = std::forward<U>(u);
             val_ = std::addressof(r);
         } else {
+            T& r = std::forward<U>(u); // bind first: if it throws, the error state is left intact
             std::destroy_at(std::addressof(unex_));
-            T& r     = std::forward<U>(u);
             val_     = std::addressof(r);
             has_val_ = true;
         }
@@ -2378,7 +2452,7 @@ class expected<T&, E> {
     // emplace — rebind the reference
     template <class U = T>
         requires(std::is_constructible_v<T&, U> && !detail::reference_constructs_from_temporary_v<T&, U>)
-    constexpr T& emplace(U&& u) noexcept;
+    constexpr T& emplace(U&& u) noexcept(std::is_nothrow_constructible_v<T&, U>);
 
     // -------------------------------------------------------------------------
     // Swap
@@ -2414,9 +2488,11 @@ class expected<T&, E> {
     constexpr std::remove_cv_t<T> value_or(U&& def) const;
 
     template <class G = error_value_type>
+        requires(std::is_copy_constructible_v<error_value_type> && std::is_convertible_v<G, error_value_type>)
     constexpr error_value_type error_or(G&& def) const&;
 
     template <class G = error_value_type>
+        requires(std::is_move_constructible_v<error_value_type> && std::is_convertible_v<G, error_value_type>)
     constexpr error_value_type error_or(G&& def) &&;
 
     // -------------------------------------------------------------------------
@@ -2594,6 +2670,22 @@ constexpr expected<T&, E>::expected(unexpected<G>&& e) : has_val_(false) {
 }
 
 template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T&, E>::expected(const unexpected<G>& e) noexcept : has_val_(false) {
+    std::construct_at(std::addressof(unex_), e.error());
+}
+
+template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T&, E>::expected(unexpected<G>&& e) noexcept : has_val_(false) {
+    std::construct_at(std::addressof(unex_), e.error());
+}
+
+template <class T, class E>
 template <class... Args>
     requires(std::is_constructible_v<E, Args...> && !detail::unexpect_dangles_v<E, Args...>)
 constexpr expected<T&, E>::expected(unexpect_t, Args&&... args) : has_val_(false) {
@@ -2697,12 +2789,12 @@ constexpr expected<T&, E>& expected<T&, E>::operator=(unexpected<G>&& e) {
 template <class T, class E>
 template <class U>
     requires(std::is_constructible_v<T&, U> && !detail::reference_constructs_from_temporary_v<T&, U>)
-constexpr T& expected<T&, E>::emplace(U&& u) noexcept {
+constexpr T& expected<T&, E>::emplace(U&& u) noexcept(std::is_nothrow_constructible_v<T&, U>) {
+    T& r = std::forward<U>(u); // bind first: if it throws, the current state is left intact
     if (!has_val_) {
         std::destroy_at(std::addressof(unex_));
         has_val_ = true;
     }
-    T& r = std::forward<U>(u);
     val_ = std::addressof(r);
     return *val_;
 }
@@ -2837,9 +2929,9 @@ constexpr std::remove_cv_t<T> expected<T&, E>::value_or(U&& def) const {
 
 template <class T, class E>
 template <class G>
+    requires(std::is_copy_constructible_v<typename expected<T&, E>::error_value_type> &&
+             std::is_convertible_v<G, typename expected<T&, E>::error_value_type>)
 constexpr typename expected<T&, E>::error_value_type expected<T&, E>::error_or(G&& def) const& {
-    static_assert(std::is_copy_constructible_v<error_value_type>, "error_or requires is_copy_constructible_v<E>");
-    static_assert(std::is_convertible_v<G, error_value_type>, "error_or requires is_convertible_v<G, E>");
     if (!has_val_)
         return unex_.error();
     return static_cast<error_value_type>(std::forward<G>(def));
@@ -2847,9 +2939,9 @@ constexpr typename expected<T&, E>::error_value_type expected<T&, E>::error_or(G
 
 template <class T, class E>
 template <class G>
+    requires(std::is_move_constructible_v<typename expected<T&, E>::error_value_type> &&
+             std::is_convertible_v<G, typename expected<T&, E>::error_value_type>)
 constexpr typename expected<T&, E>::error_value_type expected<T&, E>::error_or(G&& def) && {
-    static_assert(std::is_move_constructible_v<error_value_type>, "error_or requires is_move_constructible_v<E>");
-    static_assert(std::is_convertible_v<G, error_value_type>, "error_or requires is_convertible_v<G, E>");
     if (!has_val_)
         return std::move(unex_).error();
     return static_cast<error_value_type>(std::forward<G>(def));

@@ -22,6 +22,7 @@ target_sources(
         expected_ref_e.test.cpp
         expected_ref_both.test.cpp
         expected_void_ref_e.test.cpp
+        expected_review_corrections.test.cpp
 )
 target_link_libraries(
     beman.expected.tests.expected
