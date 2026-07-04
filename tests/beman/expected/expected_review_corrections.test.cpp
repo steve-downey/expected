@@ -147,3 +147,74 @@ struct NotConvertible {};
 
 static_assert(has_error_or<expected<int&, std::string>&, const char*>);
 static_assert(!has_error_or<expected<int&, std::string>&, NotConvertible>);
+
+// =============================================================================
+// Shallow conversion — converting from an rvalue reference-holding expected to a
+// value-holding expected must NOT move-steal the external referent (the value
+// category comes from the shallow accessor, via *std::move(rhs), not a naked
+// std::move of the referent). Mirrors optional<T&>'s behavior.
+// =============================================================================
+
+TEST_CASE("converting from an rvalue reference expected does not steal the referent", "[ref][convert][shallow]") {
+    SECTION("value side: expected<string,int> <- expected<string&,int>&&") {
+        std::string                s = "bar";
+        expected<std::string&, int> r{s};
+        expected<std::string, int>  o{std::move(r)};
+        REQUIRE(s == "bar"); // referent untouched (copied, not moved)
+        REQUIRE(o.value() == "bar");
+    }
+    SECTION("value side, assignment") {
+        std::string                s = "bar";
+        expected<std::string&, int> r{s};
+        expected<std::string, int>  o{std::in_place, "x"};
+        o = std::move(r);
+        REQUIRE(s == "bar");
+        REQUIRE(o.value() == "bar");
+    }
+    SECTION("error side: expected<int,string> <- expected<int,string&>&&") {
+        std::string                s = "bar";
+        expected<int, std::string&> r{unexpect, s};
+        expected<int, std::string>  o{std::move(r)};
+        REQUIRE(s == "bar");
+        REQUIRE(o.error() == "bar");
+    }
+}
+
+TEST_CASE("constructing/assigning a value error from unexpected<E&> does not steal the referent",
+          "[unexpected][convert][shallow]") {
+    SECTION("construction") {
+        std::string                 s = "bar";
+        expected<int, std::string>  o{unexpected<std::string&>(s)};
+        REQUIRE(s == "bar"); // external referent copied, not moved
+        REQUIRE(o.error() == "bar");
+    }
+    SECTION("assignment") {
+        std::string                s = "bar";
+        expected<int, std::string> o{unexpect, "x"};
+        o = unexpected<std::string&>(s);
+        REQUIRE(s == "bar");
+        REQUIRE(o.error() == "bar");
+    }
+}
+
+TEST_CASE("constructing a value error from an rvalue unexpected<E> still moves", "[unexpected][move]") {
+    unexpected<std::string>    u{"baz"};
+    expected<int, std::string> o{std::move(u)};
+    REQUIRE(u.error().empty()); // owned error genuinely moved out
+    REQUIRE(o.error() == "baz");
+}
+
+TEST_CASE("converting from an rvalue value expected still moves", "[convert][move]") {
+    SECTION("value side") {
+        expected<std::string, int> a{std::in_place, "bar"};
+        expected<std::string, int> b{std::move(a)};
+        REQUIRE(a.value().empty()); // genuinely moved-from
+        REQUIRE(b.value() == "bar");
+    }
+    SECTION("error side") {
+        expected<int, std::string> a{unexpect, "baz"};
+        expected<int, std::string> b{std::move(a)};
+        REQUIRE(a.error().empty());
+        REQUIRE(b.error() == "baz");
+    }
+}

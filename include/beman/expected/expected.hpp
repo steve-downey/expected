@@ -577,9 +577,9 @@ template <class U, class G>
              !std::is_constructible_v<unexpected<E>, const expected<U, G> &&>)
 constexpr expected<T, E>::expected(expected<U, G>&& rhs) : has_val_(rhs.has_value()) {
     if (has_val_)
-        std::construct_at(std::addressof(val_), std::move(*rhs));
+        std::construct_at(std::addressof(val_), *std::move(rhs));
     else
-        std::construct_at(std::addressof(unex_), std::move(rhs.error()));
+        std::construct_at(std::addressof(unex_), std::move(rhs).error());
 }
 
 template <class T, class E>
@@ -599,7 +599,7 @@ template <class U, class G>
              std::is_convertible_v<G, E>)
 constexpr expected<T, E>::expected(expected<U, G>&& rhs) : has_val_(rhs.has_value()) {
     if (has_val_)
-        std::construct_at(std::addressof(val_), std::move(*rhs));
+        std::construct_at(std::addressof(val_), *std::move(rhs));
     else
         std::construct_at(std::addressof(unex_), rhs.error());
 }
@@ -627,7 +627,7 @@ template <class T, class E>
 template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
 constexpr expected<T, E>::expected(unexpected<G>&& e) : has_val_(false) {
-    std::construct_at(std::addressof(unex_), std::move(e.error()));
+    std::construct_at(std::addressof(unex_), std::move(e).error());
 }
 
 template <class T, class E>
@@ -781,9 +781,9 @@ template <class G>
               std::is_nothrow_move_constructible_v<unexpected<E>>))
 constexpr expected<T, E>& expected<T, E>::operator=(unexpected<G>&& e) {
     if (!has_val_) {
-        unex_.error() = std::move(e.error());
+        unex_.error() = std::move(e).error();
     } else {
-        detail::reinit_expected(unex_, val_, std::move(e.error()));
+        detail::reinit_expected(unex_, val_, std::move(e).error());
         has_val_ = false;
     }
     return *this;
@@ -1681,7 +1681,7 @@ template <class U, class G>
              !std::is_constructible_v<unexpected<E>, const expected<U, G> &&>)
 constexpr expected<void, E>::expected(expected<U, G>&& rhs) : has_val_(rhs.has_value()) {
     if (!has_val_)
-        std::construct_at(std::addressof(unex_), std::move(rhs.error()));
+        std::construct_at(std::addressof(unex_), std::move(rhs).error());
 }
 
 template <class E>
@@ -1695,7 +1695,7 @@ template <class E>
 template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
 constexpr expected<void, E>::expected(unexpected<G>&& e) : has_val_(false) {
-    std::construct_at(std::addressof(unex_), std::move(e.error()));
+    std::construct_at(std::addressof(unex_), std::move(e).error());
 }
 
 template <class E>
@@ -1813,9 +1813,9 @@ template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G> && std::is_assignable_v<E&, G>)
 constexpr expected<void, E>& expected<void, E>::operator=(unexpected<G>&& e) {
     if (!has_val_) {
-        unex_.error() = std::move(e.error());
+        unex_.error() = std::move(e).error();
     } else {
-        std::construct_at(std::addressof(unex_), std::move(e.error()));
+        std::construct_at(std::addressof(unex_), std::move(e).error());
         has_val_ = false;
     }
     return *this;
@@ -2625,7 +2625,7 @@ constexpr expected<T&, E>::expected(expected<U&, G>&& rhs) : has_val_(rhs.has_va
         T& r = *rhs;
         val_ = std::addressof(r);
     } else {
-        std::construct_at(std::addressof(unex_), std::move(rhs.error()));
+        std::construct_at(std::addressof(unex_), std::move(rhs).error());
     }
 }
 
@@ -2666,7 +2666,7 @@ template <class T, class E>
 template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G>)
 constexpr expected<T&, E>::expected(unexpected<G>&& e) : has_val_(false) {
-    std::construct_at(std::addressof(unex_), std::move(e.error()));
+    std::construct_at(std::addressof(unex_), std::move(e).error());
 }
 
 template <class T, class E>
@@ -2778,9 +2778,9 @@ template <class G>
     requires(!std::is_reference_v<E> && std::is_constructible_v<E, G> && std::is_assignable_v<E&, G>)
 constexpr expected<T&, E>& expected<T&, E>::operator=(unexpected<G>&& e) {
     if (!has_val_) {
-        unex_.error() = std::move(e.error());
+        unex_.error() = std::move(e).error();
     } else {
-        std::construct_at(std::addressof(unex_), std::move(e.error()));
+        std::construct_at(std::addressof(unex_), std::move(e).error());
         has_val_ = false;
     }
     return *this;
