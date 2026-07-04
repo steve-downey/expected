@@ -61,6 +61,48 @@ TEST_CASE("reference-error construction from unexpected<E&> binds an external ob
     REQUIRE(c.error() == 99);
 }
 
+// Rebinding assignment from unexpected<E&> — allowed for reference E only when G is a reference
+// (rebinds the error pointer to an external object; never dangles). Value G and const-drop are
+// statically rejected, mirroring construction.
+static_assert(std::is_assignable_v<expected<void, int&>&, unexpected<int&>>);
+static_assert(std::is_assignable_v<expected<int, int&>&, unexpected<int&>>);
+static_assert(std::is_assignable_v<expected<int&, int&>&, unexpected<int&>>);
+static_assert(std::is_assignable_v<expected<int, const int&>&, unexpected<int&>>); // more-const OK
+static_assert(!std::is_assignable_v<expected<int, int&>&, unexpected<int>>);        // value G: deleted
+static_assert(!std::is_assignable_v<expected<int, int&>&, unexpected<const int&>>); // const drop: no overload
+
+TEST_CASE("rebinding assignment from unexpected<E&> repoints the error reference", "[ref][unexpected][assign]") {
+    int g1 = 1, g2 = 2;
+
+    SECTION("error -> error rebind (expected<int, int&>)") {
+        expected<int, int&> e{unexpect, g1};
+        e = unexpected<int&>(g2);
+        REQUIRE(&e.error() == &g2); // rebound to g2
+        REQUIRE(g1 == 1);           // previously-referenced object untouched
+        g2 = 42;
+        REQUIRE(e.error() == 42);   // sees the new referent
+    }
+    SECTION("value -> error transition (expected<int, int&>)") {
+        expected<int, int&> e{7};
+        e = unexpected<int&>(g2);
+        REQUIRE_FALSE(e.has_value());
+        REQUIRE(&e.error() == &g2);
+    }
+    SECTION("both references (expected<int&, int&>)") {
+        int target = 5;
+        expected<int&, int&> e{target};
+        e = unexpected<int&>(g2);
+        REQUIRE_FALSE(e.has_value());
+        REQUIRE(&e.error() == &g2);
+    }
+    SECTION("void value (expected<void, int&>)") {
+        expected<void, int&> e{}; // value state
+        e = unexpected<int&>(g2);
+        REQUIRE_FALSE(e.has_value());
+        REQUIRE(&e.error() == &g2);
+    }
+}
+
 // =============================================================================
 // F4 / F5 — value constructor and emplace are noexcept only when the reference
 // bind cannot throw, so a throwing conversion propagates instead of terminating.

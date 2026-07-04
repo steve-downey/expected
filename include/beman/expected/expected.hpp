@@ -359,13 +359,25 @@ class expected {
                   std::is_nothrow_move_constructible_v<unexpected<E>>))
     constexpr expected& operator=(unexpected<G>&& e);
 
-    // Deleted for reference E: would rebind E& to unexpected<G>'s temporary storage.
+    // Rebinding assignment for reference E from reference G — binds unex_ to the external
+    // referent (never dangles; pointer store is noexcept). Mirrors the reference-E constructor.
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(const unexpected<G>& e);
+
+    template <class G>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(unexpected<G>&& e);
+
+    // Deleted for reference E with value G: would rebind E& to unexpected<G>'s temporary storage.
+    template <class G>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected& operator=(const unexpected<G>&) = delete;
 
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected& operator=(unexpected<G>&&) = delete;
 
     // Emplace: destroy current value/error, construct value in-place
@@ -785,6 +797,39 @@ constexpr expected<T, E>& expected<T, E>::operator=(unexpected<G>&& e) {
     } else {
         detail::reinit_expected(unex_, val_, std::move(e).error());
         has_val_ = false;
+    }
+    return *this;
+}
+
+// Rebinding assignment for reference E from reference G. Repoints unex_ (unexpected<E&>) to the
+// external referent via construct_at — NOT `unex_.error() = ...`, which would mutate the old
+// pointee instead of rebinding. Binding is noexcept; e.error() is the shallow external E&.
+template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T, E>& expected<T, E>::operator=(const unexpected<G>& e) {
+    if (has_val_) {
+        std::destroy_at(std::addressof(val_));
+        std::construct_at(std::addressof(unex_), e.error());
+        has_val_ = false;
+    } else {
+        std::construct_at(std::addressof(unex_), e.error());
+    }
+    return *this;
+}
+
+template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T, E>& expected<T, E>::operator=(unexpected<G>&& e) {
+    if (has_val_) {
+        std::destroy_at(std::addressof(val_));
+        std::construct_at(std::addressof(unex_), e.error());
+        has_val_ = false;
+    } else {
+        std::construct_at(std::addressof(unex_), e.error());
     }
     return *this;
 }
@@ -1504,7 +1549,7 @@ class expected<void, E> {
                    std::is_trivially_move_assignable_v<unexpected<E>> &&
                    std::is_trivially_destructible_v<unexpected<E>>));
 
-    // Assignment from unexpected<G> — value-E only; no such overload is declared for reference E
+    // Assignment from unexpected<G> — value-E path.
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, const G&> &&
                  std::is_assignable_v<E&, const G&>)
@@ -1513,6 +1558,26 @@ class expected<void, E> {
     template <class G>
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, G> && std::is_assignable_v<E&, G>)
     constexpr expected& operator=(unexpected<G>&& e);
+
+    // Rebinding assignment for reference E from reference G — binds unex_ to the external referent.
+    template <class G>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(const unexpected<G>& e);
+
+    template <class G>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(unexpected<G>&& e);
+
+    // Deleted for reference E with value G: would bind E& to storage inside the temporary unexpected.
+    template <class G>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
+    constexpr expected& operator=(const unexpected<G>&) = delete;
+
+    template <class G>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
+    constexpr expected& operator=(unexpected<G>&&) = delete;
 
     constexpr void emplace() noexcept;
 
@@ -1818,6 +1883,28 @@ constexpr expected<void, E>& expected<void, E>::operator=(unexpected<G>&& e) {
         std::construct_at(std::addressof(unex_), std::move(e).error());
         has_val_ = false;
     }
+    return *this;
+}
+
+// Rebinding assignment for reference E from reference G. No value member to destroy; repoint unex_
+// via construct_at (not `unex_.error() = ...`, which would mutate the old pointee).
+template <class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<void, E>& expected<void, E>::operator=(const unexpected<G>& e) {
+    std::construct_at(std::addressof(unex_), e.error());
+    has_val_ = false;
+    return *this;
+}
+
+template <class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<void, E>& expected<void, E>::operator=(unexpected<G>&& e) {
+    std::construct_at(std::addressof(unex_), e.error());
+    has_val_ = false;
     return *this;
 }
 
@@ -2440,13 +2527,24 @@ class expected<T&, E> {
         requires(!std::is_reference_v<E> && std::is_constructible_v<E, G> && std::is_assignable_v<E&, G>)
     constexpr expected& operator=(unexpected<G>&& e);
 
-    // Deleted for reference E: would rebind E& to unexpected<G>'s temporary storage.
+    // Rebinding assignment for reference E from reference G — binds unex_ to the external referent.
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(const unexpected<G>& e);
+
+    template <class G>
+        requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+                 !detail::reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(unexpected<G>&& e);
+
+    // Deleted for reference E with value G: would rebind E& to unexpected<G>'s temporary storage.
+    template <class G>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected& operator=(const unexpected<G>&) = delete;
 
     template <class G>
-        requires std::is_reference_v<E>
+        requires(std::is_reference_v<E> && !std::is_reference_v<G>)
     constexpr expected& operator=(unexpected<G>&&) = delete;
 
     // emplace — rebind the reference
@@ -2783,6 +2881,28 @@ constexpr expected<T&, E>& expected<T&, E>::operator=(unexpected<G>&& e) {
         std::construct_at(std::addressof(unex_), std::move(e).error());
         has_val_ = false;
     }
+    return *this;
+}
+
+// Rebinding assignment for reference E from reference G. val_ is a T* (trivially destructible),
+// so no destroy is needed; repoint unex_ via construct_at (not `unex_.error() = ...`).
+template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T&, E>& expected<T&, E>::operator=(const unexpected<G>& e) {
+    std::construct_at(std::addressof(unex_), e.error());
+    has_val_ = false;
+    return *this;
+}
+
+template <class T, class E>
+template <class G>
+    requires(std::is_reference_v<E> && std::is_reference_v<G> && std::is_constructible_v<E, G> &&
+             !detail::reference_constructs_from_temporary_v<E, G>)
+constexpr expected<T&, E>& expected<T&, E>::operator=(unexpected<G>&& e) {
+    std::construct_at(std::addressof(unex_), e.error());
+    has_val_ = false;
     return *this;
 }
 
