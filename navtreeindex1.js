@@ -233,8 +233,13 @@ var NAVTREEINDEX1 =
 "md_docs_plan_tests_step9.html#autotoc_md552":[32,3,0],
 "md_docs_plan_tests_step9.html#autotoc_md553":[32,3,1],
 "md_docs_plan_tests_step9.html#autotoc_md554":[32,3,2],
+"md_docs_std_parity.html":[33],
+"md_docs_std_parity.html#autotoc_md556":[33,0],
+"md_docs_std_parity.html#autotoc_md557":[33,1],
+"md_docs_std_parity.html#autotoc_md558":[33,2],
+"md_docs_std_parity.html#autotoc_md559":[33,3],
 "pages.html":[],
-"structbeman_1_1expected_1_1unexpect__t.html":[33,0,0,0,4],
-"todo_8hpp_source.html":[34,0,0,0,0,3],
-"unexpected_8hpp_source.html":[34,0,0,0,0,4]
+"structbeman_1_1expected_1_1unexpect__t.html":[34,0,0,0,4],
+"todo_8hpp_source.html":[35,0,0,0,0,3],
+"unexpected_8hpp_source.html":[35,0,0,0,0,4]
 };

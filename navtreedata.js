@@ -580,6 +580,12 @@ var NAVTREE =
         [ "<tt>expected_ref_both_no_default_fail.cpp</tt>", "md_docs_plan_tests_step9.html#autotoc_md554", null ]
       ] ]
     ] ],
+    [ "std::expected Parity", "md_docs_std_parity.html", [
+      [ "How it works", "md_docs_std_parity.html#autotoc_md556", null ],
+      [ "Result", "md_docs_std_parity.html#autotoc_md557", null ],
+      [ "Divergences found", "md_docs_std_parity.html#autotoc_md558", null ],
+      [ "Not yet covered", "md_docs_std_parity.html#autotoc_md559", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
