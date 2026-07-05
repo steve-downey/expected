@@ -46,16 +46,37 @@ when configuring the project.
 
 This project officially supports:
 
-* GCC versions 11–16
-* LLVM Clang++ (with libstdc++ or libc++) versions 17–22
+* GCC versions 13–16
+* LLVM Clang++ (with libstdc++ or libc++) versions 19–22
 * AppleClang version 17.0.0 (i.e., the [latest version on GitHub-hosted macOS runners](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md))
-* MSVC version 19.44.35215.0 (i.e., the [latest version on GitHub-hosted Windows runners](https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md))
 
 > [!NOTE]
 >
 > Versions outside of this range would likely work as well,
 > especially if you're using a version above the given range
 > (e.g. HEAD/ nightly).
+
+#### Compiler floor and unsupported toolchains
+
+The reference specializations detect temporary-binding hazards with
+`reference_constructs_from_temporary` — the C++23 library trait where available,
+otherwise the `__reference_constructs_from_temporary` compiler builtin. That
+builtin lands in **GCC 13** and **Clang 19**, which sets the floor:
+
+* **GCC ≤ 12 / Clang ≤ 17** lack the builtin, so the trait is undefined in C++20
+  mode.
+* **Clang 18** has the builtin but rejects out-of-line definitions of constrained
+  members whose `requires`-clause names the enclosing `expected<…>` type (or a
+  member typedef) with a spelling that differs from the in-class declaration —
+  GCC and Clang 19+ canonicalize these, Clang 18 does not.
+
+**MSVC is not currently supported.** In C++23 the trait is available, but MSVC
+applies the same out-of-line-definition constraint-matching strictness as Clang
+18 (`C2244: unable to match function definition to an existing declaration`).
+The fix is to make each such member's definition token-identical to its
+declaration; that work is not done here simply because we do not have direct
+MSVC access to develop and verify the workarounds. Contributions with MSVC
+access are welcome.
 > These development environments are verified using our CI configuration.
 
 ## Development
