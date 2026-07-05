@@ -37,16 +37,33 @@ Steps 7-10 are the reference specializations (the novel work in this proposal).
 
 ## Standing Conventions
 
+### Code
+
 - Include guards: `#ifndef`/`#define`/`#endif` (never `#pragma once`)
 - Format: `BEMAN_EXPECTED_<PATH>_HPP` (uppercase, path separators to `_`)
 - Includes: angle brackets, full paths from include root
 - SPDX license: `// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception`
 - Functions defined out-of-line in headers (body after class)
 - `constexpr` everything possible
-- Test framework: GoogleTest
-- Test files include the header under test twice (idempotence check)
-- Each step runs `make test` and `make lint` before completion
 - Namespace: `beman::expected`
+
+### Testing
+
+- Test framework: Catch2 (`Catch2::Catch2WithMain`)
+- Test files include the header under test twice (idempotence check)
+- Each step runs `make TOOLCHAIN=gcc-16 test` and `make lint` before
+  completion
+- **Every constraint and mandate must have a negative test.** See
+  `docs/plan/tests-overview.md` §6 for full rules. In short:
+  - **Constraint** (`requires` clause) → SFINAE-friendly; test with
+    `static_assert(!std::is_constructible_v<...>)` or a concept detector
+    in a `*_constraints.test.cpp` file
+  - **Mandate** (`static_assert` inside a function/class body) → ill-formed
+    on instantiation; test with a `*_fail.cpp` negative compile test
+  - **Hardened precondition** → runtime trap; test under
+    `#if defined(BEMAN_EXPECTED_HARDENED)`
+  - Each negative test should have a matching positive test confirming the
+    operation works for conforming types
 
 ## Step Details
 
@@ -69,7 +86,7 @@ Steps 7-10 are the reference specializations (the novel work in this proposal).
 - [x] Step 4: `expected<void, E>` — constructors, destructor, assignment, emplace, swap, observers, error_or, equality
 - [x] Step 5: `expected<T, E>` monadic — and_then, or_else, transform, transform_error (4 ref-qualified overloads each)
 - [x] Step 6: `expected<void, E>` monadic — and_then, or_else, transform, transform_error
-- [ ] Step 7: `expected<T&, E>` — pointer storage, rebind assignment, observers returning T&, value_or, monadic ops, dangling prevention
-- [ ] Step 8: `expected<T, E&>` — union+pointer storage, error as E&, rebind error assignment, observers, monadic ops
-- [ ] Step 9: `expected<T&, E&>` — both pointer storage, rebind both, observers, monadic ops
-- [ ] Step 10: `expected<void, E&>` — no value storage, error pointer, rebind error, observers, monadic ops
+- [x] Step 7: `expected<T&, E>` — pointer storage, rebind assignment, observers returning T&, value_or, monadic ops, dangling prevention
+- [x] Step 8: `expected<T, E&>` — union+pointer storage, error as E&, rebind error assignment, observers, monadic ops
+- [x] Step 9: `expected<T&, E&>` — both pointer storage, rebind both, observers, monadic ops
+- [x] Step 10: `expected<void, E&>` — no value storage, error pointer, rebind error, observers, monadic ops
