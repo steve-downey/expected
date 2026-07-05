@@ -5,13 +5,19 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
 <!-- markdownlint-disable-next-line line-length -->
-![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/steve-downey/expected/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/steve-downey/expected/actions/workflows/pre-commit-check.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/steve-downey/expected/badge.svg?branch=main)](https://coveralls.io/github/steve-downey/expected?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg) [![Compiler Explorer Example](https://img.shields.io/badge/Try%20it%20on%20Compiler%20Explorer-grey?logo=compilerexplorer&logoColor=67c52a)](https://www.example.com)
+![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg) ![Continuous Integration Tests](https://github.com/steve-downey/sandbox-expected/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/steve-downey/sandbox-expected/actions/workflows/pre-commit-check.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/steve-downey/sandbox-expected/badge.svg?branch=main)](https://coveralls.io/github/steve-downey/sandbox-expected?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg)
 
 `beman.expected` is a C++ library implementing the std::expected specification conforming to [The Beman Standard](https://github.com/bemanproject/beman/blob/main/docs/beman_standard.md).
 
-**Implements**: `std::expected` proposed in [Expected over References (PnnnnRr)](https://wg21.link/PnnnnRr).
+**Implements**: `std::expected` proposed in [Expected over References (D4280R0)](https://wg21.link/D4280R0).
 
 **Status**: [Under development and not yet ready for production use.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#under-development-and-not-yet-ready-for-production-use)
+
+## Review Guides
+
+As this implementation proposes extensions targeting standard library adoption (notably supporting reference semantics in `std::expected`), two rigorous review guides have been prepared:
+- **[LLM Code Review Guide](docs/llm-code-review-guide.md)**: Specialized prompt instructions and strict standardese criteria for automated reviewers to mechanically verify C++26 constraints and mandates.
+- **[Human Design Review Guide](docs/human-design-review-guide.md)**: An analytical guide for human contributors highlighting the compromises, architectural semantics (like assignment-through vs rebinding), and abstraction structures.  We encourage reviewers to read this guide before contributing to standard wording or feature requests.
 
 ## License
 
@@ -28,39 +34,20 @@ Full runnable examples can be found in [`examples/`](examples/).
 
 This project requires at least the following to build:
 
-* A C++ compiler that conforms to the C++17 standard or greater
-* CMake 3.28 or later
-* (Test Only) GoogleTest
+* A C++ compiler that conforms to the C++20 standard or greater
+* CMake 3.30 or later
+* (Test Only) Catch2
 
 You can disable building tests by setting CMake option
 [`BEMAN_EXPECTED_BUILD_TESTS`](#beman_expected_build_tests) to `OFF`
 when configuring the project.
 
-Even when tests are being built and run, some of them will not be compiled
-unless the provided compiler supports **C++20** ranges.
-
-> [!TIP]
->
-> The logs indicate examples disabled due to lack of compiler support.
->
-> For example:
->
-> ```txt
-> -- Looking for __cpp_lib_ranges
-> -- Looking for __cpp_lib_ranges - not found
-> CMake Warning at examples/CMakeLists.txt:12 (message):
->   Missing range support! Skip: identity_as_default_projection
->
->
-> Examples to be built: identity_direct_usage
-> ```
-
 ### Supported Platforms
 
 This project officially supports:
 
-* GCC versions 11–15
-* LLVM Clang++ (with libstdc++ or libc++) versions 17–21
+* GCC versions 11–16
+* LLVM Clang++ (with libstdc++ or libc++) versions 17–22
 * AppleClang version 17.0.0 (i.e., the [latest version on GitHub-hosted macOS runners](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md))
 * MSVC version 19.44.35215.0 (i.e., the [latest version on GitHub-hosted Windows runners](https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md))
 
@@ -140,11 +127,6 @@ VS 2022" by typing it into Windows search bar. This shell environment will
 provide CMake, Ninja, and MSVC, allowing you to build the library and run the
 tests.
 
-Note that you will need to use FetchContent to build GoogleTest. To do so,
-please see the instructions in the "Build GoogleTest dependency from github.com"
-dropdown in the [Project specific configure
-arguments](#project-specific-configure-arguments) section.
-
 </details>
 
 ### Configure and Build the Project Using CMake Presets
@@ -200,25 +182,6 @@ ctest --test-dir build
 > you will need to specify the C++ version via `CMAKE_CXX_STANDARD`
 > when manually configuring the project.
 
-### Finding and Fetching GTest from GitHub
-
-If you do not have GoogleTest installed on your development system, you may
-optionally configure this project to download a known-compatible release of
-GoogleTest from source and build it as well.
-
-Example commands:
-
-```shell
-cmake -B build -S . \
-    -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./infra/cmake/use-fetch-content.cmake \
-    -DCMAKE_CXX_STANDARD=20
-cmake --build build --target all
-cmake --build build --target test
-```
-
-The precise version of GoogleTest that will be used is maintained in
-`./lockfile.json`.
-
 ### Project specific configure arguments
 
 Project-specific options are prefixed with `BEMAN_EXPECTED`.
@@ -244,9 +207,7 @@ cmake -B build -S . -DCMAKE_CXX_STANDARD=20 -DBEMAN_EXPECTED_BUILD_TESTS=OFF
 ```
 
 > [!TIP]
-> Because this project requires GoogleTest for running tests,
-> disabling `BEMAN_EXPECTED_BUILD_TESTS` avoids the project from
-> cloning GoogleTest from GitHub.
+> Disabling `BEMAN_EXPECTED_BUILD_TESTS` skips fetching Catch2.
 
 #### `BEMAN_EXPECTED_BUILD_EXAMPLES`
 
