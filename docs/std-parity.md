@@ -22,6 +22,7 @@ aliases the selected namespace as `test_ns`:
   beman-only tests).
 - `beman.expected.tests.expected.std` — the behavioral subset only, against
   `std::expected`. Its ctest cases are prefixed `std.` and labelled `std`.
+  Skipped on libc++ (see below) — it is not built at all there.
 
 Behavioral sources (parameterized): `bad_expected_access.test.cpp`,
 `unexpected.test.cpp`, `expected.test.cpp`, `expected_void.test.cpp`,
@@ -57,21 +58,24 @@ constraint) holds identically for `std::expected`.
    `<utility>` transitively; `<expected>` does not. Fixed by adding the explicit
    include (also correct hygiene for the beman build).
 
-## Known CI failures on affected toolchains (not beman behavioral differences)
+## `.std` target is skipped on libc++
 
-The `.std` target compiles the exact same behavioral sources against the
-platform's `<expected>`, so it also inherits that standard library's own
-bugs. Two are known to break specific libc++ versions in CI; neither reflects
-a `beman::expected` defect, and both are toolchain issues outside this
-project's control.
+`tests/beman/expected/CMakeLists.txt` detects libc++ (`_LIBCPP_VERSION`, via
+`check_cxx_symbol_exists`) — covering both an explicit `-stdlib=libc++` and
+AppleClang's implicit default — and does not build
+`beman.expected.tests.expected.std` at all in that case. This is a scope
+decision, not a beman::expected defect: the `.std` target exists to catch
+*beman* behavioral differences from the standard, not to chase the standard
+library's own bugs, and libc++ has at least two independent bugs of its own
+that surfaced running this exact suite against it:
 
 1. **`std::unexpected<int> == std::unexpected<long>` — cross-specialization
    friend-access bug.** On some libc++ versions (observed: clang 19,
    appleclang c++26) this heterogeneous comparison fails to compile with
-   `'__unex_' is a private member of 'std::unexpected<long>'`. The
+   `'__unex_' is a private member of 'std::unexpected<long>'`. (The
    `unexpected: equality different types` test in `unexpected.test.cpp` is
-   guarded `#ifndef BEMAN_EXPECTED_TEST_STD` for this reason; beman's own
-   `unexpected<E>` does not have this problem.
+   also guarded `#ifndef BEMAN_EXPECTED_TEST_STD` independent of this
+   skip, since beman's own `unexpected<E>` does not have this problem.)
 
 2. **Catch2 decomposition × `std::expected`'s constrained heterogeneous
    `operator==` — self-referential constraint check.** On some libc++
@@ -81,14 +85,14 @@ project's control.
    `CHECK(a == b)` first wraps `a` in an internal `Catch::ExprLhs` proxy, and
    `std::expected`'s generic constrained `operator==(expected, U)` is picked
    up via ADL with `U = ExprLhs<...>`; checking whether `*x == u` is valid
-   then re-enters the same constrained templates and libc++ gives up. This is
-   a documented category of Catch2 gotcha (the fix at each call site is the
-   extra-parens idiom, `CHECK((a == b))`, which bypasses decomposition), but
-   here it is triggered pervasively enough across the parameterized suite
-   (potentially dozens of sites across all six files) that it has not been
-   swept file-by-file. Left as a known, non-blocking failure on the affected
-   libc++ versions until it is worth the width of that diff; the `beman`
-   build (and `.std` on unaffected libc++/libstdc++ versions) is unaffected.
+   then re-enters the same constrained templates and libc++ gives up. This
+   is triggered pervasively enough across the parameterized suite
+   (potentially dozens of sites across all six files) that per-call-site
+   workarounds (the standard Catch2 fix is extra parens, `CHECK((a == b))`)
+   weren't worth chasing given the target's purpose above.
+
+`gcc`/libstdc++ and clang-with-libstdc++ configurations are unaffected by
+either bug and continue to run the `.std` target normally.
 
 ## Not yet covered
 
