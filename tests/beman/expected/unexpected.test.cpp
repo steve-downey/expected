@@ -1,8 +1,7 @@
 // beman/expected/unexpected.test.cpp                                 -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/expected/unexpected.hpp>
-#include <beman/expected/unexpected.hpp> // ensure idempotent header
+#include "test_expected.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -11,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-namespace expt = beman::expected;
+namespace expt = test_ns;
 
 // =============================================================================
 // [expected.un.general] para 2 — ill-formed instantiation constraints
@@ -133,11 +132,18 @@ TEST_CASE("unexpected: equality same type", "[UnexpectedTest]") {
     CHECK_FALSE(a == c);
 }
 
+#ifndef BEMAN_EXPECTED_TEST_STD
+// Beman-only: some libc++ versions (e.g. clang 19, appleclang c++26) reject
+// this heterogeneous std::unexpected<int> == std::unexpected<long> comparison
+// with "'__unex_' is a private member of 'std::unexpected<long>'" — a
+// cross-specialization friend-access bug in their std::unexpected, not a
+// beman::expected behavioral difference.
 TEST_CASE("unexpected: equality different types", "[UnexpectedTest]") {
     expt::unexpected<int>  a(42);
     expt::unexpected<long> b(42L);
     CHECK(a == b);
 }
+#endif
 
 TEST_CASE("unexpected: CTAD from int", "[UnexpectedTest]") {
     expt::unexpected u(42);

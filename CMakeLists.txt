@@ -1,4 +1,3 @@
-# CMakeLists.txt                                                    -*-cmake-*-
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 cmake_minimum_required(VERSION 3.30...4.3)
@@ -82,17 +81,6 @@ beman_install_library(beman.expected TARGETS beman.expected)
 configure_build_telemetry()
 
 if(BEMAN_EXPECTED_BUILD_TESTS)
-    find_package(Catch2 CONFIG REQUIRED)
-    # When Catch2 is fetched via FetchContent, its extras dir needs to be on the module path.
-    # FetchContent_GetProperties reads global state set during fetch, so works from any scope.
-    include(FetchContent)
-    FetchContent_GetProperties(catch2)
-    if(catch2_POPULATED AND catch2_SOURCE_DIR)
-        list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
-    endif()
-endif()
-
-if(BEMAN_EXPECTED_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests/beman/expected)
 endif()
@@ -100,3 +88,14 @@ endif()
 if(BEMAN_EXPECTED_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+# Coverage
+configure_file("cmake/gcovr.cfg.in" gcovr.cfg @ONLY)
+
+add_custom_target(
+    process_coverage
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Running gcovr to process coverage results"
+    COMMAND mkdir -p coverage
+    COMMAND gcovr --config gcovr.cfg .
+)

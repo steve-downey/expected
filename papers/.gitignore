@@ -1,0 +1,25 @@
+# LaTeX build artifacts
+std-gram.ext
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.toc
+*.glo
+*.pdf
+_minted/
+.deps/
+.venv/
+
+# Downloaded bibliography (too large to track; regenerate with make curl-bib)
+wg21.bib
+
+# Emacs
+*~
+\#*\#

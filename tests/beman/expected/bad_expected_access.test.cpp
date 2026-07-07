@@ -1,8 +1,7 @@
 // tests/beman/expected/bad_expected_access.test.cpp                  -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#include <beman/expected/bad_expected_access.hpp>
-#include <beman/expected/bad_expected_access.hpp> // test 2nd include OK
+#include "test_expected.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -10,7 +9,7 @@
 #include <string>
 #include <utility>
 
-namespace expt = beman::expected;
+namespace expt = test_ns;
 
 // =============================================================================
 // [expected.bad.void] and [expected.bad] — type-level assertions
@@ -37,13 +36,20 @@ TEST_CASE("bad_expected_access: construct from int", "[BadExpectedAccessTest]") 
 TEST_CASE("bad_expected_access: what() returns message", "[BadExpectedAccessTest]") {
     expt::bad_expected_access<int> e(1);
     CHECK(e.what() != nullptr);
+    // what() returns an implementation-defined NTBS [expected.bad.void]; the
+    // exact text is beman-specific (libstdc++/libc++ differ).
+#ifndef BEMAN_EXPECTED_TEST_STD
     CHECK(std::string_view(e.what()) == "bad expected access");
+#endif
 }
 
 TEST_CASE("bad_expected_access: inherits from std::exception", "[BadExpectedAccessTest]") {
     expt::bad_expected_access<int> e(1);
     std::exception&                ex = e;
+    CHECK(ex.what() != nullptr);
+#ifndef BEMAN_EXPECTED_TEST_STD
     CHECK(std::string_view(ex.what()) == "bad expected access");
+#endif
 }
 
 TEST_CASE("bad_expected_access: error() lvalue ref mutable", "[BadExpectedAccessTest]") {
@@ -79,7 +85,10 @@ TEST_CASE("bad_expected_access: catchable as std::exception", "[BadExpectedAcces
     try {
         throw expt::bad_expected_access<int>(7);
     } catch (const std::exception& ex) {
+        CHECK(ex.what() != nullptr);
+#ifndef BEMAN_EXPECTED_TEST_STD
         CHECK(std::string_view(ex.what()) == "bad expected access");
+#endif
     }
 }
 
@@ -87,7 +96,10 @@ TEST_CASE("bad_expected_access: catchable as bad_expected_access<void>", "[BadEx
     try {
         throw expt::bad_expected_access<int>(7);
     } catch (const expt::bad_expected_access<void>& ex) {
+        CHECK(ex.what() != nullptr);
+#ifndef BEMAN_EXPECTED_TEST_STD
         CHECK(std::string_view(ex.what()) == "bad expected access");
+#endif
     }
 }
 
@@ -107,4 +119,22 @@ TEST_CASE("bad_expected_access<void>: accessible via base reference", "[BadExpec
     expt::bad_expected_access<int>         ex(0);
     const expt::bad_expected_access<void>& base = ex;
     CHECK(base.what() != nullptr);
+}
+
+TEST_CASE("bad_expected_access: move constructor", "[BadExpectedAccessTest]") {
+    expt::bad_expected_access<std::string> orig("test error");
+    expt::bad_expected_access<std::string> moved(std::move(orig));
+    CHECK(moved.error() == "test error");
+}
+
+TEST_CASE("bad_expected_access: rvalue error accessor (string move)", "[BadExpectedAccessTest]") {
+    expt::bad_expected_access<std::string> e("val");
+    std::string                            s = std::move(e).error();
+    CHECK(s == "val");
+}
+
+TEST_CASE("bad_expected_access: const rvalue error accessor (string move)", "[BadExpectedAccessTest]") {
+    const expt::bad_expected_access<std::string> e("val");
+    std::string                                  s = std::move(e).error();
+    CHECK(s == "val");
 }
