@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_step6_expected_void_monad
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step6-expected-void-monadic</code> <b>Depends on:</b> Step 4 (expected&lt;void, E&gt; specialization) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md277"></a>
+<h1><a class="anchor" id="autotoc_md373"></a>
 Goal</h1>
 <p>Add the four monadic operations to the <code>expected&lt;void, E&gt;</code> partial specialization per [expected.void.monadic].</p>
-<h1><a class="anchor" id="autotoc_md278"></a>
+<h1><a class="anchor" id="autotoc_md374"></a>
 Context for Executing Agent</h1>
 <p>Step 4 implemented the void specialization without monadic ops. The void case differs from the primary template because there is no value to pass to the callable — <code>and_then</code> and <code>transform</code> call F with no arguments.</p>
-<h2><a class="anchor" id="autotoc_md279"></a>
+<h2><a class="anchor" id="autotoc_md375"></a>
 Differences from primary template monadic ops</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -122,7 +122,7 @@ Differences from primary template monadic ops</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>transform_error(F)</code> has value   </td><td class="markdownTableBodyNone">return <code>expected&lt;T,G&gt;(in_place, value())</code>   </td><td class="markdownTableBodyNone">return <code>expected&lt;void,G&gt;()</code>   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md280"></a>
+<h2><a class="anchor" id="autotoc_md376"></a>
 Constraints per [expected.void.monadic]</h2>
 <p>For <code>and_then</code>:</p><ul>
 <li><code>F</code> is invocable with no arguments: <code>invoke(f)</code></li>
@@ -141,7 +141,7 @@ Constraints per [expected.void.monadic]</h2>
 <li>Same as primary (calls <code>f(error())</code>)</li>
 <li>Returns <code>expected&lt;void, G&gt;</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md281"></a>
+<h1><a class="anchor" id="autotoc_md377"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — add 16 monadic member functions to the void specialization</li>
@@ -158,7 +158,7 @@ Deliverables</h1>
 </li>
 <li><b>Update <code>tests/beman/expected/CMakeLists.txt</code></b></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md282"></a>
+<h1><a class="anchor" id="autotoc_md378"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch <code>step6-expected-void-monadic</code> from <code>main</code> (with Step 4 merged)</li>
@@ -169,11 +169,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md283"></a>
+<h1><a class="anchor" id="autotoc_md379"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md284"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md380"></a>
 Handoff to Step 7</h1>
 <p>Step 6 done, next read <code>docs/plan/step7-expected-ref-t.md</code>. Both the primary and void templates now have full monadic support. The reference specializations build on these foundations. </p>
 </div></div><!-- contents -->

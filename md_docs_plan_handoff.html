@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::expected: Handoff: Starting State</title>
+<title>beman::expected: Handoff: Current State</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -97,88 +97,94 @@ $(document).ready(function(){initNavTree('md_docs_plan_handoff.html',''); initRe
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Handoff: Starting State </div></div>
+  <div class="headertitle"><div class="title">Handoff: Current State </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md187"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md280"></a>
 Repository</h1>
 <p><code>beman.expected</code> — a Beman C++ Standards track reference implementation for <code>std::expected</code> with reference support (P2988 / targeting C++29).</p>
-<h1><a class="anchor" id="autotoc_md188"></a>
+<h1><a class="anchor" id="autotoc_md281"></a>
+Working Branch</h1>
+<p>All step branches are created from and merged back into **<code>expected-over-references</code>** (not <code>main</code>). The <code>main</code> branch tracks upstream; <code>expected-over-references</code> is the integration branch for this work.</p>
+<h1><a class="anchor" id="autotoc_md282"></a>
 Current State</h1>
-<p>The repository has a complete skeleton: all standard interface declarations exist as comments in the header files, but no actual C++ class definitions have been written. The headers compile (they're empty namespaces), and the tests are breathing tests only (<code>EXPECT_EQ(true, true)</code>).</p>
-<h2><a class="anchor" id="autotoc_md189"></a>
-Files</h2>
+<p>All 10 steps are complete. Steps 1–9 are merged into <code>expected-over-references</code>. Step 10 is on branch <code>step10-expected-void-ref-e</code>, ready to merge. The implementation includes the full conformant <code>expected&lt;T,E&gt;</code> primary template, <code>expected&lt;void,E&gt;</code>, monadic operations for both, <code>expected&lt;T&amp;,E&gt;</code> (P2988 reference-value specialization), <code>expected&lt;T,E&amp;&gt;</code> (P2988 reference-error specialization), <code>expected&lt;T&amp;,E&amp;&gt;</code> (P2988 both-reference specialization), and <code>expected&lt;void,E&amp;&gt;</code> (P2988 void+reference-error specialization). 470 tests pass.</p>
+<h2><a class="anchor" id="autotoc_md283"></a>
+Key Files</h2>
 <ul>
-<li><code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code> — commented-out specification for <code>expected&lt;T,E&gt;</code> and <code>expected&lt;void,E&gt;</code>, empty <code>beman::expected</code> namespace</li>
-<li><code><a class="el" href="unexpected_8hpp_source.html">include/beman/expected/unexpected.hpp</a></code> — commented-out specification for <code>unexpected&lt;E&gt;</code>, empty namespace</li>
-<li><code><a class="el" href="bad__expected__access_8hpp_source.html">include/beman/expected/bad_expected_access.hpp</a></code> — commented-out specification for <code>bad_expected_access&lt;E&gt;</code> and <code>bad_expected_access&lt;void&gt;</code>, empty namespace</li>
-<li><code>tests/beman/expected/expected.test.cpp</code> — breathing test only</li>
-<li><code>tests/beman/expected/unexpected.test.cpp</code> — breathing test only</li>
-<li><code>tests/beman/expected/bad_expected_access.test.cpp</code> — breathing test</li>
+<li><code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code> — full implementation: <code>unexpected&lt;E&gt;</code>, <code>bad_expected_access</code>, <code>expected&lt;T,E&gt;</code>, <code>expected&lt;void,E&gt;</code>, <code>expected&lt;T&amp;,E&gt;</code>, <code>expected&lt;T,E&amp;&gt;</code>, <code>expected&lt;T&amp;,E&amp;&gt;</code>, <code>expected&lt;void,E&amp;&gt;</code> (with monadic ops for all)</li>
+<li><code>tests/beman/expected/</code> — comprehensive test suite (470 tests)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md190"></a>
+<h2><a class="anchor" id="autotoc_md284"></a>
+Step 10 Design Notes</h2>
+<ul>
+<li><code>expected&lt;void, E&amp;&gt;</code> is a partial specialization <code>template&lt;class E&gt; class expected&lt;void, E&amp;&gt;</code> This is more specific than both <code>expected&lt;T,E&gt; requires is_void_v&lt;T&gt;</code> and <code>expected&lt;T,E&amp;&gt;</code>, so it is correctly selected for <code>expected&lt;void, int&amp;&gt;</code>.</li>
+<li>Storage: <code>E* unex_ptr_</code> + <code>bool has_val_</code> (no union — void has no value)</li>
+<li><b>Trivially copyable/destructible</b>: pointer + bool, all operations default</li>
+<li><b>Default constructible</b>: sets <code>has_val_ = true</code> (void success state)</li>
+<li><b>Shallow const on error</b>: <code>error()</code> always returns <code>E&amp;</code> regardless of <code>const</code> on the <code>expected</code> object</li>
+<li><b>Dangling prevention</b>: <code>expected(unexpect_t, G&amp;&amp;)</code> is deleted when <code>reference_constructs_from_temporary_v&lt;E&amp;, G&gt;</code> is true</li>
+<li><b>No <code>operator=</code> from <code>unexpected&lt;G&gt;</code></b>: <code>unexpected&lt;G&gt;</code> requires G to be an object type (reference types are ill-formed). Rebind is done via copy assignment from another <code>expected&lt;void, E&amp;&gt;</code>, same as in <code>expected&lt;T,E&amp;&gt;</code>.</li>
+<li>**<code>emplace()</code> returns void**: sets <code>has_val_ = true</code>, no construction needed</li>
+<li>**<code>transform_error(F)</code>** returns <code>expected&lt;void, G&gt;</code> — the plain void specialization (non-reference error, since F transforms E&amp; → G by value)</li>
+<li><b>Removed <code>expected_void_ref_fail</code> negative compile test</b>: this test asserted <code>expected&lt;void, int&amp;&gt;</code> was ill-formed in <code>expected&lt;T,E&amp;&gt;</code>. Now that Step 10 adds <code>expected&lt;void, E&amp;&gt;</code>, this is valid and the test was removed.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md285"></a>
 Build System</h2>
 <ul>
 <li>CMake 3.30+, Ninja Multi-Config</li>
-<li>GoogleTest via vcpkg or FetchContent</li>
+<li>Catch2 via FetchContent</li>
 <li><code>make test</code> to build and run, <code>make lint</code> for pre-commit hooks</li>
 <li>Header-only INTERFACE library (unless modules enabled)</li>
 <li>Default config: Asan</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md191"></a>
+<h2><a class="anchor" id="autotoc_md286"></a>
 Coding Rules</h2>
 <ul>
 <li>Namespace: <code>beman::expected</code> (nested, not <code>beman::expected::inline_namespace</code>)</li>
 <li>Include guards: <code>#ifndef BEMAN_EXPECTED_&lt;FILE&gt;_HPP</code> / <code>#define</code> / <code>#endif</code></li>
 <li>License: <code>// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</code></li>
-<li>Angle-bracket includes with full paths: <code>&lt;<a class="el" href="unexpected_8hpp_source.html">beman/expected/unexpected.hpp</a>&gt;</code></li>
-<li>Functions defined out-of-line within the header (body after class)</li>
+<li>Angle-bracket includes with full paths: <code>&lt;<a class="el" href="expected_8hpp_source.html">beman/expected/expected.hpp</a>&gt;</code></li>
+<li>Functions defined inline within the class for the reference specializations</li>
 <li><code>constexpr</code> everything</li>
-<li>Test includes: header under test twice (idempotence), then gtest, then std</li>
+<li>Test includes: header under test twice (idempotence), then Catch2, then std</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md192"></a>
+<h2><a class="anchor" id="autotoc_md287"></a>
 Reference Implementation</h2>
 <p>For <code>optional&lt;T&amp;&gt;</code> patterns, see <code>~/src/steve-downey/optional/main</code>:</p><ul>
 <li><code>include/beman/optional/optional.hpp</code> lines 1515-2119 for the reference specialization</li>
-<li>Key pattern: <code>T* value_ = nullptr</code> storage, <code>convert_ref_init_val()</code> for binding, rebind semantics on assignment</li>
-<li><code>reference_constructs_from_temporary_v</code> concept for dangling prevention</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md193"></a>
+<h1><a class="anchor" id="autotoc_md288"></a>
 Plan</h1>
-<p>See <code>docs/plan/index.md</code> for the full plan with step index, checklist, and links to individual step files.</p>
-<h1><a class="anchor" id="autotoc_md194"></a>
-Test Plan Documents</h1>
-<p>Each implementation step has a corresponding test plan:</p>
+<p>See <code>docs/plan/index.md</code> for the full plan with step index, checklist, and links to individual step files. <b>All 10 steps are now complete.</b></p>
+<h1><a class="anchor" id="autotoc_md289"></a>
+What Comes Next</h1>
+<p>The core implementation is complete. The full set of specializations:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">File   </th><th class="markdownTableHeadNone">Covers    </th></tr>
+<th class="markdownTableHeadNone">Specialization   </th><th class="markdownTableHeadNone">Value storage   </th><th class="markdownTableHeadNone">Error storage   </th><th class="markdownTableHeadNone">Step    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>tests-overview.md</code>   </td><td class="markdownTableBodyNone">Framework, conventions, negative compile pattern, CMakeLists structure    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T, E&gt;</code>   </td><td class="markdownTableBodyNone">T (owned)   </td><td class="markdownTableBodyNone">E (owned)   </td><td class="markdownTableBodyNone">3, 5    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>tests-step1.md</code>   </td><td class="markdownTableBodyNone"><code>unexpected&lt;E&gt;</code> — all testable statements from [expected.un.*]    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;void, E&gt;</code>   </td><td class="markdownTableBodyNone">none   </td><td class="markdownTableBodyNone">E (owned)   </td><td class="markdownTableBodyNone">4, 6    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>tests-step2.md</code>   </td><td class="markdownTableBodyNone"><code>bad_expected_access&lt;E&gt;</code> — [expected.bad] and [expected.bad.void]    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T&amp;, E&gt;</code>   </td><td class="markdownTableBodyNone">T* (pointer)   </td><td class="markdownTableBodyNone">E (owned)   </td><td class="markdownTableBodyNone">7    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>tests-step3.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;T,E&gt;</code> primary template — [expected.object.*] excluding monadic    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T, E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">T (owned)   </td><td class="markdownTableBodyNone">E* (pointer)   </td><td class="markdownTableBodyNone">8    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>tests-step4.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;void,E&gt;</code> partial specialization    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T&amp;, E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">T* (pointer)   </td><td class="markdownTableBodyNone">E* (pointer)   </td><td class="markdownTableBodyNone">9    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>tests-step5.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;T,E&gt;</code> monadic operations    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>tests-step6.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;void,E&gt;</code> monadic operations    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>tests-step7.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;T&amp;,E&gt;</code> reference-value specialization (P2988)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>tests-step8.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;T,E&amp;&gt;</code> reference-error specialization (P2988)    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>tests-step9.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;T&amp;,E&amp;&gt;</code> both-reference specialization (P2988)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>tests-step10.md</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;void,E&amp;&gt;</code> void+reference-error specialization (P2988)   </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;void, E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">none   </td><td class="markdownTableBodyNone">E* (pointer)   </td><td class="markdownTableBodyNone">10   </td></tr>
 </table>
-<p>Read <code>tests-overview.md</code> first, then the <code>tests-stepN.md</code> for the step being worked before writing any tests.</p>
-<h1><a class="anchor" id="autotoc_md195"></a>
-What Comes Next</h1>
-<p>Step 1: Implement <code>unexpected&lt;E&gt;</code> — see <code>docs/plan/step1-unexpected.md</code>. </p>
+<p>Remaining work beyond the core implementation:</p>
+<ol type="1">
+<li><b>Merge Step 10</b> into <code>expected-over-references</code></li>
+<li><b>Paper/proposal writing</b> — document the API surface for the C++ committee</li>
+<li><b>Additional test coverage</b> — edge cases, more type combinations</li>
+<li><b>Performance benchmarks</b> — compare with std::expected on supported compilers</li>
+<li><b>CI/CD setup</b> — ensure all specializations are tested on multiple compilers</li>
+<li><b>Upstream PR</b> — submit to beman project upstream </li>
+</ol>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

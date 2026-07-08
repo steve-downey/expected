@@ -102,20 +102,20 @@ $(document).ready(function(){initNavTree('md_docs_plan_step1_unexpected.html',''
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step1-unexpected</code> <b>Depends on:</b> None (first step) <b>Read first:</b> <code>docs/plan/handoff.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md205"></a>
+<h1><a class="anchor" id="autotoc_md301"></a>
 Goal</h1>
 <p>Implement the <code>unexpected&lt;E&gt;</code> class template per [expected.unexpected] in the C++ standard. This is the wrapper type that holds error values for storage in <code>expected</code> objects.</p>
-<h1><a class="anchor" id="autotoc_md206"></a>
+<h1><a class="anchor" id="autotoc_md302"></a>
 Context for Executing Agent</h1>
 <p>The file <code><a class="el" href="unexpected_8hpp_source.html">include/beman/expected/unexpected.hpp</a></code> already exists with the full specification as a comment block (lines 6-49). The namespace <code>beman::expected</code> exists but is empty. Your job is to write the actual class template inside that namespace.</p>
-<h2><a class="anchor" id="autotoc_md207"></a>
+<h2><a class="anchor" id="autotoc_md303"></a>
 Key files</h2>
 <ul>
 <li><code><a class="el" href="unexpected_8hpp_source.html">include/beman/expected/unexpected.hpp</a></code> — implement here</li>
 <li><code>tests/beman/expected/unexpected.test.cpp</code> — expand from breathing test</li>
 <li><code>tests/beman/expected/CMakeLists.txt</code> — may need updates for new test files</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md208"></a>
+<h2><a class="anchor" id="autotoc_md304"></a>
 Standard reference</h2>
 <p>Section [expected.un.general] specifies:</p>
 <div class="fragment"><div class="line">namespace std {</div>
@@ -152,7 +152,7 @@ Standard reference</h2>
 <div class="line"> </div>
 <div class="line">  template&lt;class E&gt; unexpected(E) -&gt; unexpected&lt;E&gt;;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md209"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md305"></a>
 Constraints on the converting constructor</h2>
 <p>Per [expected.un.cons]:</p><ul>
 <li><code>template&lt;class Err = E&gt; constexpr explicit unexpected(Err&amp;&amp;)</code>:<ul>
@@ -161,13 +161,13 @@ Constraints on the converting constructor</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md210"></a>
+<h2><a class="anchor" id="autotoc_md306"></a>
 Constraints on E</h2>
 <p>Per [expected.un.general] para 2:</p><ul>
 <li><code>E</code> shall be a valid value type for <code>unexpected</code></li>
 <li><code>E</code> shall not be a non-object type, an array type, a specialization of <code>unexpected</code>, or a cv-qualified type</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md211"></a>
+<h1><a class="anchor" id="autotoc_md307"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="unexpected_8hpp_source.html">include/beman/expected/unexpected.hpp</a></code>** — full implementation of:<ul>
@@ -189,7 +189,7 @@ Deliverables</h1>
 </ul>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md212"></a>
+<h1><a class="anchor" id="autotoc_md308"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch <code>step1-unexpected</code> from <code>main</code></li>
@@ -210,11 +210,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code> summarizing what was done</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md213"></a>
+<h1><a class="anchor" id="autotoc_md309"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md214"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md310"></a>
 Handoff to Step 2</h1>
 <p>Step 1 done, next read <code>docs/plan/step2-bad-expected-access.md</code>. <code>unexpected&lt;E&gt;</code> is now available for use in <code>bad_expected_access</code> and <code>expected</code>. </p>
 </div></div><!-- contents -->

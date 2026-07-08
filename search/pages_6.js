@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['test_20plan_20overview_20—_20beman_3a_3aexpected_0',['Test Plan Overview — beman::expected',['../md_docs_plan_tests_overview.html',1,'']]],
-  ['test_20plan_3a_20step_201_20—_20unexpected_3ce_3e_1',['Test Plan: Step 1 — unexpected&lt;E&gt;',['../md_docs_plan_tests_step1.html',1,'']]],
-  ['test_20plan_3a_20step_2010_20—_20expected_3cvoid_2c_20e_26_3e_20void_2berror_2dreference_20specialization_2',['Test Plan: Step 10 — expected&lt;void, E&amp;&gt; Void+Error-Reference Specialization',['../md_docs_plan_tests_step10.html',1,'']]],
-  ['test_20plan_3a_20step_202_20—_20bad_5fexpected_5faccess_3ce_3e_3',['Test Plan: Step 2 — bad_expected_access&lt;E&gt;',['../md_docs_plan_tests_step2.html',1,'']]],
-  ['test_20plan_3a_20step_203_20—_20expected_3ct_2c_20e_3e_20primary_20template_4',['Test Plan: Step 3 — expected&lt;T, E&gt; Primary Template',['../md_docs_plan_tests_step3.html',1,'']]],
-  ['test_20plan_3a_20step_204_20—_20expected_3cvoid_2c_20e_3e_20specialization_5',['Test Plan: Step 4 — expected&lt;void, E&gt; Specialization',['../md_docs_plan_tests_step4.html',1,'']]],
-  ['test_20plan_3a_20step_205_20—_20monadic_20operations_20for_20expected_3ct_2c_20e_3e_6',['Test Plan: Step 5 — Monadic Operations for expected&lt;T, E&gt;',['../md_docs_plan_tests_step5.html',1,'']]],
-  ['test_20plan_3a_20step_206_20—_20monadic_20operations_20for_20expected_3cvoid_2c_20e_3e_7',['Test Plan: Step 6 — Monadic Operations for expected&lt;void, E&gt;',['../md_docs_plan_tests_step6.html',1,'']]],
-  ['test_20plan_3a_20step_207_20—_20expected_3ct_26_2c_20e_3e_20reference_20specialization_8',['Test Plan: Step 7 — expected&lt;T&amp;, E&gt; Reference Specialization',['../md_docs_plan_tests_step7.html',1,'']]],
-  ['test_20plan_3a_20step_208_20—_20expected_3ct_2c_20e_26_3e_20error_2dreference_20specialization_9',['Test Plan: Step 8 — expected&lt;T, E&amp;&gt; Error-Reference Specialization',['../md_docs_plan_tests_step8.html',1,'']]],
-  ['test_20plan_3a_20step_209_20—_20expected_3ct_26_2c_20e_26_3e_20both_2dreference_20specialization_10',['Test Plan: Step 9 — expected&lt;T&amp;, E&amp;&gt; Both-Reference Specialization',['../md_docs_plan_tests_step9.html',1,'']]]
+  ['std_3a_3aexpected_20parity_0',['std::expected Parity',['../md_docs_std_parity.html',1,'']]],
+  ['step_2010_3a_20implement_20expected_3cvoid_2c_20e_26_3e_20specialization_1',['Step 10: Implement expected&lt;void, E&amp;&gt; Specialization',['../md_docs_plan_step10_expected_void_ref_e.html',1,'']]],
+  ['step_201_3a_20implement_20unexpected_3ce_3e_2',['Step 1: Implement unexpected&lt;E&gt;',['../md_docs_plan_step1_unexpected.html',1,'']]],
+  ['step_202_3a_20implement_20bad_5fexpected_5faccess_3',['Step 2: Implement bad_expected_access',['../md_docs_plan_step2_bad_expected_access.html',1,'']]],
+  ['step_203_3a_20implement_20expected_3ct_2c_20e_3e_20primary_20template_4',['Step 3: Implement expected&lt;T, E&gt; Primary Template',['../md_docs_plan_step3_expected_primary.html',1,'']]],
+  ['step_204_3a_20implement_20expected_3cvoid_2c_20e_3e_20specialization_5',['Step 4: Implement expected&lt;void, E&gt; Specialization',['../md_docs_plan_step4_expected_void.html',1,'']]],
+  ['step_205_3a_20monadic_20operations_20for_20expected_3ct_2c_20e_3e_6',['Step 5: Monadic Operations for expected&lt;T, E&gt;',['../md_docs_plan_step5_expected_primary_monadic.html',1,'']]],
+  ['step_206_3a_20monadic_20operations_20for_20expected_3cvoid_2c_20e_3e_7',['Step 6: Monadic Operations for expected&lt;void, E&gt;',['../md_docs_plan_step6_expected_void_monadic.html',1,'']]],
+  ['step_207_3a_20implement_20expected_3ct_26_2c_20e_3e_20reference_20specialization_8',['Step 7: Implement expected&lt;T&amp;, E&gt; Reference Specialization',['../md_docs_plan_step7_expected_ref_t.html',1,'']]],
+  ['step_208_3a_20implement_20expected_3ct_2c_20e_26_3e_20error_2dreference_20specialization_9',['Step 8: Implement expected&lt;T, E&amp;&gt; Error-Reference Specialization',['../md_docs_plan_step8_expected_ref_e.html',1,'']]],
+  ['step_209_3a_20implement_20expected_3ct_26_2c_20e_26_3e_20both_2dreference_20specialization_10',['Step 9: Implement expected&lt;T&amp;, E&amp;&gt; Both-Reference Specialization',['../md_docs_plan_step9_expected_ref_both.html',1,'']]]
 ];

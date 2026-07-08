@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_step5_expected_primary_mo
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step5-expected-primary-monadic</code> <b>Depends on:</b> Step 3 (expected&lt;T, E&gt; primary template) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md266"></a>
+<h1><a class="anchor" id="autotoc_md362"></a>
 Goal</h1>
 <p>Add the four monadic operations (<code>and_then</code>, <code>or_else</code>, <code>transform</code>, <code>transform_error</code>) to the primary <code>expected&lt;T, E&gt;</code> template. Each has 4 ref-qualified overloads (&amp; , &amp;&amp;, const&amp;, const&amp;&amp;) = 16 function templates total.</p>
-<h1><a class="anchor" id="autotoc_md267"></a>
+<h1><a class="anchor" id="autotoc_md363"></a>
 Context for Executing Agent</h1>
 <p>The primary template from Step 3 already has all constructors, observers, assignment, swap, and equality. This step adds the monadic operations defined in [expected.object.monadic].</p>
-<h2><a class="anchor" id="autotoc_md268"></a>
+<h2><a class="anchor" id="autotoc_md364"></a>
 Monadic operations overview</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -130,7 +130,7 @@ Monadic operations overview</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>transform_error(F)</code>   </td><td class="markdownTableBodyNone">has error   </td><td class="markdownTableBodyNone"><code>error()</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;T, G&gt;(unexpect, invoke(f, error()))</code>   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md269"></a>
+<h2><a class="anchor" id="autotoc_md365"></a>
 Key constraints per [expected.object.monadic]</h2>
 <p>For <code>and_then</code>:</p><ul>
 <li>Let <code>U = remove_cvref_t&lt;invoke_result_t&lt;F, decltype(value())&gt;&gt;</code></li>
@@ -153,7 +153,7 @@ Key constraints per [expected.object.monadic]</h2>
 <li>Returns <code>expected&lt;T, G&gt;</code></li>
 <li><code>G</code> must be a valid error type for <code>unexpected</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md270"></a>
+<h2><a class="anchor" id="autotoc_md366"></a>
 Ref-qualification pattern</h2>
 <p>Each operation has 4 overloads matching the object's value category: </p><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> F&gt; <span class="keyword">constexpr</span> <span class="keyword">auto</span> and_then(F&amp;&amp; f) &amp;;</div>
 <div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> F&gt; <span class="keyword">constexpr</span> <span class="keyword">auto</span> and_then(F&amp;&amp; f) &amp;&amp;;</div>
@@ -165,7 +165,7 @@ Ref-qualification pattern</h2>
 <li><code>const &amp;</code> → passes <code>value()</code> (const lvalue ref)</li>
 <li><code>const &amp;&amp;</code> → passes <code>std::move(value())</code> (const rvalue ref)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md271"></a>
+<h1><a class="anchor" id="autotoc_md367"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — add 16 monadic member functions to the primary template</li>
@@ -181,7 +181,7 @@ Deliverables</h1>
 </li>
 <li><b>Update <code>tests/beman/expected/CMakeLists.txt</code></b> — add new test file</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md272"></a>
+<h1><a class="anchor" id="autotoc_md368"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch <code>step5-expected-primary-monadic</code> from <code>main</code> (with Step 3 merged)</li>
@@ -193,11 +193,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md273"></a>
+<h1><a class="anchor" id="autotoc_md369"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md274"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md370"></a>
 Handoff to Step 6</h1>
 <p>Step 5 done, next read <code>docs/plan/step6-expected-void-monadic.md</code>. The primary template now has full monadic support. Step 7 will specialize it for references. </p>
 </div></div><!-- contents -->

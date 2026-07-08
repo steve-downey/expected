@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step6.html',''); in
 <div class="contents">
 <div class="textblock"><p><b>Standard section:</b> [expected.void.monadic] (22.8.7.7) <b>Test file:</b> <code>tests/beman/expected/expected_void_monadic.test.cpp</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md501"></a>
+<h1><a class="anchor" id="autotoc_md603"></a>
 Testing Strategy</h1>
 <p>Catch2. Include header twice. Key differences from Step 5 (primary template):</p><ul>
 <li><code>and_then(F)</code> invokes F with <b>no arguments</b> (void has no value to pass)</li>
@@ -113,9 +113,9 @@ Testing Strategy</h1>
 <li>Return type for <code>or_else</code> must have <code>value_type = void</code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md503"></a>
+<h1><a class="anchor" id="autotoc_md605"></a>
 and_then [expected.void.monadic] para 1–8</h1>
-<h2><a class="anchor" id="autotoc_md504"></a>
+<h2><a class="anchor" id="autotoc_md606"></a>
 Lvalue overloads (para 1–4)</h2>
 <p><code>U = remove_cvref_t&lt;invoke_result_t&lt;F&gt;&gt;</code></p>
 <ul>
@@ -124,11 +124,11 @@ Lvalue overloads (para 1–4)</h2>
 <li><b>Effects:</b> if has_value(), return <code>invoke(f)</code>; else return <code>U(unexpect, error())</code></li>
 </ul>
 <p><b>Note:</b> F is invoked with <b>no arguments</b> for void expected — this differs from the primary template where F receives the stored value.</p>
-<h2><a class="anchor" id="autotoc_md505"></a>
+<h2><a class="anchor" id="autotoc_md607"></a>
 Rvalue overloads (para 5–8)</h2>
 <p>Same F invocation (no args); <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md507"></a>
+<h1><a class="anchor" id="autotoc_md609"></a>
 or_else [expected.void.monadic] para 9–14</h1>
 <p><code>G = remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code> (lvalue)</p>
 <ul>
@@ -137,7 +137,7 @@ or_else [expected.void.monadic] para 9–14</h1>
 <li><b>Effects:</b> if has_value(), return <code>G()</code>; else return <code>invoke(f, error())</code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md509"></a>
+<h1><a class="anchor" id="autotoc_md611"></a>
 transform [expected.void.monadic] para 15–22</h1>
 <p><code>U = remove_cv_t&lt;invoke_result_t&lt;F&gt;&gt;</code> (invoked with no args)</p>
 <ul>
@@ -153,7 +153,7 @@ transform [expected.void.monadic] para 15–22</h1>
 <p><u><u><u></p><hr  />
 <p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h1><a class="anchor" id="autotoc_md511"></a>
+<h1><a class="anchor" id="autotoc_md613"></a>
 transform_error [expected.void.monadic] para 23–28</h1>
 <p><u><u><u> <code>G = remove_cv_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code></u></u></u></p>
 <p><u><u><u></p><ul>
@@ -164,7 +164,7 @@ transform_error [expected.void.monadic] para 23–28</h1>
 <p><u><u><u></p><hr  />
 <p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h1><a class="anchor" id="autotoc_md513"></a>
+<h1><a class="anchor" id="autotoc_md615"></a>
 Test Outline</h1>
 <p><u><u><u> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -364,16 +364,16 @@ Test Outline</h1>
 <div class="line">    (void)(std::move(e).and_then(f));</div>
 <div class="line">    (void)(std::move(std::as_const(e)).and_then(f));</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:108</div></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:34</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:122</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:47</div></div>
 </div><!-- fragment --><p></u></u></u></p>
 <p><u><u><u></p><hr  />
 <p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h1><a class="anchor" id="autotoc_md515"></a>
+<h1><a class="anchor" id="autotoc_md617"></a>
 Negative Compile Tests</h1>
 <p><u><u><u> </u></u></u></p>
-<h2><a class="anchor" id="autotoc_md516"></a>
+<h2><a class="anchor" id="autotoc_md618"></a>
 &lt;tt&gt;void_and_then_wrong_error_type_fail.cpp&lt;/tt&gt;</h2>
 <p><u><u><u></p><div class="fragment"><div class="line"><span class="comment">// NEGATIVE: and_then on void expected mandates U::error_type == E</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -383,7 +383,7 @@ Negative Compile Tests</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h2><a class="anchor" id="autotoc_md517"></a>
+<h2><a class="anchor" id="autotoc_md619"></a>
 &lt;tt&gt;void_or_else_wrong_value_type_fail.cpp&lt;/tt&gt;</h2>
 <p><u><u><u></p><div class="fragment"><div class="line"><span class="comment">// NEGATIVE: or_else on void expected mandates G::value_type == void</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>

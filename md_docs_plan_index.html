@@ -100,17 +100,17 @@ $(document).ready(function(){initNavTree('md_docs_plan_index.html',''); initResi
   <div class="headertitle"><div class="title">Plan: Implement expected&lt;T&amp;, E&gt; and expected&lt;T, E&amp;&gt; Reference Specializations </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md197"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md291"></a>
 Proposal</h1>
 <p>Implement <code>std::expected</code> over references for both <code>T</code> and <code>E</code> parameters, applying the same assign-through and rebind semantics adopted for C++26 <code>std::optional&lt;T&amp;&gt;</code> (P2988). This requires first completing a working primary template <code>expected&lt;T, E&gt;</code> from the existing skeleton.</p>
-<h1><a class="anchor" id="autotoc_md198"></a>
+<h1><a class="anchor" id="autotoc_md292"></a>
 Reference Materials</h1>
 <ul>
 <li><b>beman/optional</b> — reference implementation of <code>optional&lt;T&amp;&gt;</code> with rebind semantics (<code>~/src/steve-downey/optional/main</code>)</li>
 <li><b>C++26 standard wording</b> — <code>[expected.expected]</code>, <code>[expected.void]</code>, <code>[expected.unexpected]</code>, <code>[expected.bad]</code></li>
 <li><b>P2988</b> — <code>std::optional&lt;T&amp;&gt;</code> adopted design (rebind on assignment)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md199"></a>
+<h1><a class="anchor" id="autotoc_md293"></a>
 Phase Overview</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -137,8 +137,10 @@ Phase Overview</h1>
 <td class="markdownTableBodyNone">10   </td><td class="markdownTableBodyNone"><code>step10-expected-void-ref-e</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;void, E&amp;&gt;</code> void+error-ref specialization   </td><td class="markdownTableBodyNone">Steps 4, 6   </td></tr>
 </table>
 <p>Steps 1-2 are independent foundations (can be parallel). Steps 3-4 depend on 1-2 and are independent of each other. Steps 5-6 add monadic ops to their respective primary/void templates. Steps 7-10 are the reference specializations (the novel work in this proposal).</p>
-<h1><a class="anchor" id="autotoc_md200"></a>
+<h1><a class="anchor" id="autotoc_md294"></a>
 Standing Conventions</h1>
+<h2><a class="anchor" id="autotoc_md295"></a>
+Code</h2>
 <ul>
 <li>Include guards: <code>#ifndef</code>/<code>#define</code>/<code>#endif</code> (never <code>#pragma once</code>)</li>
 <li>Format: <code>BEMAN_EXPECTED_&lt;PATH&gt;_HPP</code> (uppercase, path separators to <code>_</code>)</li>
@@ -146,12 +148,23 @@ Standing Conventions</h1>
 <li>SPDX license: <code>// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</code></li>
 <li>Functions defined out-of-line in headers (body after class)</li>
 <li><code>constexpr</code> everything possible</li>
-<li>Test framework: GoogleTest</li>
-<li>Test files include the header under test twice (idempotence check)</li>
-<li>Each step runs <code>make test</code> and <code>make lint</code> before completion</li>
 <li>Namespace: <code>beman::expected</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md201"></a>
+<h2><a class="anchor" id="autotoc_md296"></a>
+Testing</h2>
+<ul>
+<li>Test framework: Catch2 (<code>Catch2::Catch2WithMain</code>)</li>
+<li>Test files include the header under test twice (idempotence check)</li>
+<li>Each step runs <code>make TOOLCHAIN=gcc-16 test</code> and <code>make lint</code> before completion</li>
+<li><b>Every constraint and mandate must have a negative test.</b> See <code>docs/plan/tests-overview.md</code> §6 for full rules. In short:<ul>
+<li><b>Constraint</b> (<code>requires</code> clause) → SFINAE-friendly; test with <code>static_assert(!std::is_constructible_v&lt;...&gt;)</code> or a concept detector in a <code>*_constraints.test.cpp</code> file</li>
+<li><b>Mandate</b> (<code>static_assert</code> inside a function/class body) → ill-formed on instantiation; test with a <code>*_fail.cpp</code> negative compile test</li>
+<li><b>Hardened precondition</b> → runtime trap; test under <code>#if defined(BEMAN_EXPECTED_HARDENED)</code></li>
+<li>Each negative test should have a matching positive test confirming the operation works for conforming types</li>
+</ul>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md297"></a>
 Step Details</h1>
 <ul>
 <li><a class="el" href="md_docs_plan_step1_unexpected.html">Step 1: unexpected&lt;E&gt;</a></li>
@@ -165,7 +178,7 @@ Step Details</h1>
 <li><a class="el" href="md_docs_plan_step9_expected_ref_both.html">Step 9: expected&lt;T&amp;,E&amp;&gt; both-reference specialization</a></li>
 <li><a class="el" href="md_docs_plan_step10_expected_void_ref_e.html">Step 10: expected&lt;void,E&amp;&gt; void+error-ref specialization</a></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md202"></a>
+<h1><a class="anchor" id="autotoc_md298"></a>
 Checklist</h1>
 <ul>
 <li>[x] Step 1: <code>unexpected&lt;E&gt;</code> — constructors, error() observers, swap, equality, deduction guide</li>
@@ -174,10 +187,10 @@ Checklist</h1>
 <li>[x] Step 4: <code>expected&lt;void, E&gt;</code> — constructors, destructor, assignment, emplace, swap, observers, error_or, equality</li>
 <li>[x] Step 5: <code>expected&lt;T, E&gt;</code> monadic — and_then, or_else, transform, transform_error (4 ref-qualified overloads each)</li>
 <li>[x] Step 6: <code>expected&lt;void, E&gt;</code> monadic — and_then, or_else, transform, transform_error</li>
-<li>[ ] Step 7: <code>expected&lt;T&amp;, E&gt;</code> — pointer storage, rebind assignment, observers returning T&amp;, value_or, monadic ops, dangling prevention</li>
-<li>[ ] Step 8: <code>expected&lt;T, E&amp;&gt;</code> — union+pointer storage, error as E&amp;, rebind error assignment, observers, monadic ops</li>
-<li>[ ] Step 9: <code>expected&lt;T&amp;, E&amp;&gt;</code> — both pointer storage, rebind both, observers, monadic ops</li>
-<li>[ ] Step 10: <code>expected&lt;void, E&amp;&gt;</code> — no value storage, error pointer, rebind error, observers, monadic ops </li>
+<li>[x] Step 7: <code>expected&lt;T&amp;, E&gt;</code> — pointer storage, rebind assignment, observers returning T&amp;, value_or, monadic ops, dangling prevention</li>
+<li>[x] Step 8: <code>expected&lt;T, E&amp;&gt;</code> — union+pointer storage, error as E&amp;, rebind error assignment, observers, monadic ops</li>
+<li>[x] Step 9: <code>expected&lt;T&amp;, E&amp;&gt;</code> — both pointer storage, rebind both, observers, monadic ops</li>
+<li>[x] Step 10: <code>expected&lt;void, E&amp;&gt;</code> — no value storage, error pointer, rebind error, observers, monadic ops </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

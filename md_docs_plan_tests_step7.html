@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step7.html',''); in
 <div class="contents">
 <div class="textblock"><p><b>Standard section:</b> No direct standard wording — this is novel beyond [expected.expected]. Design follows P2988 (optional&lt;T&amp;&gt;) rebind semantics. <b>Test file:</b> <code>tests/beman/expected/expected_ref.test.cpp</code> <b>Negative-compile files:</b> <code>tests/beman/expected/expected_ref_*_fail.cpp</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md520"></a>
+<h1><a class="anchor" id="autotoc_md622"></a>
 Testing Strategy</h1>
 <p>Catch2. Include header twice. This specialization is not in the C++26 standard (it's the proposal being implemented), so tests validate the P2988-derived design rather than quoting standard wording verbatim.</p>
 <p>Key behaviors to test:</p><ol type="1">
@@ -113,7 +113,7 @@ Testing Strategy</h1>
 <li><b>No in-place T constructor</b> — <code>in_place_t</code> args for the value side don't exist (just pass the lvalue reference directly); <code>unexpect_t</code> args for error still work</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md522"></a>
+<h1><a class="anchor" id="autotoc_md624"></a>
 Type-Level Tests (static_assert)</h1>
 <div class="fragment"><div class="line"><span class="comment">// expected&lt;T&amp;, E&gt; is a valid specialization</span></div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_constructible_v&lt;expected&lt;int&amp;, int&gt;, <span class="keywordtype">int</span>&amp;&gt;);</div>
@@ -144,7 +144,7 @@ Type-Level Tests (static_assert)</h1>
 <div class="line">    <span class="keyword">decltype</span>(std::declval&lt;expected&lt;int&amp;, int&gt;&gt;().value()),</div>
 <div class="line">    <span class="keywordtype">int</span>&amp;&gt;);</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md524"></a>
+<h1><a class="anchor" id="autotoc_md626"></a>
 Test Outline</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -411,12 +411,12 @@ Test Outline</h1>
 <div class="line">    CHECK(r.error() == <span class="stringliteral">&quot;5&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:78</div></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:108</div></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:34</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:122</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:47</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md526"></a>
+<h1><a class="anchor" id="autotoc_md628"></a>
 Negative Compile Tests</h1>
-<h2><a class="anchor" id="autotoc_md527"></a>
+<h2><a class="anchor" id="autotoc_md629"></a>
 &lt;tt&gt;expected_ref_temporary_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: constructing expected&lt;int&amp;, E&gt; from a temporary binds a dangling reference</span></div>
 <div class="line"><span class="comment">// Must be deleted by reference_constructs_from_temporary_v check</span></div>
@@ -424,14 +424,14 @@ Negative Compile Tests</h1>
 <div class="line"><span class="keywordtype">void</span> test() {</div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int&amp;, int&gt;</a> e(42);  <span class="comment">// 42 is a temporary — must not compile</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md528"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md630"></a>
 &lt;tt&gt;expected_ref_no_default_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: expected&lt;T&amp;, E&gt; has no default constructor (T&amp; cannot be null)</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><span class="keywordtype">void</span> test() {</div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int&amp;, int&gt;</a> e;  <span class="comment">// must not compile</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md529"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md631"></a>
 &lt;tt&gt;expected_ref_inplace_value_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: expected&lt;T&amp;, E&gt; has no in_place_t value constructor</span></div>
 <div class="line"><span class="comment">// (makes no sense for references; just bind the lvalue directly)</span></div>
@@ -441,7 +441,7 @@ Negative Compile Tests</h1>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int&amp;, int&gt;</a> e(std::in_place, x);  <span class="comment">// must not compile</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md531"></a>
+<h1><a class="anchor" id="autotoc_md633"></a>
 CMakeLists additions</h1>
 <p>Each <code>_fail.cpp</code> follows the transcode pattern: </p><div class="fragment"><div class="line"># example for one fail file</div>
 <div class="line">add_library(beman.expected.tests.expected_ref_temporary_fail OBJECT)</div>

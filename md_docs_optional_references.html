@@ -110,21 +110,21 @@ $(document).ready(function(){initNavTree('md_docs_optional_references.html','');
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md149"></a>
+<h1><a class="anchor" id="autotoc_md234"></a>
 Comparison table</h1>
-<h2><a class="anchor" id="autotoc_md150"></a>
+<h2><a class="anchor" id="autotoc_md235"></a>
 Using a raw pointer result for an element search function</h2>
 <p>This is the convention the C++ core guidelines suggest, to use a raw pointer for representing optional non-owning references. However, there is a user-required check against , no type safety meaning no safety against mis-interpreting such a raw pointer, for example by using pointer arithmetic on it.</p>
-<h2><a class="anchor" id="autotoc_md151"></a>
+<h2><a class="anchor" id="autotoc_md236"></a>
 returning result of an element search function via a (smart) pointer</h2>
 <p>The disadvantage here is that is both non-standard and not well named, therefore this example uses that would have the advantage of avoiding dangling through potential lifetime extension. However, on the downside is still the explicit checks against the on the client side, failing so risks undefined behavior.</p>
-<h2><a class="anchor" id="autotoc_md152"></a>
+<h2><a class="anchor" id="autotoc_md237"></a>
 returning result of an element search function via an iterator</h2>
 <p>This might be the obvious choice, for example, for associative containers, especially since their iterator stability guarantees. However, returning such an iterator will leak the underlying container type as well necessarily requires one to know the sentinel of the container to check for the not-found case.</p>
-<h2><a class="anchor" id="autotoc_md153"></a>
+<h2><a class="anchor" id="autotoc_md238"></a>
 Using an optional&lt;T*&gt; as a substitute for optional&lt;T&amp;&gt;</h2>
 <p>This approach adds another level of indirection and requires two checks to take a definite action.</p>
-<h1><a class="anchor" id="autotoc_md154"></a>
+<h1><a class="anchor" id="autotoc_md239"></a>
 Motivation</h1>
 <p>Other than the standard library’s implementation of optional, optionals holding references are common. The desire for such a feature is well understood, and many optional types in commonly used libraries provide it, with the semantics proposed here. One standard library implementation already provides an implementation of but disables its use, because the standard forbids it.</p>
 <p>The research in JeanHeyd Meneide’s _References for Standard Library Vocabulary Types - an optional case study._ shows conclusively that rebind semantics are the only safe semantic as assign through on engaged is too bug-prone. Implementations that attempt assign-through are abandoned. The standard library should follow existing practice and supply an that rebinds on assignment.</p>
@@ -135,47 +135,47 @@ Motivation</h1>
 <p>That we can’t guarantee from (product type) that (sum type) is valid, is a problem, and one that reflection can’t solve. A language sum type could, but we need agreement on the semantics.</p>
 <p>The semantics of a variant with a reference are as if it holds the address of the referent when referring to that referent. All other semantics are worse. Not being able to express a variant&lt;T&amp;&gt; is inconsistent, hostile, and strictly worse than disallowing it.</p>
 <p>Thus, we expect future papers to propose and with the ability to hold references. The latter can be used as an iteration type over elements.</p>
-<h1><a class="anchor" id="autotoc_md155"></a>
+<h1><a class="anchor" id="autotoc_md240"></a>
 Design</h1>
 <p>The design is straightforward. The holds a pointer to the underlying object of type , or if the optional is disengaged. The implementation is simple, especially with C++20 and up techniques, using concept constraints. As the held pointer is a primitive regular type with reference semantics, many operations can be defaulted and are by nature. See and . The implementation is less than 200 lines of code, much of it the monadic functions with identical textual implementations with different signatures and different overloads being called.</p>
 <p>In place construction is not supported as it would just be a way of providing immediate life-time issues.</p>
-<h2><a class="anchor" id="autotoc_md156"></a>
+<h2><a class="anchor" id="autotoc_md241"></a>
 Relational Operations</h2>
 <p>The definitions of the relational operators are the same as for the base template. Interoperable comparisons between T and optional&lt;T&amp;&gt; work as expected. This is not true for the boost optional&lt;T&amp;&gt;.</p>
-<h2><a class="anchor" id="autotoc_md157"></a>
+<h2><a class="anchor" id="autotoc_md242"></a>
 make_optional</h2>
 <p>With further research, the existing uses of make_optional&lt;X&amp;&gt; seem to be primarily test cases, and deliberate use seems to be exceedingly rare in the wild. Reflector review was much more positive about removing the misleading ability to create an via . In addition, the multiple argument forms can be used to attempt to construct a optional that contains a reference, but this becomes ill formed because of existing mandates at the type level. In order to preserve existing behavior, where make_optional is not well formed if it constructs a reference, changes to should be made.</p>
 <p>Adding a non-type template parameter as the first template parameter to the single argument and mandating that the multi-argument version not request a reference type as the parameter, will diagnose mistaken use of and preserve the existing behavior.</p>
 <p>Since construction of an object in order to make a reference to it to construct an optional containing a reference would always dangle, there do not seem to be any use cases for the multi-argument or initializer list forms of make_optional for reference types, and the constructor form seems to satisfy all cases for single argument construction of a optional containing a reference, there does not seem to be a need for a factory function for optional over reference.</p>
 <p>There was also discussion of using to indicate reference use, in analogy with std::tuple. Unfortunately there are existing uses of optional over reference_wrapper as a workaround for lack of reference specialization, and it would be a breaking change for such code.</p>
-<h2><a class="anchor" id="autotoc_md158"></a>
+<h2><a class="anchor" id="autotoc_md243"></a>
 Trivial construction</h2>
 <p>Construction of should be trivial, because it is straightforward to implement, and is trivial. Boost is not.</p>
-<h2><a class="anchor" id="autotoc_md159"></a>
+<h2><a class="anchor" id="autotoc_md244"></a>
 Value Category Affects value()</h2>
 <p>For several implementations there are distinct overloads for functions depending on value category, with the same implementation. However, this makes it very easy to accidentally steal from the underlying referred to object. Value category should be shallow. Thanks to many people for pointing this out. If “Deducing ” had been used, the problem would have been much more subtle in code review.</p>
-<h2><a class="anchor" id="autotoc_md160"></a>
+<h2><a class="anchor" id="autotoc_md245"></a>
 Shallow vs Deep const</h2>
 <p>There is some implementation divergence in optionals about deep const for . That is, can the referred to be modified through a . Does return an or a , and does return an or a . I believe it is overall more defensible if the is shallow as it would be for a where the constness of the struct ref does not affect if the p pointer can be written through. This is consistent with the rebinding behavior being proposed.</p>
 <p>Where deeper constness is desired, would prevent non const access to the underlying object.</p>
-<h2><a class="anchor" id="autotoc_md161"></a>
+<h2><a class="anchor" id="autotoc_md246"></a>
 Conditional Explicit</h2>
 <p>As in the base template, is made conditional on the type used to construct the optional. . This is not present in boost::optional, leading to differences in construction between braced initialization and = that can be surprising.</p>
-<h2><a class="anchor" id="autotoc_md162"></a>
+<h2><a class="anchor" id="autotoc_md247"></a>
 value_or</h2>
 <p>After extensive discussion, it seems there is no particularly wonderful solution for that does not involve a time machine. Implementations of optionals that support reference semantics diverge over the return type, and the current one is arguably wrong, and should use something based on , which of course did not exist when was standardized.</p>
 <p>The weak consensus is to return a from as this is least likely to cause issues. There was at least one strong objection to this choice, but all other choices had more objections. The author intends to propose free functions , , , and over all types modeling optional-like, , in the next revision of . This would cover , , and pointer types.</p>
 <p>Having return by value also allows the common case of using a literal as the alternative to be expressed concisely.</p>
-<h2><a class="anchor" id="autotoc_md163"></a>
+<h2><a class="anchor" id="autotoc_md248"></a>
 in_place_t construction</h2>
 <p>The reference specialization allows a limited form of in_place construction where the argument can be converted to the appropriate reference without creation of a temporary. As the reference specialization is non-owning, there is no “place” for a temporary to be constructed that will not dangle. For cases where the lifetime of the constructed object would match the lifetime of the optional, the temporary can be constructed explicitly, instead.</p>
-<h2><a class="anchor" id="autotoc_md164"></a>
+<h2><a class="anchor" id="autotoc_md249"></a>
 Converting assignment</h2>
 <p>A similarly limited converting assignment operator is provided for cases where an optional&lt;U&gt; has a value or refers to a value which can be converted to a T&amp; without construction of a temporary. In particular, converting an optional&lt;T&amp;&gt; to an optional&lt;T const&amp;&gt; is supported.</p>
-<h2><a class="anchor" id="autotoc_md165"></a>
+<h2><a class="anchor" id="autotoc_md250"></a>
 Compiler Explorer Playground</h2>
 <p>See <a href="https://compiler-explorer.com/z/zKqE3sn87">https://compiler-explorer.com/z/zKqE3sn87</a> for an updated playground with relevant Google Test functions and various optional implementations made available for cross reference including a flattened in-place version of the reference implementation.</p>
-<h1><a class="anchor" id="autotoc_md166"></a>
+<h1><a class="anchor" id="autotoc_md251"></a>
 Principles for Reification of Design</h1>
 <p>Optional must never construct a temporary, or knowingly take the address of an temporary or part of an temporary.</p>
 <p>It is always presumed safe to copy the pointer value from an optional, since by induction, it is not dangling.</p>
@@ -185,7 +185,7 @@ Principles for Reification of Design</h1>
 <p>Assignment is always from an optional, which may have been an implicit construction. The assignment cannot throw, the construction/conversion may. The assignment may therefore need annotation converting the rhs if that constructor was explicit. This must not be necessary in the default case of creating an optional reference to an lvalue of the same type.</p>
 <p>The model for the constraints and mandates for is taken from over reference types. The type takes the most care of types in the standard library in dealing with creation of temporaries.</p>
 <p>As is designed to be converting, to create instances from arguments that can be used to create the underlying type, constructors should be explicit only where the operations used to create the pointer or the notional reference would be or are explicit.</p>
-<h2><a class="anchor" id="autotoc_md167"></a>
+<h2><a class="anchor" id="autotoc_md252"></a>
 Construction from temporary</h2>
 <p>We disallow construction of from any type U in which:</p>
 <ul>
@@ -213,7 +213,7 @@ Construction from temporary</h2>
 <ul>
 <li>We provide behavior consistent with , that disallows binding to xvalues. We believe that is closer in spirit to than any view type. It certainly shares some of the features.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md168"></a>
+<h2><a class="anchor" id="autotoc_md253"></a>
 Deleting dangling overloads</h2>
 <p>To achieve the dangling safety expressed before, the constructor is marked deleted if it would lead to binding of the reference to temporary or the xvalue. However, deleted constructors are still considered to be candidates during overload resolution, leading to ambiguity in the following examples:</p>
 <p>During the reflector discussion, an option of an alternate design was presented, where the dangling overload would be constrained, and eliminated from the overload set.</p>
@@ -226,26 +226,26 @@ Deleting dangling overloads</h2>
 </ul>
 <p>As language in general treats functions accepting by value and by const reference in the same manner during overload resolution, we believe achieving this consistency is a feature.</p>
 <p>The design that was introduced by , and , for references, is followed, where the detection of dangling does not affect the results of overload resolution and instead makes a call that would dangle be ill-formed and diagnosed.</p>
-<h2><a class="anchor" id="autotoc_md169"></a>
+<h2><a class="anchor" id="autotoc_md254"></a>
 Assignment of optional&lt;T&amp;&gt;</h2>
 <p>In the case of , any assignment operation is equivalent to assigning a pointer, and there is no observable difference between: using converting assignment from or constructing temporary , and then assigning it to it.</p>
 <p>This observation allows us to provide only copy-assignment for , instead of a set of converting assignments, that would need to replicate the signatures of constructors and their constraints. Assignment from any other value is handled by first implicitly constructing and then using copy-assignment. Move-assignment is the same as copy-assignment, since only pointer copy is involved.</p>
-<h2><a class="anchor" id="autotoc_md170"></a>
+<h2><a class="anchor" id="autotoc_md255"></a>
 Copy and Assignment of optional&lt;U&amp;&gt;&amp;&amp; to optional&lt;T&gt;</h2>
 <p>Care must be take to prevent the assignment of a movable optional to disallow the copy or assignment of the underlying referred to value to be stolen. The assignment or copy constructor should be used instead, which also needs to check slightly different constraints for and for testing . We thank Jan Kokemüller for uncovering this bug. The bug seems to be present in many optional implementations that support references.</p>
-<h1><a class="anchor" id="autotoc_md171"></a>
+<h1><a class="anchor" id="autotoc_md256"></a>
 Proposal</h1>
 <p>Add an lvalue reference specialization for the std::optional template.</p>
-<h1><a class="anchor" id="autotoc_md172"></a>
+<h1><a class="anchor" id="autotoc_md257"></a>
 Wording</h1>
 <p>The wording here cross references and adopts the wording in . The proposed changes are relative to the current working draft .</p>
-<h1><a class="anchor" id="autotoc_md173"></a>
+<h1><a class="anchor" id="autotoc_md258"></a>
 Impact on the standard</h1>
 <p>A pure library extension, affecting no other parts of the library or language.</p>
-<h1><a class="anchor" id="autotoc_md174"></a>
+<h1><a class="anchor" id="autotoc_md259"></a>
 Acknowledgments</h1>
 <p>Many thanks to all of the reviewers and authors of beman.optional, , in particular A. Jiang, Darius Neațu, David Sankel, Eddie Nolan, Jan Kokemüller, Jeff Garland, and River (Xueqing) Wu. Tomasz Kamiński provided extensive support for the library wording of optional&lt;T&amp;&gt;.</p>
-<h1><a class="anchor" id="autotoc_md175"></a>
+<h1><a class="anchor" id="autotoc_md260"></a>
 Document history</h1>
 <ul>
 <li><b>Changes since R8</b><ul>
@@ -289,7 +289,7 @@ Document history</h1>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md176"></a>
+<h1><a class="anchor" id="autotoc_md261"></a>
 Implementation</h1>
 <div class="fragment"><div class="line">// ----------------------</div>
 <div class="line">// BASE AND DETAILS ELIDED</div>

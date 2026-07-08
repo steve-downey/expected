@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::expected: File List</title>
+<title>beman::expected: Fix: PR #57 Review Corrections</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('files.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md_docs_plan_fix_review_corrections.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -96,22 +96,45 @@ $(document).ready(function(){initNavTree('files.html',''); initResizable(); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">File List</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Fix: PR #57 Review Corrections </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all documented files with brief descriptions:</div><div class="directory">
-<div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span><span onclick="javascript:toggleLevel(4);">4</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><span id="img_0_" class="iconfopen" onclick="toggleFolder('0_')">&#160;</span><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html" target="_self">include</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><span id="arr_0_0_" class="arrow" onclick="toggleFolder('0_0_')">&#9660;</span><span id="img_0_0_" class="iconfopen" onclick="toggleFolder('0_0_')">&#160;</span><a class="el" href="dir_94cf5e36d6dc57d8747f5a546f07158a.html" target="_self">beman</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><span id="arr_0_0_0_" class="arrow" onclick="toggleFolder('0_0_0_')">&#9660;</span><span id="img_0_0_0_" class="iconfopen" onclick="toggleFolder('0_0_0_')">&#160;</span><a class="el" href="dir_ba88a56a66e410323a789d9937b75819.html" target="_self">expected</a></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_0_" class="odd"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="bad__expected__access_8hpp_source.html"><span class="icondoc"></span></a><b>bad_expected_access.hpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_1_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="config_8hpp_source.html"><span class="icondoc"></span></a><b>config.hpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_2_" class="odd"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="expected_8hpp_source.html"><span class="icondoc"></span></a><b>expected.hpp</b></td><td class="desc"></td></tr>
-<tr id="row_0_0_0_3_" class="even"><td class="entry"><span style="width:64px;display:inline-block;">&#160;</span><a href="unexpected_8hpp_source.html"><span class="icondoc"></span></a><b>unexpected.hpp</b></td><td class="desc"></td></tr>
-</table>
-</div><!-- directory -->
-</div><!-- contents -->
+<div class="textblock"><p><b>Branch:</b> <code>fix-review-corrections</code> <b>Depends on:</b> <code>expected-over-references</code> (all 10 steps complete) <b>Read first:</b> <code>docs/plan/handoff.md</code></p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md264"></a>
+Goal</h1>
+<p>Fix four issues identified in the PR #57 code review:</p>
+<ol type="1">
+<li><code>expected&lt;void, E&amp;&gt;</code> unsafely accepts <code>unexpected&lt;G&gt;</code> (const_cast UB)</li>
+<li><code>expected&lt;T&amp;, E&gt;::value() &amp;&amp;</code> over-constrains E (requires copy+move, only needs move)</li>
+<li>Tautological <code>requires</code> clause on <code>expected&lt;T&amp;, E&gt;</code> partial specialization</li>
+<li>Member layout inconsistency in <code>expected&lt;void, E&amp;&gt;</code> (unex_ptr_ before has_val_)</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md265"></a>
+Changes</h1>
+<h2><a class="anchor" id="autotoc_md266"></a>
+expected.hpp</h2>
+<p><b>Issue 1:</b> Replace <code>unexpected&lt;G&gt;</code> constructors (lines 3908-3922) with unconditionally deleted overloads matching <code>expected&lt;T, E&amp;&gt;</code> and <code>expected&lt;T&amp;, E&amp;&gt;</code>. Add deleted <code>operator=(unexpected&lt;G&gt;&amp;)</code> overloads after <code>operator=(expected&amp;&amp;)</code>.</p>
+<p><b>Issue 2 (investigated, no change):</b> The fallback <code>reference_constructs_from_temporary_v</code> concept is correct for how it is used. All constructor templates use forwarding references (U&amp;&amp;); lvalues deduce U=T&amp; (reference type), skipping the problematic disjunct 1. Rvalues deduce U=T (non-reference), correctly triggering deletion. GCC 11/12 hit the fallback and all CI checks pass.</p>
+<p><b>Issue 3:</b> <code>expected&lt;T&amp;, E&gt;::value() &amp;&amp;</code> static_assert changed from <code>is_copy_constructible_v&lt;E&gt; &amp;&amp; is_move_constructible_v&lt;E&gt;</code> to just <code>is_move_constructible_v&lt;E&gt;</code> (throw uses std::move). <code>expected&lt;void, E&amp;&gt;::value() &amp;&amp;</code> changed to just <code>is_copy_constructible_v&lt;E&gt;</code> (throw copies, no std::move).</p>
+<p><b>Issue 4:</b> Removed <code>requires std::is_lvalue_reference_v&lt;T&amp;&gt;</code> from the <code>expected&lt;T&amp;, E&gt;</code> partial specialization declaration. Always true by construction.</p>
+<p><b>Issue 5:</b> Swapped <code>expected&lt;void, E&amp;&gt;</code> member declaration order to <code>bool has_val_; E* unex_ptr_;</code> matching all other specializations. Fixed initializer-list order in default and in_place_t constructors.</p>
+<h2><a class="anchor" id="autotoc_md267"></a>
+New test files</h2>
+<ul>
+<li><code>expected_void_ref_e_construct_from_unexpected_fail.cpp</code></li>
+<li><code>expected_void_ref_e_assign_unexpected_fail.cpp</code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md268"></a>
+CMakeLists.txt</h2>
+<p>Two new <code>add_fail_test()</code> entries with regex patterns matching the existing <code>expected_ref_e_construct_from_unexpected_fail</code> pattern.</p>
+<h1><a class="anchor" id="autotoc_md269"></a>
+Verification</h1>
+<div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test</div>
+<div class="line">make lint</div>
+</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

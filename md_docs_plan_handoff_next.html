@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>beman::expected: Handoff: After Fix 5 (All Conformance Fixes Complete)</title>
+<title>beman::expected: Handoff: After Step 7 (expected&lt;T&amp;, E&gt; Complete)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -97,61 +97,74 @@ $(document).ready(function(){initNavTree('md_docs_plan_handoff_next.html',''); i
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Handoff: After Fix 5 (All Conformance Fixes Complete) </div></div>
+  <div class="headertitle"><div class="title">Handoff: After Step 7 (expected&lt;T&amp;, E&gt; Complete) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md178"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md271"></a>
 What Was Done</h1>
-<p>Fix 5 is complete. Branch <code>fix5-preconditions-and-minor</code> merged (&ndash;no-ff) into <code>expected-over-references</code>. All conformance fixes (F1–F5) are now merged.</p>
-<h2><a class="anchor" id="autotoc_md179"></a>
-Changes in Fix 5</h2>
+<p>Step 7 is complete. Branch <code>step7-expected-ref-t</code> implements <code>expected&lt;T&amp;, E&gt;</code> — the reference-value partial specialization (P2988). 313 tests pass, lint clean.</p>
+<h2><a class="anchor" id="autotoc_md272"></a>
+Changes in Step 7</h2>
 <p>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>:**</p><ul>
-<li>Added <code>BEMAN_EXPECTED_HARDENED</code> precondition guards (<code>__builtin_trap()</code>) to:<ul>
-<li><code>operator-&gt;()</code> (both const and non-const) — checks <code>has_val_</code></li>
-<li><code>operator*()</code> (all 4 overloads) — checks <code>has_val_</code></li>
-<li><code>error()</code> (all 4 overloads, primary template) — checks <code>!has_val_</code></li>
-<li><code>operator*()</code> (void specialization) — checks <code>has_val_</code></li>
-<li><code>error()</code> (all 4 overloads, void specialization) — checks <code>!has_val_</code></li>
+<li>Added <code>detail::reference_constructs_from_temporary_v</code> (portable fallback using <code>__cpp_lib_reference_from_temporary</code> when available, otherwise approximation via <code>is_convertible_v</code>)</li>
+<li>Added <code>expected&lt;T&amp;, E&gt;</code> partial specialization (~670 lines) after the void specialization, with:<ul>
+<li>Storage: <code>union { T* val_; E unex_; }</code> + <code>bool has_val_</code></li>
+<li>No default constructor (<code>= delete</code>)</li>
+<li>Copy/move constructors (trivial + non-trivial paths)</li>
+<li>Value constructor with dangling-prevention delete overload</li>
+<li>Converting constructors from <code>expected&lt;U&amp;, G&gt;</code> (copy and move)</li>
+<li>Error constructors from <code>unexpected&lt;G&gt;</code> (copy and move)</li>
+<li><code>unexpect_t</code> in-place error constructors</li>
+<li>Rebind assignment (<code>operator=</code>) — rebinds pointer, never assigns through</li>
+<li>Assignment from <code>unexpected&lt;G&gt;</code> (rebinds error)</li>
+<li>Observers: <code>operator*()</code> → <code>T&amp;</code>, <code>operator-&gt;()</code> → <code>T*</code>, <code>value()</code> → <code>T&amp;</code></li>
+<li>Shallow const: <code>const expected&lt;T&amp;, E&gt;</code> still gives <code>T*</code>/<code>T&amp;</code> (not const)</li>
+<li><code>value_or()</code>, <code>error_or()</code>, <code>error()</code></li>
+<li><code>swap()</code>, equality operators</li>
+<li>Monadic ops: <code>and_then</code>, <code>or_else</code>, <code>transform</code>, <code>transform_error</code> (2 ref-qualified overloads each — <code>&amp;</code> and <code>&amp;&amp;</code>)</li>
+<li>Mandate static_asserts: E must not be reference, void, array, or cv-qual</li>
 </ul>
 </li>
-<li>Void <code>or_else</code> (4 overloads): changed <code>is_void_v&lt;G::value_type&gt;</code> to <code>is_same_v&lt;G::value_type, T&gt;</code> — correct for <code>const void</code> etc.</li>
-<li>Void <code>transform_error</code> (4 overloads): changed <code>expected&lt;void, G&gt;</code> to <code>expected&lt;T, G&gt;</code> — matches standard wording</li>
 </ul>
-<p>**<code><a class="el" href="unexpected_8hpp_source.html">include/beman/expected/unexpected.hpp</a></code>:**</p><ul>
-<li>Added <code>requires std::is_swappable_v&lt;E&gt;</code> to friend swap</li>
+<p><b>New test files:</b></p><ul>
+<li><code>tests/beman/expected/expected_ref.test.cpp</code> — 477 lines of runtime tests</li>
+<li><code>tests/beman/expected/expected_ref_constraints.test.cpp</code> — 259 lines of static_assert / type-trait checks</li>
+<li>Negative compile tests:<ul>
+<li><code>expected_ref_temporary_fail.cpp</code> — binding temporary to T&amp; is deleted</li>
+<li><code>expected_ref_no_default_fail.cpp</code> — no default constructor</li>
+<li><code>expected_ref_inplace_value_fail.cpp</code> — no in_place_t value constructor</li>
+<li><code>expected_ref_e_ref_fail.cpp</code> — E must not be reference</li>
+<li><code>expected_ref_e_void_fail.cpp</code> — E must not be void</li>
+<li><code>expected_ref_e_array_fail.cpp</code> — E must not be array</li>
+<li><code>expected_ref_e_cv_fail.cpp</code> — E must not be cv-qualified</li>
 </ul>
-<p><b>Tests added:</b></p><ul>
-<li><code>tests/beman/expected/expected_hardened.test.cpp</code> — compiled with <code>-DBEMAN_EXPECTED_HARDENED</code>, verifies happy paths and swap constraint</li>
-<li>New CMake target <code>beman.expected.tests.hardened</code></li>
+</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md180"></a>
+<p>**<code>tests/beman/expected/CMakeLists.txt</code>:**</p><ul>
+<li>Added <code>beman.expected.tests.expected_ref</code> target</li>
+<li>Added <code>beman.expected.tests.expected_ref_constraints</code> target</li>
+<li>Added all 7 negative-compile fail targets</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md273"></a>
 Test count</h2>
-<p>253 tests total, all passing.</p>
-<h1><a class="anchor" id="autotoc_md181"></a>
+<p>313 tests total, all passing.</p>
+<h1><a class="anchor" id="autotoc_md274"></a>
 Build Commands</h1>
-<div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test   # 253 tests, all passing</div>
-<div class="line">make lint                    # all linters pass (beman-tidy crash is pre-existing)</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md182"></a>
-Conformance Fix Checklist</h1>
+<div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test   # 313 tests, all passing</div>
+<div class="line">make lint                    # all linters pass</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md275"></a>
+Step 7 Checklist</h1>
 <ul>
-<li>[x] Fix 1: Constructor/assignment/equality constraints</li>
-<li>[x] Fix 2: Trivial special member functions</li>
-<li>[x] Fix 3: Monadic operation constraints</li>
-<li>[x] Fix 4: Mandates static_asserts</li>
-<li>[x] Fix 5: Hardened preconditions and minor fixes ← just done</li>
+<li>[x] Step 7: <code>expected&lt;T&amp;, E&gt;</code> — pointer storage, rebind assignment, observers returning T&amp;, value_or, monadic ops, dangling prevention</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md183"></a>
-All Conformance Fixes Complete</h1>
-<p>The conformance fixes phase is finished. Per <code>docs/conformance-fixes/index.md</code>, the next actions are:</p>
-<ol type="1">
-<li>Update <code>docs/conformance-audit.md</code> to mark resolved items</li>
-<li>Update this handoff for the post-fix state</li>
-<li>Proceed to Step 7: <code>docs/plan/step7-expected-ref-t.md</code></li>
-</ol>
-<h1><a class="anchor" id="autotoc_md184"></a>
-State of the Implementation</h1>
+<h1><a class="anchor" id="autotoc_md276"></a>
+What Comes Next</h1>
+<p><b>Step 8: <code>expected&lt;T, E&amp;&gt;</code> error-reference specialization.</b></p>
+<p>Read <code>docs/plan/step8-expected-ref-e.md</code> for the full specification.</p>
+<h2><a class="anchor" id="autotoc_md277"></a>
+Key differences from Step 7</h2>
 <p>The <code>expected-over-references</code> branch now has a fully conformant <code>expected&lt;T,E&gt;</code> and <code>expected&lt;void,E&gt;</code> (modulo the extensions noted in the audit as conforming). All constraint, Mandates, trivial SMF, monadic SFINAE, and precondition gaps identified in the audit are resolved.</p>
-<h1><a class="anchor" id="autotoc_md185"></a>
+<h1><a class="anchor" id="autotoc_md278"></a>
 Upstream Merge (2026-06-02)</h1>
 <p>Branch <code>merge-upstream</code> merged 94 commits from <code>bemanproject/sandbox-expected</code> main and landed portability fixes for the full CI matrix. Now merged to <code>main</code>.</p>
 <p>Key changes in the merge:</p><ul>

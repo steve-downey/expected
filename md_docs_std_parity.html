@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('md_docs_std_parity.html',''); initResi
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Before adding the reference specializations (<code>expected&lt;T&amp;, E&gt;</code> etc., plan steps 7–10), the behavioral test suite is run against <b>both</b> <code>beman::expected</code> and <code>std::expected</code> to prove there are no behavioral differences outside the reference extension.</p>
-<h1><a class="anchor" id="autotoc_md556"></a>
+<h1><a class="anchor" id="autotoc_md658"></a>
 How it works</h1>
 <p>The portable <em>behavioral</em> test sources are parameterized over the implementation under test via <code>tests/beman/expected/test_expected.hpp</code>, which aliases the selected namespace as <code>test_ns</code>:</p>
 <table class="markdownTable">
@@ -115,20 +115,28 @@ How it works</h1>
 <p><code>tests/beman/expected/CMakeLists.txt</code> compiles the behavioral sources twice:</p>
 <ul>
 <li><code>beman.expected.tests.expected</code> — the full beman suite (behavioral + beman-only tests).</li>
-<li><code>beman.expected.tests.expected.std</code> — the behavioral subset only, against <code>std::expected</code>. Its ctest cases are prefixed <code>std.</code> and labelled <code>std</code>.</li>
+<li><code>beman.expected.tests.expected.std</code> — the behavioral subset only, against <code>std::expected</code>. Its ctest cases are prefixed <code>std.</code> and labelled <code>std</code>. Skipped on libc++ (see below) — it is not built at all there.</li>
 </ul>
 <p>Behavioral sources (parameterized): <code>bad_expected_access.test.cpp</code>, <code>unexpected.test.cpp</code>, <code>expected.test.cpp</code>, <code>expected_void.test.cpp</code>, <code>expected_monadic.test.cpp</code>, <code>expected_void_monadic.test.cpp</code>.</p>
 <p>Beman-only sources (not parameterized — encode behavior not guaranteed by the standard): <code>expected_constraints.test.cpp</code>, <code>expected_monadic_constraints.test.cpp</code> (SFINAE-friendliness), <code>expected_trivial.test.cpp</code> (triviality of SMFs is implementation quality), <code>expected_hardened.test.cpp</code> (beman hardening), <code>header_idempotence.test.cpp</code>, <code>todo.test.cpp</code>.</p>
-<h1><a class="anchor" id="autotoc_md557"></a>
+<h1><a class="anchor" id="autotoc_md659"></a>
 Result</h1>
 <p>Running <code>make TOOLCHAIN=gcc-15 test</code> (g++ 15.2, libstdc++): <b>all tests pass</b>, including the 215 behavioral cases against <code>std::expected</code>. Every constructor, assignment, observer, monadic operation, equality operator, and <code>static_assert</code> (including the strengthened <code>noexcept</code> specifications and every conformance-fix constraint) holds identically for <code>std::expected</code>.</p>
-<h1><a class="anchor" id="autotoc_md558"></a>
+<h1><a class="anchor" id="autotoc_md660"></a>
 Divergences found</h1>
 <ol type="1">
 <li>**<code>bad_expected_access::what()</code> message text** — the only behavioral difference. <code>what()</code> returns an <em>implementation-defined</em> NTBS ([expected.bad.void]). beman returns <code>"bad expected access"</code>; libstdc++ returns <code>"bad access to std::expected without expected value"</code>. The tests over-specified the exact text. Fixed: the parameterized builds assert only the portable guarantee (<code>what() != nullptr</code>); the exact-string check is now guarded <code>#ifndef BEMAN_EXPECTED_TEST_STD</code> and kept as a beman-specific check.</li>
 <li><b>Latent missing <code>&lt;utility&gt;</code> includes</b> (not a divergence, a test bug) — <code>expected_monadic.test.cpp</code> and <code>expected_void_monadic.test.cpp</code> used <code>std::move</code> / <code>std::as_const</code> while relying on beman's header to pull in <code>&lt;utility&gt;</code> transitively; <code>&lt;expected&gt;</code> does not. Fixed by adding the explicit include (also correct hygiene for the beman build).</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md559"></a>
+<h1><a class="anchor" id="autotoc_md661"></a>
+&lt;tt&gt;.std&lt;/tt&gt; target is skipped on libc++</h1>
+<p><code>tests/beman/expected/CMakeLists.txt</code> detects libc++ (<code>_LIBCPP_VERSION</code>, via <code>check_cxx_symbol_exists</code>) — covering both an explicit <code>-stdlib=libc++</code> and AppleClang's implicit default — and does not build <code>beman.expected.tests.expected.std</code> at all in that case. This is a scope decision, not a beman::expected defect: the <code>.std</code> target exists to catch <em>beman</em> behavioral differences from the standard, not to chase the standard library's own bugs, and libc++ has at least two independent bugs of its own that surfaced running this exact suite against it:</p>
+<ol type="1">
+<li>**<code>std::unexpected&lt;int&gt; == std::unexpected&lt;long&gt;</code> — cross-specialization friend-access bug.** On some libc++ versions (observed: clang 19, appleclang c++26) this heterogeneous comparison fails to compile with &lsquo;&rsquo;__unex_' is a private member of 'std::unexpected&lt;long&gt;'<code>. (The </code>unexpected: equality different types<code>test in</code>unexpected.test.cpp<code>is also guarded</code>#ifndef BEMAN_EXPECTED_TEST_STD<code>independent of this skip, since beman's own</code>unexpected&lt;E&gt;` does not have this problem.)</li>
+<li><b>Catch2 decomposition × <code>std::expected</code>'s constrained heterogeneous <code>operator==</code> — self-referential constraint check.</b> On some libc++ versions (observed: clang 21, clang 22, appleclang c++26) essentially any <code>CHECK</code>/<code>REQUIRE</code> that compares an <code>expected</code>/<code>unexpected</code> value can fail with &lsquo;satisfaction of constraint &rsquo;...' depends on itself<code>. Catch2's </code>CHECK(a == b)<code>first wraps</code>a<code>in an internal</code>Catch::ExprLhs<code>proxy, and </code>std::expected<code>'s generic constrained</code>operator==(expected, U)<code>is picked up via ADL with</code>U = ExprLhs&lt;...&gt;<code>; checking whether</code>*x == u` is valid then re-enters the same constrained templates and libc++ gives up. This is triggered pervasively enough across the parameterized suite (potentially dozens of sites across all six files) that per-call-site workarounds (the standard Catch2 fix is extra parens, <code>CHECK((a == b))</code>) weren't worth chasing given the target's purpose above.</li>
+</ol>
+<p><code>gcc</code>/libstdc++ and clang-with-libstdc++ configurations are unaffected by either bug and continue to run the <code>.std</code> target normally.</p>
+<h1><a class="anchor" id="autotoc_md662"></a>
 Not yet covered</h1>
 <ul>
 <li>**<code>tl::expected</code>** — deferred. It is a pre-standard implementation (no <code>error_or</code>, different <code>bad_expected_access</code>, looser monadic constraints, <code>tl::unexpect</code> naming) so parity is partial; it is of interest because of existing use at Bloomberg. When added, wire a third selection (<code>-DBEMAN_EXPECTED_TEST_TL</code>) into <code>test_expected.hpp</code> and a matching CMake target, running only the subset tl can support.</li>

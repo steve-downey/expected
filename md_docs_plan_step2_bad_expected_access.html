@@ -102,20 +102,20 @@ $(document).ready(function(){initNavTree('md_docs_plan_step2_bad_expected_access
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step2-bad-expected-access</code> <b>Depends on:</b> None (independent of Step 1) <b>Read first:</b> <code>docs/plan/handoff.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md231"></a>
+<h1><a class="anchor" id="autotoc_md327"></a>
 Goal</h1>
 <p>Implement <code>bad_expected_access&lt;void&gt;</code> (the base class) and <code>bad_expected_access&lt;E&gt;</code> (the derived template) per [expected.bad] and [expected.bad.void].</p>
-<h1><a class="anchor" id="autotoc_md232"></a>
+<h1><a class="anchor" id="autotoc_md328"></a>
 Context for Executing Agent</h1>
 <p>The file <code><a class="el" href="bad__expected__access_8hpp_source.html">include/beman/expected/bad_expected_access.hpp</a></code> exists with the specification as comments. These exception types are thrown by <code>expected::value()</code> when accessed without a value.</p>
-<h2><a class="anchor" id="autotoc_md233"></a>
+<h2><a class="anchor" id="autotoc_md329"></a>
 Key files</h2>
 <ul>
 <li><code><a class="el" href="bad__expected__access_8hpp_source.html">include/beman/expected/bad_expected_access.hpp</a></code> — implement here</li>
 <li><code>tests/beman/expected/bad_expected_access.test.cpp</code> — expand tests</li>
 <li><code>tests/beman/expected/CMakeLists.txt</code> — already includes this test</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md234"></a>
+<h2><a class="anchor" id="autotoc_md330"></a>
 Standard reference</h2>
 <p><b>bad_expected_access&lt;void&gt;</b> [expected.bad.void]: </p><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><span class="keyword">class </span>bad_expected_access&lt;void&gt; : <span class="keyword">public</span> exception {</div>
@@ -141,7 +141,7 @@ Standard reference</h2>
 <div class="line">private:</div>
 <div class="line">    E unex;  <span class="comment">// exposition only</span></div>
 <div class="line">};</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md235"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md331"></a>
 Notes</h2>
 <ul>
 <li><code>bad_expected_access&lt;void&gt;</code> inherits from <code>std::exception</code></li>
@@ -149,7 +149,7 @@ Notes</h2>
 <li>Protected constructors on the void specialization — it's only a base class</li>
 <li>The derived template stores the unexpected value and provides <code>error()</code> access</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md236"></a>
+<h1><a class="anchor" id="autotoc_md332"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="bad__expected__access_8hpp_source.html">include/beman/expected/bad_expected_access.hpp</a></code>** — full implementation:<ul>
@@ -167,7 +167,7 @@ Deliverables</h1>
 </ul>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md237"></a>
+<h1><a class="anchor" id="autotoc_md333"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch <code>step2-bad-expected-access</code> from <code>main</code></li>
@@ -188,11 +188,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md238"></a>
+<h1><a class="anchor" id="autotoc_md334"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md239"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md335"></a>
 Handoff to Step 3</h1>
 <p>Step 2 done, next read <code>docs/plan/step3-expected-primary.md</code>. <code>bad_expected_access&lt;E&gt;</code> is now available for <code>expected::value()</code> to throw. </p>
 </div></div><!-- contents -->

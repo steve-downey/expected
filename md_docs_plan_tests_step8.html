@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step8.html',''); in
 <div class="contents">
 <div class="textblock"><p><b>Standard section:</b> Novel beyond standard — mirror of Step 7, error side. <b>Test file:</b> <code>tests/beman/expected/expected_ref_e.test.cpp</code> <b>Negative-compile files:</b> <code>tests/beman/expected/expected_ref_e_*_fail.cpp</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md534"></a>
+<h1><a class="anchor" id="autotoc_md636"></a>
 Testing Strategy</h1>
 <p>Catch2. Include header twice. This specialization mirrors Step 7 but for the error type:</p><ul>
 <li>Value T is stored by value (same as primary template)</li>
@@ -111,7 +111,7 @@ Testing Strategy</h1>
 <li>Assignment from <code>unexpected&lt;G&gt;</code> rebinds the error pointer, does not assign through</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md536"></a>
+<h1><a class="anchor" id="autotoc_md638"></a>
 Type-Level Tests (static_assert)</h1>
 <div class="fragment"><div class="line"><span class="comment">// expected&lt;T, E&amp;&gt; is a valid specialization</span></div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_constructible_v&lt;expected&lt;int, int&amp;&gt;, std::in_place_t, <span class="keywordtype">int</span>&gt;);</div>
@@ -137,7 +137,7 @@ Type-Level Tests (static_assert)</h1>
 <div class="line"><span class="comment">// Not constructible from a temporary error (dangling prevention)</span></div>
 <div class="line"><span class="comment">// Tested via fail-file</span></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md538"></a>
+<h1><a class="anchor" id="autotoc_md640"></a>
 Test Outline</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -391,12 +391,12 @@ Test Outline</h1>
 <div class="line">    CHECK(&amp;e.error() == &amp;err);</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:78</div></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:108</div></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:34</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:122</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:47</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md540"></a>
+<h1><a class="anchor" id="autotoc_md642"></a>
 Negative Compile Tests</h1>
-<h2><a class="anchor" id="autotoc_md541"></a>
+<h2><a class="anchor" id="autotoc_md643"></a>
 &lt;tt&gt;expected_ref_e_temporary_error_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: cannot bind a temporary to E&amp; — dangling prevention</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -404,7 +404,7 @@ Negative Compile Tests</h1>
 <div class="line">    <span class="comment">// 42 is a temporary — expected&lt;int, int&amp;&gt; must refuse to bind E&amp; to it</span></div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int, int&amp;&gt;</a> e(beman::expected::unexpect, 42);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md542"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md644"></a>
 &lt;tt&gt;expected_ref_e_const_lvalue_assignment_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: cannot bind a const lvalue to non-const E&amp;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
