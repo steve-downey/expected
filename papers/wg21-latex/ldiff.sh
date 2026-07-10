@@ -1,4 +1,5 @@
 #!/bin/env sh
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 export SAFECMDS=Rplus,Cpp,CppIII,opt,shl,shr,dcr,exor,bigoh,tilde,bitand,bitor,xor,rightshift,enternote,enterexample,exitexample,required,requires,effects,postconditions,postcondition,preconditions,precondition,returns,throws,default,complexity,remark,remarks,note,notes,realnote,realnotes,errors,sync,implimits,replaceable,exceptionsafety,returntype,cvalue,ctype,ctypes,dtype,ctemplate,templalias,xref,xsee,ntbs,ntmbs,ntwcs,ntcxvis,ntcxxxiis,expos,impdef,notdef,unspec,unspecbool,seebelow,unspecuniqtype,unspecalloctype,unun,change,rationale,effect,difficulty,howwide,uniquens,cv,seebelow
 
