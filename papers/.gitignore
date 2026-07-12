@@ -20,6 +20,9 @@ _minted/
 # Downloaded bibliography (too large to track; regenerate with make curl-bib)
 wg21.bib
 
+# Generated clean wording (regenerate with make strip-wording)
+expected-clean.tex
+
 # Emacs
 *~
 \#*\#
