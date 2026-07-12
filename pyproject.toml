@@ -15,4 +15,4 @@ dev = [
 ]
 
 [tool.codespell]
-ignore-words-list = 'unexpect'
+ignore-words-list = 'unexpect,fith,ist'
