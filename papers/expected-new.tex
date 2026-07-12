@@ -498,7 +498,7 @@ that is not a valid template argument for \tcode{unexpected} is ill-formed.
 \pnum
 When \tcode{T} is not \cv{} \tcode{void}, it shall meet
 the \oldconcept{Destructible} requirements (\tref{cpp17.destructible}).
-\tcode{E} shall meet
+\added{If \tcode{E} is not an lvalue reference type, }\tcode{E} shall meet
 the \oldconcept{Destructible} requirements.
 
 \rSec3[expected.object.cons]{Constructors}
@@ -1900,7 +1900,7 @@ a type for the \tcode{E} parameter that
 is not a valid template argument for \tcode{unexpected} is ill-formed.
 
 \pnum
-\tcode{E} shall meet the requirements of
+\added{If \tcode{E} is not an lvalue reference type, }\tcode{E} shall meet the requirements of
 \oldconcept{Destructible} (\tref{cpp17.destructible}).
 
 \rSec3[expected.void.cons]{Constructors}
