@@ -2744,6 +2744,135 @@ If \tcode{!x.has_value()} is \tcode{true},
 otherwise \tcode{false}.
 \end{itemdescr}
 
+\begin{addedblock}
+\rSec2[expected.ref]{Partial specialization of \tcode{expected} for reference types}
+
+\rSec3[expected.ref.general]{General}
+
+\begin{codeblock}
+template<class T, class E>
+class expected<T&, E> {
+public:
+  using value_type      = T&;
+  using error_type      = E;
+  using unexpected_type = unexpected<E>;
+
+  template<class U>
+  using rebind = expected<U, error_type>;
+
+  // constructors
+  constexpr expected() = delete;
+  constexpr expected(const expected&);
+  constexpr expected(expected&&) noexcept(@\seebelow@);
+  template<class U = T>
+    constexpr explicit(@\seebelow@) expected(U&&);
+  template<class U>
+    constexpr expected(U&&) = delete;
+  template<class U, class G>
+    constexpr explicit(@\seebelow@) expected(const expected<U&, G>&);
+  template<class U, class G>
+    constexpr explicit(@\seebelow@) expected(expected<U&, G>&&);
+  template<class G>
+    constexpr explicit(@\seebelow@) expected(const unexpected<G>&);
+  template<class G>
+    constexpr explicit(@\seebelow@) expected(unexpected<G>&&);
+  template<class... Args>
+    constexpr expected(in_place_t, Args&&...) = delete;
+  template<class... Args>
+    constexpr explicit expected(unexpect_t, Args&&...);
+  template<class U, class... Args>
+    constexpr explicit expected(unexpect_t, initializer_list<U>, Args&&...);
+
+  // destructor
+  constexpr ~expected();
+
+  // assignment
+  constexpr expected& operator=(const expected&);
+  constexpr expected& operator=(expected&&) noexcept(@\seebelow@);
+  template<class U = T>
+    constexpr expected& operator=(U&&);
+  template<class G>
+    constexpr expected& operator=(const unexpected<G>&);
+  template<class G>
+    constexpr expected& operator=(unexpected<G>&&);
+  template<class U = T>
+    constexpr T& emplace(U&&) noexcept(@\seebelow@);
+
+  // swap
+  constexpr void swap(expected&) noexcept(@\seebelow@);
+  friend constexpr void swap(expected& x, expected& y) noexcept(noexcept(x.swap(y)));
+
+  // observers
+  constexpr T* operator->() const noexcept;
+  constexpr T& operator*() const noexcept;
+  constexpr explicit operator bool() const noexcept;
+  constexpr bool has_value() const noexcept;
+  constexpr T& value() const &;
+  constexpr T& value() &&;
+  constexpr const E& error() const & noexcept;
+  constexpr E& error() & noexcept;
+  constexpr const E&& error() const && noexcept;
+  constexpr E&& error() && noexcept;
+  template<class U = remove_cv_t<T>> constexpr remove_cv_t<T> value_or(U&&) const;
+  template<class G = E> constexpr E error_or(G&&) const &;
+
+  // monadic operations
+  template<class F> constexpr auto and_then(F&& f) &;
+  template<class F> constexpr auto and_then(F&& f) &&;
+  template<class F> constexpr auto and_then(F&& f) const &;
+  template<class F> constexpr auto and_then(F&& f) const &&;
+  template<class F> constexpr auto or_else(F&& f) &;
+  template<class F> constexpr auto or_else(F&& f) &&;
+  template<class F> constexpr auto or_else(F&& f) const &;
+  template<class F> constexpr auto or_else(F&& f) const &&;
+  template<class F> constexpr auto transform(F&& f) &;
+  template<class F> constexpr auto transform(F&& f) &&;
+  template<class F> constexpr auto transform(F&& f) const &;
+  template<class F> constexpr auto transform(F&& f) const &&;
+  template<class F> constexpr auto transform_error(F&& f) &;
+  template<class F> constexpr auto transform_error(F&& f) &&;
+  template<class F> constexpr auto transform_error(F&& f) const &;
+  template<class F> constexpr auto transform_error(F&& f) const &&;
+
+  // equality operators
+  template<class T2, class E2> requires (!is_void_v<T2>)
+    friend constexpr bool operator==(const expected& x, const expected<T2, E2>& y);
+  template<class T2>
+    friend constexpr bool operator==(const expected&, const T2&);
+  template<class E2>
+    friend constexpr bool operator==(const expected&, const unexpected<E2>&);
+
+private:
+  bool @\exposid{has_val}@;         // \expos
+  union {
+    T* @\exposid{val}@;             // \expos
+    E @\exposid{unex}@;             // \expos
+  };
+};
+\end{codeblock}
+
+\pnum
+Any object of type \tcode{expected<T\&, E>} either
+represents a reference to an object of type \tcode{T}, or
+contains a value of type \tcode{E} nested within\iref{intro.object} it.
+Member \exposid{has_val} indicates whether the \tcode{expected<T\&, E>} object
+represents a reference.
+When an \tcode{expected<T\&, E>} object represents a reference,
+member \exposid{val} points to the referenced object,
+which is not owned by the \tcode{expected} object.
+
+\pnum
+A program that instantiates the definition of
+\tcode{expected<T\&, E>} with a type for the \tcode{E} parameter that
+is not a valid template argument for \tcode{unexpected} is ill-formed.
+
+\pnum
+\tcode{T} shall be an object type that is not an array type.
+If \tcode{E} is not an lvalue reference type,
+\tcode{E} shall meet the \oldconcept{Destructible} requirements
+(\tref{cpp17.destructible}).
+\end{addedblock}
+
 %%% Local Variables:
 %%% mode: LaTeX
 %%% TeX-master: t
