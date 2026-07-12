@@ -612,7 +612,7 @@ namespace std {
     bool @\exposid{has_val}@;           // \expos
     union {
       remove_cv_t<T> @\exposid{val}@;   // \expos
-      E @\exposid{unex}@;               // \expos
+      unexpected<E> @\exposid{unex}@;   // \expos
     };
   };
 }
@@ -1062,7 +1062,7 @@ Otherwise, if \tcode{rhs.has_value()} is \tcode{true}, equivalent to:
 @\exposid{reinit-expected}@(@\exposid{val}@, @\exposid{unex}@, *rhs)
 \end{codeblock}
 \item
-Otherwise, equivalent to \tcode{\exposid{unex} = rhs.error()}.
+Otherwise, equivalent to \tcode{\exposid{unex} = rhs.\exposid{unex}}.
 \end{itemize}
 Then, if no exception was thrown,
 equivalent to: \tcode{\exposid{has_val} = rhs.has_value(); return *this;}
@@ -1139,7 +1139,7 @@ Otherwise, if \tcode{rhs.has_value()} is \tcode{true}, equivalent to:
 @\exposid{reinit-expected}@(@\exposid{val}@, @\exposid{unex}@, std::move(*rhs))
 \end{codeblock}
 \item
-Otherwise, equivalent to \tcode{\exposid{unex} = std::move(rhs.error())}.
+Otherwise, equivalent to \tcode{\exposid{unex} = std::move(rhs.\exposid{unex})}.
 \end{itemize}
 Then, if no exception was thrown,
 equivalent to: \tcode{has_val = rhs.has_value(); return *this;}
@@ -1247,7 +1247,7 @@ If \tcode{has_value()} is \tcode{true}, equivalent to:
 \end{codeblock}
 \item
 Otherwise, equivalent to:
-\tcode{\exposid{unex} = std::forward<GF>(e.error());}
+\tcode{\exposid{unex} = unexpected<E>(std::forward<GF>(e.error()));}
 \end{itemize}
 
 \pnum
@@ -1349,7 +1349,7 @@ For the case where \tcode{rhs.has_value()} is \tcode{false} and
 \tcode{this->has_value()} is \tcode{true}, equivalent to:
 \begin{codeblock}
 if constexpr (is_nothrow_move_constructible_v<E>) {
-  E tmp(std::move(rhs.@\exposid{unex}@));
+  unexpected<E> tmp(std::move(rhs.@\exposid{unex}@));
   destroy_at(addressof(rhs.@\exposid{unex}@));
   try {
     construct_at(addressof(rhs.@\exposid{val}@), std::move(@\exposid{val}@));
@@ -1517,7 +1517,7 @@ constexpr E& error() & noexcept;
 
 \pnum
 \returns
-\exposid{unex}.
+\tcode{\exposid{unex}.error()}.
 \end{itemdescr}
 
 \indexlibrarymember{error}{expected}%
@@ -1533,7 +1533,7 @@ constexpr const E&& error() const && noexcept;
 
 \pnum
 \returns
-\tcode{std::move(\exposid{unex})}.
+\tcode{std::move(\exposid{unex}).error()}.
 \end{itemdescr}
 
 \indexlibrarymember{value_or}{expected}%
@@ -2025,7 +2025,7 @@ public:
 private:
   bool @\exposid{has_val}@;         // \expos
   union {
-    E @\exposid{unex}@;             // \expos
+    unexpected<E> @\exposid{unex}@; // \expos
   };
 };
 \end{codeblock}
@@ -2300,7 +2300,7 @@ equivalent to: \tcode{construct_at(addressof(\exposid{unex}), rhs.\exposid{unex}
 Otherwise, if \tcode{rhs.has_value()} is \tcode{true},
 destroys \exposid{unex} and sets \exposid{has_val} to \tcode{true}.
 \item
-Otherwise, equivalent to \tcode{\exposid{unex} = rhs.error()}.
+Otherwise, equivalent to \tcode{\exposid{unex} = rhs.\exposid{unex}}.
 \end{itemize}
 
 \pnum
@@ -2347,7 +2347,7 @@ construct_at(addressof(@\exposid{unex}@), std::move(rhs.@\exposid{unex}@));
 Otherwise, if \tcode{rhs.has_value()} is \tcode{true},
 destroys \exposid{unex} and sets \exposid{has_val} to \tcode{true}.
 \item
-Otherwise, equivalent to \tcode{\exposid{unex} = std::move(rhs.error())}.
+Otherwise, equivalent to \tcode{\exposid{unex} = std::move(rhs.\exposid{unex})}.
 \end{itemize}
 
 \pnum
@@ -2396,7 +2396,7 @@ construct_at(addressof(@\exposid{unex}@), std::forward<GF>(e.error()));
 \end{codeblock}
 \item
 Otherwise, equivalent to:
-\tcode{\exposid{unex} = std::forward<GF>(e.error());}
+\tcode{\exposid{unex} = unexpected<E>(std::forward<GF>(e.error()));}
 \end{itemize}
 
 \pnum
@@ -2546,7 +2546,7 @@ constexpr E& error() & noexcept;
 
 \pnum
 \returns
-\exposid{unex}.
+\tcode{\exposid{unex}.error()}.
 \end{itemdescr}
 
 \indexlibrarymember{error}{expected<void>}%
@@ -2562,7 +2562,7 @@ constexpr const E&& error() const && noexcept;
 
 \pnum
 \returns
-\tcode{std::move(\exposid{unex})}.
+\tcode{std::move(\exposid{unex}).error()}.
 \end{itemdescr}
 
 \indexlibrarymember{error_or}{expected<void>}%
