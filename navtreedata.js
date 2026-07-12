@@ -189,7 +189,7 @@ var NAVTREE =
     ] ],
     [ "Human Design Review Guide: <tt>beman::expected</tt>", "md_docs_human_design_review_guide.html", [
       [ "What This Is", "md_docs_human_design_review_guide.html#autotoc_md149", null ],
-      [ "Decision 1: Three Class Templates, Reference Errors Folded In, Zero Abstraction", "md_docs_human_design_review_guide.html#autotoc_md151", [
+      [ "Decision 1: Six Separate Specializations, Zero Abstraction", "md_docs_human_design_review_guide.html#autotoc_md151", [
         [ "What was done", "md_docs_human_design_review_guide.html#autotoc_md152", null ],
         [ "Why this matters", "md_docs_human_design_review_guide.html#autotoc_md153", null ],
         [ "The argument for the current approach", "md_docs_human_design_review_guide.html#autotoc_md154", null ],

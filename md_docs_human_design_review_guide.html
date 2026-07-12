@@ -103,45 +103,47 @@ $(document).ready(function(){initNavTree('md_docs_human_design_review_guide.html
 <div class="textblock"><p><b>Target Audience:</b> Human reviewers, WG21 participants, and anyone deciding whether this code should become standard library wording.</p>
 <h1><a class="anchor" id="autotoc_md149"></a>
 What This Is</h1>
-<p>A complete implementation of <code>std::expected</code> (C++26) extended to allow <code>T</code> and/or <code>E</code> to be reference types, proposed for C++29. This is a new <code>expected&lt;T&amp;, E&gt;</code> specialization for a reference value, a relaxation of the primary and <code>void</code> templates to admit a reference error <code>E</code>, and a new <code>unexpected&lt;E&amp;&gt;</code> — three <code>expected</code> class templates in all, each accepting an object or reference error. The reference semantics follow P2988 (<code>optional&lt;T&amp;&gt;</code>): rebind on assignment, shallow const, dangling prevention via deleted constructors.</p>
+<p>A complete implementation of <code>std::expected</code> (C++26) extended with six template specializations that allow <code>T</code> and/or <code>E</code> to be reference types, proposed for C++29. The reference semantics follow P2988 (<code>optional&lt;T&amp;&gt;</code>): rebind on assignment, shallow const, dangling prevention via deleted constructors.</p>
 <p><b>File count:</b> 3 headers, ~4400 lines of implementation, 15 positive test files (469 tests), 54 negative compile tests.</p>
 <p><b>This guide is not a checklist.</b> It's a map of the decisions that shaped this code. Some are obviously correct. Some are defensible but debatable. Some might be wrong. Your job is to decide which is which.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md151"></a>
-Decision 1: Three Class Templates, Reference Errors Folded In, Zero Abstraction</h1>
+Decision 1: Six Separate Specializations, Zero Abstraction</h1>
 <h2><a class="anchor" id="autotoc_md152"></a>
 What was done</h2>
-<p>The implementation provides three complete, independent <code>expected</code> class templates, plus two <code>unexpected</code> templates. Reference <em>error</em> types are not separate specializations: each <code>expected</code> template permits <code>E</code> to be an object type <em>or</em> an lvalue reference, and stores the error as an <code>unexpected&lt;E&gt;</code> — which is the pointer-holding <code>unexpected&lt;E&amp;&gt;</code> when <code>E</code> is a reference. So a single <code>expected&lt;T&amp;, E&gt;</code> covers both <code>expected&lt;T&amp;, E&gt;</code> and <code>expected&lt;T&amp;, E&amp;&gt;</code>, and the primary covers <code>expected&lt;T, E&gt;</code> and <code>expected&lt;T, E&amp;&gt;</code>.</p>
+<p>The implementation provides six complete, independent partial specializations:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Template   </th><th class="markdownTableHeadNone">Value storage   </th><th class="markdownTableHeadNone">Error storage    </th></tr>
+<th class="markdownTableHeadNone">Specialization   </th><th class="markdownTableHeadNone">Lines   </th><th class="markdownTableHeadNone">Storage    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>expected&lt;T, E&gt;</code> (primary)   </td><td class="markdownTableBodyNone"><code>union { T val_; unexpected&lt;E&gt; unex_; }</code> + bool   </td><td class="markdownTableBodyNone"><code>unexpected&lt;E&gt;</code> (pointer when <code>E</code> is <code>E&amp;</code>)    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T, E&gt;</code>   </td><td class="markdownTableBodyNone">~1100   </td><td class="markdownTableBodyNone"><code>union { T val_; E unex_; }</code> + bool    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>expected&lt;void, E&gt;</code>   </td><td class="markdownTableBodyNone"><code>union { unexpected&lt;E&gt; unex_; }</code> + bool   </td><td class="markdownTableBodyNone"><code>unexpected&lt;E&gt;</code>    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;void, E&gt;</code>   </td><td class="markdownTableBodyNone">~800   </td><td class="markdownTableBodyNone"><code>union { E unex_; }</code> + bool    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>expected&lt;T&amp;, E&gt;</code>   </td><td class="markdownTableBodyNone"><code>union { T* val_; unexpected&lt;E&gt; unex_; }</code> + bool   </td><td class="markdownTableBodyNone"><code>unexpected&lt;E&gt;</code>    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T&amp;, E&gt;</code>   </td><td class="markdownTableBodyNone">~700   </td><td class="markdownTableBodyNone"><code>T*</code> + <code>union { E unex_; }</code> + bool    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>unexpected&lt;E&gt;</code>   </td><td class="markdownTableBodyNone">—   </td><td class="markdownTableBodyNone"><code>E</code> by value    </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T, E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">~700   </td><td class="markdownTableBodyNone"><code>union { T val_; }</code> + <code>E*</code> + bool    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>unexpected&lt;E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">—   </td><td class="markdownTableBodyNone"><code>E*</code>   </td></tr>
+<td class="markdownTableBodyNone"><code>expected&lt;T&amp;, E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">~550   </td><td class="markdownTableBodyNone"><code>T*</code> + <code>E*</code> + bool    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>expected&lt;void, E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">~450   </td><td class="markdownTableBodyNone"><code>E*</code> + bool   </td></tr>
 </table>
-<p>The static assertion that used to read "`E` must not be a reference" now reads "`E` must not be an *rvalue* reference," which is the whole of what admits reference errors. Each template is a self-contained class with its own constructors, assignment operators, observers, swap, equality, and monadic operations. There is no shared base class, no CRTP, no mixin, no macro that generates them.</p>
+<p>Each specialization is a self-contained class with its own constructors, assignment operators, observers, swap, equality, and monadic operations. There is no shared base class, no CRTP, no mixin, no macro that generates them.</p>
 <h2><a class="anchor" id="autotoc_md153"></a>
 Why this matters</h2>
-<p>The total is ~4300 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this by 40-60%. The monadic operations alone account for 4 operations x 4 ref-qualified overloads across the three templates — dozens of method definitions that share structural similarity.</p>
+<p>The total is ~4300 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this by 40-60%. The monadic operations alone account for 4 operations x 4 ref-qualified overloads x 6 specializations = 96 method definitions that share structural similarity.</p>
 <h2><a class="anchor" id="autotoc_md154"></a>
 The argument for the current approach</h2>
 <ul>
 <li>Standard library implementations (libstdc++, libc++, MSVC STL) use flat specializations for <code>optional</code> and <code>expected</code>. Inheritance-based factoring produces incomprehensible error messages.</li>
 <li>Each specialization can be read and audited independently against whatever future standard wording emerges.</li>
-<li>When constraints differ subtly between templates (and they do — <code>T&amp;</code> doesn't need <code>is_nothrow_move_constructible</code> checks, and a reference <code>E</code> accepts <code>unexpected&lt;G&gt;</code> construction only when <code>G</code> is itself a reference), a shared base must either disable features via SFINAE or push complexity into the base, which hides it rather than removing it.</li>
+<li>When constraints differ subtly between specializations (and they do — <code>T&amp;</code> doesn't need <code>is_nothrow_move_constructible</code> checks, <code>E&amp;</code> doesn't support <code>unexpected&lt;G&gt;</code> construction), a shared base must either disable features via SFINAE or push complexity into the base, which hides it rather than removing it.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md155"></a>
 The argument against</h2>
 <ul>
-<li><b>Maintenance burden.</b> A bug in <code>and_then</code> must be fixed in three templates. A new monadic operation (hypothetical <code>or_transform</code>) must be added 12 times (4 overloads x 3 templates).</li>
-<li><b>Consistency risk.</b> Are all three templates actually consistent, across both object and reference <code>E</code>? Small divergences creep in when hand-copying constraint clauses. The only way to verify is exhaustive side-by-side comparison.</li>
+<li><b>Maintenance burden.</b> A bug in <code>and_then</code> must be fixed in 6 places. A new monadic operation (hypothetical <code>or_transform</code>) must be added 24 times (4 overloads x 6 specializations).</li>
+<li><b>Consistency risk.</b> Are all 6 specializations actually consistent? Small divergences creep in when hand-copying constraint clauses. The only way to verify is exhaustive side-by-side comparison.</li>
 <li><b>Review fatigue.</b> A reviewer looking at 4300 lines of structurally similar code will inevitably skim. The 95th <code>requires</code> clause gets less scrutiny than the 5th.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md156"></a>
@@ -252,7 +254,7 @@ What to discuss</h2>
 Decision 8: Monadic Operations on Reference Specializations</h1>
 <h2><a class="anchor" id="autotoc_md187"></a>
 What was done</h2>
-<p>All four monadic operations (<code>and_then</code>, <code>or_else</code>, <code>transform</code>, <code>transform_error</code>) are provided for all three <code>expected</code> templates, with four ref-qualified overloads each (<code>&amp;</code>, <code>const&amp;</code>, <code>&amp;&amp;</code>, <code>const&amp;&amp;</code>), for both object and reference <code>E</code>.</p>
+<p>All four monadic operations (<code>and_then</code>, <code>or_else</code>, <code>transform</code>, <code>transform_error</code>) are provided for all six specializations, with four ref-qualified overloads each (<code>&amp;</code>, <code>const&amp;</code>, <code>&amp;&amp;</code>, <code>const&amp;&amp;</code>).</p>
 <p>For reference specializations, the callable always receives <code>T&amp;</code> (dereferenced pointer), regardless of the expected object's own value category. This means:</p>
 <div class="fragment"><div class="line">expected&lt;int&amp;, int&gt; e(x);</div>
 <div class="line"><span class="keyword">auto</span> f = [](<span class="keywordtype">int</span>&amp; r) { <span class="keywordflow">return</span> expected&lt;int&amp;, int&gt;(r); };</div>
@@ -285,19 +287,19 @@ Gaps to discuss</h2>
 </ul>
 <h2><a class="anchor" id="autotoc_md193"></a>
 What to decide</h2>
-<p>Is the test suite sufficient for standardization review? The positive coverage is good — every operation has basic tests. But the systematic constraint/SFINAE testing that exists for the primary template and <code>expected&lt;T&amp;, E&gt;</code> is absent for the reference-error (<code>E&amp;</code>) configurations of the primary and <code>void</code> templates. This gap should be closed before submitting to WG21.</p>
+<p>Is the test suite sufficient for standardization review? The positive coverage is good — every operation has basic tests. But the systematic constraint/SFINAE testing that exists for the primary template is absent for three of the four reference specializations. This gap should be closed before submitting to WG21.</p>
 <hr  />
 <h1><a class="anchor" id="autotoc_md195"></a>
 Decision 10: Single Header vs Multi-Header</h1>
 <h2><a class="anchor" id="autotoc_md196"></a>
 What exists</h2>
-<p>Everything is in <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code>. The <code><a class="el" href="unexpected_8hpp_source.html">unexpected.hpp</a></code> and <code><a class="el" href="bad__expected__access_8hpp_source.html">bad_expected_access.hpp</a></code> are separate (matching the standard's <code>[expected.syn]</code> structure), but all three <code>expected</code> templates live in one file.</p>
+<p>Everything is in <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code>. The <code><a class="el" href="unexpected_8hpp_source.html">unexpected.hpp</a></code> and <code><a class="el" href="bad__expected__access_8hpp_source.html">bad_expected_access.hpp</a></code> are separate (matching the standard's <code>[expected.syn]</code> structure), but all six specializations live in one file.</p>
 <h2><a class="anchor" id="autotoc_md197"></a>
 What to discuss</h2>
 <ul>
 <li><b>4400 lines in one file.</b> This is at the boundary of manageable. A reviewer can <code>grep</code> and navigate, but side-by-side comparison of specializations requires tooling.</li>
 <li><b>The standard doesn't mandate file structure.</b> But for a reference implementation intended to demonstrate proposed wording, would splitting <code>expected_ref.hpp</code> (or similar) improve reviewability?</li>
-<li><b>Compile times.</b> Every translation unit that includes <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code> parses all three templates. For users who only need <code>expected&lt;T, E&gt;</code>, this is wasted work. The module build path (<code>expected.cppm</code>) mitigates this but is opt-in and not the default.</li>
+<li><b>Compile times.</b> Every translation unit that includes <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code> parses all six specializations. For users who only need <code>expected&lt;T, E&gt;</code>, this is wasted work. The module build path (<code>expected.cppm</code>) mitigates this but is opt-in and not the default.</li>
 </ul>
 <hr  />
 <h1><a class="anchor" id="autotoc_md199"></a>
