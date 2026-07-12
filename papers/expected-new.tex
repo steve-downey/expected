@@ -1393,7 +1393,7 @@ Any exception thrown by the expressions in the \Fundescx{Effects}.
 The exception specification is equivalent to:
 \begin{codeblock}
 is_nothrow_move_constructible_v<T> && is_nothrow_swappable_v<T> &&
-is_nothrow_move_constructible_v<unexpected<E>> && is_nothrow_swappable_v<unexpected<E>>
+is_nothrow_move_constructible_v<E> && (is_reference_v<E> || is_nothrow_swappable_v<E>)
 \end{codeblock}
 \end{itemdescr}
 
@@ -2479,7 +2479,7 @@ Any exception thrown by the expressions in the \Fundescx{Effects}.
 \pnum
 \remarks
 The exception specification is equivalent to
-\tcode{is_nothrow_move_constructible_v<unexpected<E>> \&\& is_nothrow_swappable_v<unexpected<E>>}.
+\tcode{is_nothrow_move_constructible_v<E> \&\& (is_reference_v<E> || is_nothrow_swappable_v<E>)}.
 \end{itemdescr}
 
 \indexlibrarymember{swap}{expected<void>}%
@@ -3062,10 +3062,10 @@ same object; otherwise, initializes \exposid{unex} with
 \pnum
 \remarks
 The exception specification of the move constructor is equivalent to
-\tcode{is_nothrow_move_constructible_v<unexpected<E>>}. Each of these
+\tcode{is_nothrow_move_constructible_v<E>}. Each of these
 constructors is trivial if the corresponding constructor of
-\tcode{unexpected<E>} is trivial, and is defined as deleted unless that
-constructor of \tcode{unexpected<E>} is available.
+\tcode{E} is trivial, and is defined as deleted unless that
+constructor of \tcode{E} is available.
 \end{itemdescr}
 
 \indexlibraryctor{expected}%
@@ -3205,7 +3205,7 @@ If \tcode{has_value()} is \tcode{false}, destroys \exposid{unex}.
 
 \pnum
 \remarks
-This destructor is trivial if \tcode{unexpected<E>} is trivially
+This destructor is trivial if \tcode{E} is trivially
 destructible. \tcode{T} is not destroyed; \tcode{*this} never owns the object
 it refers to.
 \end{itemdescr}
@@ -3340,7 +3340,7 @@ objects are not swapped. Otherwise behaves as the primary template's
 \pnum
 \remarks
 The exception specification is equivalent to
-\tcode{is_nothrow_move_constructible_v<unexpected<E>> \&\&}
+\tcode{is_nothrow_move_constructible_v<E> \&\&}
 \tcode{(is_reference_v<E> || is_nothrow_swappable_v<E>)}.
 \end{itemdescr}
 
