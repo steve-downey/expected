@@ -614,6 +614,72 @@ construction is refused, a good diagnostic is worth the floor.
 A feature test macro \tcode{__cpp_lib_expected_ref} is proposed, so code can
 detect the reference specializations.
 
+\section{The held \tcode{unexpected<E>} is exposition-only; the observable
+  behavior is keyed on \tcode{E} (D12)}
+
+Storing the error as \tcode{unexpected<E>} (D4) is a specification device, not a
+representation mandate. It buys the reference case --- \tcode{unexpected<E\&>}
+holds a pointer --- without a new specialization. It must buy nothing else. In
+particular it must not reach an existing implementation and tell it to change
+what \tcode{expected<T, E>} stores.
+
+So the exposition-only member is \tcode{unexpected<E>}, but every observable
+property is stated in terms of \tcode{E}: the \emph{Constraints}, the
+\emph{Mandates}, the exception specifications, and the triviality of each special
+member function read exactly as they do in the current \tcode{T}-and-\tcode{E}
+wording. An implementation that stores \tcode{E} directly, as every shipping one
+does, is conforming unchanged. Its layout, its name mangling, and its trait
+answers do not move. ABI stability for existing implementations was a goal of
+this design, not an accident of it.
+
+This is safe because \tcode{unexpected<E>} is a transparent wrapper over
+\tcode{E}: for an object \tcode{E} its copy, move, assignment, destruction,
+exception specifications, and triviality all track \tcode{E}'s own. The one place
+the language lets such a wrapper diverge --- a defaulted move that is defined as
+deleted is ignored by overload resolution, where a user-deleted move is not ---
+is reconciled by \tcode{expected}'s own fall-back from a constrained-out move to
+its copy, and lands on the same answer. The equivalence was checked trait by
+trait against \tcode{std::expected} across a battery of awkward error types.
+
+The design commits to the conclusion, not to the coincidence. If an observable
+difference between the \tcode{unexpected<E>} rendering and a rendering with
+separate \tcode{T} and \tcode{E} members is ever found, that is a defect in this
+proposal, and its resolution is already decided: the behavior is whatever the
+\tcode{T}-and-\tcode{E} rendering gives. The wrapper is how the error is
+described, never what the program is allowed to observe.
+
+One implementation note, since it is not obvious and cost real debugging time.
+Declaring a copy or move constructor as two candidates, each guarded by its own
+\tcode{requires}-clause covering only the trivial and only the non-trivial case,
+leaves a gap when \tcode{E} is not copy or move constructible at all: neither
+candidate's constraint holds, and whether the compiler still falls back to an
+implicitly-declared (and correctly deleted) constructor is exactly the kind of
+question compilers have disagreed about. \tcode{libstdc++}'s own
+\tcode{<expected>} avoids the question by declaring the trivial-path constructor
+with no constraint at all --- an unconditional \tcode{= default} --- and letting
+constraint subsumption prefer the non-trivial candidate whenever it applies. The
+reference implementation adopts the same idiom. It is a statement about how to
+spell the declaration, not about what either candidate computes, and it changes
+nothing this section already promised.
+
+\section{\tcode{expected<T, E>} is trivially copyable when \tcode{T} and
+  \tcode{E} are (D13)}
+
+A drive-by. \tcode{expected<int, int>} is not trivially copyable today, because
+\tcode{expected}'s copy and move assignment are specified as non-trivial
+operations even when every component is trivial. There is no semantic reason for
+this. The assignment of a sum of trivially copyable, trivially assignable,
+trivially destructible types can be defaulted, and then the whole
+\tcode{expected} is trivially copyable --- it can be passed in registers and
+relocated with \tcode{memcpy}.
+
+``Non-trivial by specification'' is not a reason; it is the absence of one. This
+proposal specifies the special member functions of \tcode{expected} to be trivial
+when \tcode{T} and \tcode{E} make them trivial, matching the intuition that a sum
+of trivial types is trivial. The change is a widening: types that were trivially
+copyable stay so, and \tcode{expected<int, int>} joins them. Nothing that was
+trivially copyable becomes less so.
+
 \chapter{Anticipated objections}
 
 \section{``Use \tcode{reference\_wrapper} instead''}
