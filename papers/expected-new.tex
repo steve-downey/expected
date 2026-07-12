@@ -626,6 +626,15 @@ nested within\iref{intro.object} it.
 Member \exposid{has_val} indicates whether the \tcode{expected<T, E>} object
 contains an object of type \tcode{T}.
 
+\begin{addedblock}
+\pnum
+When \tcode{has_value()} is \tcode{false}, the error is
+\tcode{\exposid{unex}.error()}. The error is held as an \tcode{unexpected<E>},
+and not as an \tcode{E}, so that \tcode{E} may be an lvalue reference type: an
+\tcode{E\&} cannot be a union member, whereas \tcode{unexpected<E\&>} holds a
+pointer to an external object\iref{expected.un.ref}.
+\end{addedblock}
+
 \pnum
 A type \tcode{T} is a \term{valid value type for \tcode{expected}},
 if \tcode{remove_cv_t<T>} is \tcode{void}
@@ -1348,7 +1357,7 @@ See \tref{expected.object.swap}.
 For the case where \tcode{rhs.has_value()} is \tcode{false} and
 \tcode{this->has_value()} is \tcode{true}, equivalent to:
 \begin{codeblock}
-if constexpr (is_nothrow_move_constructible_v<E>) {
+if constexpr (is_nothrow_move_constructible_v<unexpected<E>>) {
   unexpected<E> tmp(std::move(rhs.@\exposid{unex}@));
   destroy_at(addressof(rhs.@\exposid{unex}@));
   try {
@@ -1384,7 +1393,7 @@ Any exception thrown by the expressions in the \Fundescx{Effects}.
 The exception specification is equivalent to:
 \begin{codeblock}
 is_nothrow_move_constructible_v<T> && is_nothrow_swappable_v<T> &&
-is_nothrow_move_constructible_v<E> && is_nothrow_swappable_v<E>
+is_nothrow_move_constructible_v<unexpected<E>> && is_nothrow_swappable_v<unexpected<E>>
 \end{codeblock}
 \end{itemdescr}
 
@@ -2038,6 +2047,15 @@ nested within\iref{intro.object} it.
 Member \exposid{has_val} indicates whether the \tcode{expected<T, E>} object
 represents a value of type \tcode{T}.
 
+\begin{addedblock}
+\pnum
+When \tcode{has_value()} is \tcode{false}, the error is
+\tcode{\exposid{unex}.error()}. The error is held as an \tcode{unexpected<E>},
+and not as an \tcode{E}, so that \tcode{E} may be an lvalue reference type: an
+\tcode{E\&} cannot be a union member, whereas \tcode{unexpected<E\&>} holds a
+pointer to an external object\iref{expected.un.ref}.
+\end{addedblock}
+
 \pnum
 A program that instantiates
 the definition of the template \tcode{expected<T, E>} with
@@ -2461,7 +2479,7 @@ Any exception thrown by the expressions in the \Fundescx{Effects}.
 \pnum
 \remarks
 The exception specification is equivalent to
-\tcode{is_nothrow_move_constructible_v<E> \&\& is_nothrow_swappable_v<E>}.
+\tcode{is_nothrow_move_constructible_v<unexpected<E>> \&\& is_nothrow_swappable_v<unexpected<E>>}.
 \end{itemdescr}
 
 \indexlibrarymember{swap}{expected<void>}%
