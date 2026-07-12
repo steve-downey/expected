@@ -18,6 +18,8 @@ repos:
     hooks:
     - id: clang-format
       types_or: [c++, c]
+      # Hand-aligned illustrative listing rendered verbatim in the paper.
+      exclude: '^papers/wg21-latex/implementation\.hpp$'
 
     # CMake linting and formatting
   - repo: https://github.com/BlankSpruce/gersemi-pre-commit
