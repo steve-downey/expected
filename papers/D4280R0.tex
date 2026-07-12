@@ -27,13 +27,15 @@
 
 \begin{abstract}
   We propose reference support for \tcode{std::expected}: the value type,
-  the error type, or both may be an lvalue reference. Six partial
-  specializations cover the cases --- \tcode{expected<T\&, E>},
-  \tcode{expected<T, E\&>}, \tcode{expected<T\&, E\&>}, and
-  \tcode{expected<void, E\&>}, alongside the two object specializations that
-  ship today. \tcode{unexpected<E\&>} is proposed to match.
+  the error type, or both may be an lvalue reference. This takes one new
+  partial specialization, \tcode{expected<T\&, E>}, for a reference value; a
+  relaxation of the primary \tcode{expected<T, E>} and of
+  \tcode{expected<void, E>} to admit an lvalue-reference error type \tcode{E},
+  which today they reject; and a new \tcode{unexpected<E\&>} to carry one. All
+  four value/error reference combinations fall out; only the value-reference
+  case needs a specialization of its own.
 
-  The reference specializations follow \tcode{optional<T\&>} \cite{P2988R12}
+  The reference support follows \tcode{optional<T\&>} \cite{P2988R12}
   exactly where the shapes coincide. A reference is held as a pointer.
   Assignment rebinds; it never assigns through to the referent. \tcode{const}
   is shallow --- the binding is fixed, the referent is not. Constructors that
@@ -221,29 +223,31 @@ static_assert(!std::is_reference_v<T>,
     "T must not be a reference (use expected<T&,E> specialization)");
 \end{minted}
 
-whose comment already points at the answer. We propose the specializations it
-promises, and the symmetric ones for the error type. In full:
+whose comment already points at the answer. Reference values need a
+specialization; reference errors do not. In full, the proposal is:
 
 \begin{itemize}
-\item \tcode{expected<T\&, E>} --- reference value, object error.
-\item \tcode{expected<T, E\&>} --- object value, reference error.
-\item \tcode{expected<T\&, E\&>} --- both references.
-\item \tcode{expected<void, E\&>} --- no value, reference error.
-\item \tcode{unexpected<E\&>} --- so that \tcode{unexpected} can name a
-  reference error and feed the specializations above.
+\item a new partial specialization \tcode{expected<T\&, E>} for a reference
+  value, in which \tcode{E} may be an object type or an lvalue reference;
+\item a relaxation of the primary \tcode{expected<T, E>} and of
+  \tcode{expected<void, E>}, whose error type \tcode{E} may now be an lvalue
+  reference where today it may not; and
+\item a new partial specialization \tcode{unexpected<E\&>}, so that
+  \tcode{unexpected} can carry a reference error.
 \end{itemize}
 
-The two object specializations, \tcode{expected<T, E>} and
-\tcode{expected<void, E>}, are unchanged. A reference specialization stores a
-pointer where it would have stored the referred-to type, an \tcode{E} (or its
-own pointer) for the error, and the engaged flag. There is no new state and no
-new vocabulary; the observers, the modifiers, the monadic operations, and the
-comparisons keep their names and their meanings.
+That is one new \tcode{expected} specialization, not four: an error you do not
+own is stored as the pointer already inside \tcode{unexpected<E\&>}, so
+permitting a reference \tcode{E} costs a constraint, not a class. The primary
+\tcode{expected<T, E>} and \tcode{expected<void, E>} are otherwise unchanged.
+A reference is stored as a pointer --- \tcode{T\&} as a \tcode{T*}, a reference
+error as the pointer within \tcode{unexpected<E\&>} --- and there is no new
+state and no new vocabulary; the observers, the modifiers, the monadic
+operations, and the comparisons keep their names and their meanings.
 
-An illustrative synopsis of the value-reference case follows. It is the
-primary template with the value slot turned into a pointer, the deleted
-operations that a reference cannot support, and nothing else. The other three
-specializations are the same idea applied to the error slot, or to both.
+An illustrative synopsis of the one new specialization follows. It is the
+primary template with the value slot turned into a pointer and the operations a
+reference cannot support deleted, and nothing else.
 
 \begin{codeblock}
 namespace std {
@@ -400,7 +404,8 @@ This is the first of those two. It is also more than the sentence asked for:
 \tcode{E} is a template parameter exactly as \tcode{T} is, and an error you do
 not own is as ordinary as a value you do not own. Supporting references in the
 value position but not the error position would be an arbitrary asymmetry.
-So the proposal covers both, and the four combinations that result.
+So the proposal covers both --- the value position with a specialization, the
+error position by letting \tcode{E} be a reference in every one of them.
 
 There is a principled reason the standard disallowed references in its sum
 types: assignment means something different for a reference than for a value.
@@ -491,15 +496,20 @@ function.'' A \tcode{const int\&} \emph{can} bind a prvalue, so
 message is seen. Both are correct rejections. They do not read identically, and
 a reviewer should expect both forms.
 
-\section{References in the error position, and the whole lattice (D4)}
+\section{References in the error position, by relaxation not specialization (D4)}
 
 The error type is a template parameter, and errors are routinely owned
 elsewhere --- a diagnostics engine, an error registry, a long-lived context
-object. So \tcode{expected<T, E\&>}, \tcode{expected<T\&, E\&>}, and
-\tcode{expected<void, E\&>} are proposed alongside \tcode{expected<T\&, E>}.
-Not being able to express \tcode{expected<T, E\&>} while
-\tcode{expected<T\&, E>} works would be inconsistent, hostile, and strictly
-worse than disallowing both.
+object. So a reference error must be expressible. It does not, however, need a
+class of its own: an \tcode{expected} already stores its error as an
+\tcode{unexpected<E>}, and \tcode{unexpected<E\&>} holds a pointer, so
+admitting a reference \tcode{E} is a matter of relaxing a constraint, not
+writing a specialization. Every \tcode{expected} template --- the primary, the
+\tcode{void} specialization, and the new \tcode{expected<T\&, E>} --- changes
+its guard from ``\tcode{E} is not a reference'' to ``\tcode{E} is not an
+\emph{rvalue} reference,'' and reference errors work throughout. Not being able
+to express \tcode{expected<T, E\&>} while \tcode{expected<T\&, E>} works would
+be inconsistent, hostile, and strictly worse than disallowing both.
 
 \section{\tcode{unexpected<E\&>}, and the reference-only rule (D5)}
 
@@ -507,9 +517,9 @@ To construct an \tcode{expected} with a reference error, \tcode{unexpected} has
 to be able to hold one, so \tcode{unexpected<E\&>} is part of the proposal. It
 stores a pointer to an external object.
 
-For the reference-error specializations, construction from
-\tcode{unexpected<G>} is offered \emph{only when \tcode{G} is itself a
-reference}, and deleted when \tcode{G} is a value:
+When the error type is a reference, construction from \tcode{unexpected<G>} is
+offered \emph{only when \tcode{G} is itself a reference}, and deleted when
+\tcode{G} is a value:
 
 \begin{minted}[fontsize=\small]{c++}
 int err = 42;
@@ -639,11 +649,14 @@ feature should not wait on an unrelated one.
 \chapter{Impact on the standard}
 
 A pure library extension. No core-language change, and no existing well-formed
-program is made ill-formed. The change adds partial specializations of
-\tcode{expected} and \tcode{unexpected}; the only code affected is code that
-depends on those specializations being absent --- for example a
-\tcode{static_assert} against them --- and such code was deliberately excluding
-the feature rather than relying on ordinary behavior.
+program is made ill-formed. The change adds the \tcode{expected<T\&, E>} and
+\tcode{unexpected<E\&>} specializations, and widens the error type of the
+existing \tcode{expected} templates from an object type to an object type or an
+lvalue reference. Widening a constraint only ever admits more programs, so the
+only code affected is code that relied on a reference error, or the
+\tcode{expected<T\&, E>} specialization, being rejected --- a
+\tcode{static_assert} against them, say --- which was deliberately excluding the
+feature rather than relying on ordinary behavior.
 
 \chapter{Wording}
 
@@ -653,12 +666,15 @@ and deletions \removed{like this}. The baseline is checked in verbatim and
 edited only in the copy, so the marks are exactly the proposed change and
 nothing else.
 
-The edits follow the \tcode{optional<T\&>} wording of \cite{P2988R12}
-specialization by specialization --- a synopsis with the value slot a pointer,
-the deleted default and in-place constructors, the rebind-semantics assignment
-tables, and the shallow-\tcode{const} observers --- and reuse that shape on the
-error slot, with the \tcode{unexpected<E\&>} reference-only construction rule of
-D5. This revision establishes the baseline; the marked edits land in the next.
+The edits are of two kinds. A new \tcode{[expected.ref]} subclause specifies
+\tcode{expected<T\&, E>}, following the \tcode{optional<T\&>} wording of
+\cite{P2988R12} --- a synopsis with the value slot a pointer, the deleted
+default and in-place constructors, the rebind-semantics assignment, and the
+shallow-\tcode{const} observers. Marked edits in place widen the error type of
+the primary \tcode{expected<T, E>} and of \tcode{expected<void, E>} to admit an
+lvalue reference, and add \tcode{unexpected<E\&>} with the reference-only
+construction rule of D5. This revision establishes the baseline; the marked
+edits land in the next.
 
 \include{expected-new}
 
@@ -684,13 +700,15 @@ thanks to JeanHeyd Meneide for the foundational reference research
 \chapter{Implementation}
 \label{chap:impl}
 
-The six specializations are implemented as flat, independent partial
-specializations --- no shared base, no CRTP, no mixin --- matching how
-libstdc++, libc++, and the MSVC STL write \tcode{optional} and \tcode{expected}.
-Inheritance-based factoring would cut the line count, at the cost of the
-diagnostics; a reader auditing proposed wording wants each specialization
-legible on its own. The full source, with its positive and negative-compile
-test suites, is below.
+The three \tcode{expected} class templates --- the primary, \tcode{expected<void,
+E>}, and \tcode{expected<T\&, E>} --- and the two \tcode{unexpected} templates
+are written as flat, independent definitions: no shared base, no CRTP, no mixin,
+matching how libstdc++, libc++, and the MSVC STL write \tcode{optional} and
+\tcode{expected}. Each admits a reference error type by permitting \tcode{E} to
+be an lvalue reference, stored through \tcode{unexpected<E\&>}. Inheritance-based
+factoring would cut the line count, at the cost of the diagnostics; a reader
+auditing proposed wording wants each template legible on its own. The full
+source, with its positive and negative-compile test suites, is below.
 
 \inputminted{c++}{../include/beman/expected/expected.hpp}
 

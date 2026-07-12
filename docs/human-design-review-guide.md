@@ -4,7 +4,7 @@
 
 ## What This Is
 
-A complete implementation of `std::expected` (C++26) extended with six template specializations that allow `T` and/or `E` to be reference types, proposed for C++29. The reference semantics follow P2988 (`optional<T&>`): rebind on assignment, shallow const, dangling prevention via deleted constructors.
+A complete implementation of `std::expected` (C++26) extended to allow `T` and/or `E` to be reference types, proposed for C++29. This is a new `expected<T&, E>` specialization for a reference value, a relaxation of the primary and `void` templates to admit a reference error `E`, and a new `unexpected<E&>` — three `expected` class templates in all, each accepting an object or reference error. The reference semantics follow P2988 (`optional<T&>`): rebind on assignment, shallow const, dangling prevention via deleted constructors.
 
 **File count:** 3 headers, ~4400 lines of implementation, 15 positive test files (469 tests), 54 negative compile tests.
 
@@ -12,37 +12,47 @@ A complete implementation of `std::expected` (C++26) extended with six template 
 
 ---
 
-## Decision 1: Six Separate Specializations, Zero Abstraction
+## Decision 1: Three Class Templates, Reference Errors Folded In, Zero Abstraction
 
 ### What was done
 
-The implementation provides six complete, independent partial specializations:
+The implementation provides three complete, independent `expected` class
+templates, plus two `unexpected` templates. Reference *error* types are not
+separate specializations: each `expected` template permits `E` to be an object
+type *or* an lvalue reference, and stores the error as an `unexpected<E>` — which
+is the pointer-holding `unexpected<E&>` when `E` is a reference. So a single
+`expected<T&, E>` covers both `expected<T&, E>` and `expected<T&, E&>`, and the
+primary covers `expected<T, E>` and `expected<T, E&>`.
 
-| Specialization | Lines | Storage |
+| Template | Value storage | Error storage |
 |----------------|-------|---------|
-| `expected<T, E>` | ~1100 | `union { T val_; E unex_; }` + bool |
-| `expected<void, E>` | ~800 | `union { E unex_; }` + bool |
-| `expected<T&, E>` | ~700 | `T*` + `union { E unex_; }` + bool |
-| `expected<T, E&>` | ~700 | `union { T val_; }` + `E*` + bool |
-| `expected<T&, E&>` | ~550 | `T*` + `E*` + bool |
-| `expected<void, E&>` | ~450 | `E*` + bool |
+| `expected<T, E>` (primary) | `union { T val_; unexpected<E> unex_; }` + bool | `unexpected<E>` (pointer when `E` is `E&`) |
+| `expected<void, E>` | `union { unexpected<E> unex_; }` + bool | `unexpected<E>` |
+| `expected<T&, E>` | `union { T* val_; unexpected<E> unex_; }` + bool | `unexpected<E>` |
+| `unexpected<E>` | — | `E` by value |
+| `unexpected<E&>` | — | `E*` |
 
-Each specialization is a self-contained class with its own constructors, assignment operators, observers, swap, equality, and monadic operations. There is no shared base class, no CRTP, no mixin, no macro that generates them.
+The static assertion that used to read "`E` must not be a reference" now reads
+"`E` must not be an *rvalue* reference," which is the whole of what admits
+reference errors. Each template is a self-contained class with its own
+constructors, assignment operators, observers, swap, equality, and monadic
+operations. There is no shared base class, no CRTP, no mixin, no macro that
+generates them.
 
 ### Why this matters
 
-The total is ~4300 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this by 40-60%. The monadic operations alone account for 4 operations x 4 ref-qualified overloads x 6 specializations = 96 method definitions that share structural similarity.
+The total is ~4300 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this by 40-60%. The monadic operations alone account for 4 operations x 4 ref-qualified overloads across the three templates — dozens of method definitions that share structural similarity.
 
 ### The argument for the current approach
 
 - Standard library implementations (libstdc++, libc++, MSVC STL) use flat specializations for `optional` and `expected`. Inheritance-based factoring produces incomprehensible error messages.
 - Each specialization can be read and audited independently against whatever future standard wording emerges.
-- When constraints differ subtly between specializations (and they do — `T&` doesn't need `is_nothrow_move_constructible` checks, `E&` doesn't support `unexpected<G>` construction), a shared base must either disable features via SFINAE or push complexity into the base, which hides it rather than removing it.
+- When constraints differ subtly between templates (and they do — `T&` doesn't need `is_nothrow_move_constructible` checks, and a reference `E` accepts `unexpected<G>` construction only when `G` is itself a reference), a shared base must either disable features via SFINAE or push complexity into the base, which hides it rather than removing it.
 
 ### The argument against
 
-- **Maintenance burden.** A bug in `and_then` must be fixed in 6 places. A new monadic operation (hypothetical `or_transform`) must be added 24 times (4 overloads x 6 specializations).
-- **Consistency risk.** Are all 6 specializations actually consistent? Small divergences creep in when hand-copying constraint clauses. The only way to verify is exhaustive side-by-side comparison.
+- **Maintenance burden.** A bug in `and_then` must be fixed in three templates. A new monadic operation (hypothetical `or_transform`) must be added 12 times (4 overloads x 3 templates).
+- **Consistency risk.** Are all three templates actually consistent, across both object and reference `E`? Small divergences creep in when hand-copying constraint clauses. The only way to verify is exhaustive side-by-side comparison.
 - **Review fatigue.** A reviewer looking at 4300 lines of structurally similar code will inevitably skim. The 95th `requires` clause gets less scrutiny than the 5th.
 
 ### What to decide
@@ -172,7 +182,7 @@ Every deleted operation carries a C++26 `= delete("message")` string explaining 
 
 ### What was done
 
-All four monadic operations (`and_then`, `or_else`, `transform`, `transform_error`) are provided for all six specializations, with four ref-qualified overloads each (`&`, `const&`, `&&`, `const&&`).
+All four monadic operations (`and_then`, `or_else`, `transform`, `transform_error`) are provided for all three `expected` templates, with four ref-qualified overloads each (`&`, `const&`, `&&`, `const&&`), for both object and reference `E`.
 
 For reference specializations, the callable always receives `T&` (dereferenced pointer), regardless of the expected object's own value category. This means:
 
@@ -208,7 +218,7 @@ std::move(e).and_then(f);  // f still gets int&, not int&&
 
 ### What to decide
 
-Is the test suite sufficient for standardization review? The positive coverage is good — every operation has basic tests. But the systematic constraint/SFINAE testing that exists for the primary template is absent for three of the four reference specializations. This gap should be closed before submitting to WG21.
+Is the test suite sufficient for standardization review? The positive coverage is good — every operation has basic tests. But the systematic constraint/SFINAE testing that exists for the primary template and `expected<T&, E>` is absent for the reference-error (`E&`) configurations of the primary and `void` templates. This gap should be closed before submitting to WG21.
 
 ---
 
@@ -216,13 +226,13 @@ Is the test suite sufficient for standardization review? The positive coverage i
 
 ### What exists
 
-Everything is in `expected.hpp`. The `unexpected.hpp` and `bad_expected_access.hpp` are separate (matching the standard's `[expected.syn]` structure), but all six specializations live in one file.
+Everything is in `expected.hpp`. The `unexpected.hpp` and `bad_expected_access.hpp` are separate (matching the standard's `[expected.syn]` structure), but all three `expected` templates live in one file.
 
 ### What to discuss
 
 - **4400 lines in one file.** This is at the boundary of manageable. A reviewer can `grep` and navigate, but side-by-side comparison of specializations requires tooling.
 - **The standard doesn't mandate file structure.** But for a reference implementation intended to demonstrate proposed wording, would splitting `expected_ref.hpp` (or similar) improve reviewability?
-- **Compile times.** Every translation unit that includes `expected.hpp` parses all six specializations. For users who only need `expected<T, E>`, this is wasted work. The module build path (`expected.cppm`) mitigates this but is opt-in and not the default.
+- **Compile times.** Every translation unit that includes `expected.hpp` parses all three templates. For users who only need `expected<T, E>`, this is wasted work. The module build path (`expected.cppm`) mitigates this but is opt-in and not the default.
 
 ---
 
