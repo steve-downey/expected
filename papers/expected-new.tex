@@ -2988,23 +2988,27 @@ public:
     friend constexpr bool operator==(const expected&, const unexpected<E2>&);
 
 private:
-  bool @\exposid{has_val}@;         // \expos
+  bool @\exposid{has_val}@;           // \expos
   union {
-    T* @\exposid{val}@;             // \expos
-    E @\exposid{unex}@;             // \expos
+    T* @\exposid{val}@;               // \expos
+    unexpected<E> @\exposid{unex}@;   // \expos
   };
 };
 \end{codeblock}
 
 \pnum
-Any object of type \tcode{expected<T\&, E>} either
-represents a reference to an object of type \tcode{T}, or
-contains a value of type \tcode{E} nested within\iref{intro.object} it.
-Member \exposid{has_val} indicates whether the \tcode{expected<T\&, E>} object
-represents a reference.
-When an \tcode{expected<T\&, E>} object represents a reference,
-member \exposid{val} points to the referenced object,
-which is not owned by the \tcode{expected} object.
+An object of type \tcode{expected<T\&, E>} either represents a reference to an
+object of type \tcode{T}, or holds an error.
+Member \exposid{has_val} indicates whether the object represents a reference.
+When it represents a reference, member \exposid{val} points to the referenced
+object, which is not owned by the \tcode{expected} object.
+Otherwise, the error is \tcode{\exposid{unex}.error()}.
+
+\pnum
+The error is held as an \tcode{unexpected<E>}, and not as an \tcode{E}, so that
+\tcode{E} can be an lvalue reference type: an \tcode{E\&} cannot be a union
+member, whereas \tcode{unexpected<E\&>} holds a pointer to an external
+object\iref{expected.un.ref}.
 
 \pnum
 A program that instantiates the definition of
@@ -3030,8 +3034,8 @@ constexpr expected(expected&& rhs) noexcept(@\seebelow@);
 \effects
 If \tcode{rhs.has_value()} is \tcode{true}, initializes \exposid{val} with
 \tcode{rhs.\exposid{val}}, so that \tcode{*this} and \tcode{rhs} refer to the
-same object; otherwise, initializes \exposid{unex} with the error of
-\tcode{rhs}.
+same object; otherwise, initializes \exposid{unex} with
+\tcode{rhs.\exposid{unex}}.
 
 \pnum
 \ensures
@@ -3162,7 +3166,10 @@ If \tcode{E} is an lvalue reference type, the initialization shall not bind
 
 \pnum
 \effects
-Initializes \exposid{unex} with the given arguments.
+Direct-non-list-initializes \exposid{unex} with \tcode{in_place} and
+\tcode{std::forward<Args>(args)...} (respectively, \tcode{in_place},
+\tcode{il}, and \tcode{std::forward<Args>(args)...}), so that the error
+\tcode{\exposid{unex}.error()} is constructed from those arguments.
 \tcode{has_value()} is \tcode{false}.
 \end{itemdescr}
 
@@ -3258,9 +3265,10 @@ otherwise the corresponding requirements of the primary template hold.
 
 \pnum
 \effects
-Makes \tcode{*this} hold the error of \tcode{e}. When \tcode{E} is a reference
-type, \exposid{unex} is made to refer to the same object as \tcode{e.error()};
-the previously referenced object, if any, is not modified.
+Makes \tcode{*this} hold the error of \tcode{e}, reinitializing \exposid{unex}
+from \tcode{e} rather than assigning through it. When \tcode{E} is a reference
+type, \tcode{\exposid{unex}.error()} thereafter refers to the same object as
+\tcode{e.error()}; the previously referenced object, if any, is not modified.
 
 \pnum
 \returns
@@ -3402,8 +3410,8 @@ constexpr E&& error() && noexcept;
 
 \pnum
 \returns
-A reference to the error, as for the primary template
-(\ref{expected.object.obs}).
+\tcode{\exposid{unex}.error()}, with the \tcode{const} and reference
+qualification of the selected overload.
 \end{itemdescr}
 
 \indexlibrarymember{value_or}{expected}%
