@@ -1,4 +1,4 @@
-// papers/wg21-latex/implementation.hpp                                -*-C++-*-
+// papers/wg21-latex/implementation.hpp                               -*-C++-*-
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // ----------------------
 // BASE AND DETAILS ELIDED
