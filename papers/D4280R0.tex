@@ -245,66 +245,124 @@ primary template with the value slot turned into a pointer, the deleted
 operations that a reference cannot support, and nothing else. The other three
 specializations are the same idea applied to the error slot, or to both.
 
-\begin{minted}[fontsize=\footnotesize]{c++}
+\begin{codeblock}
 namespace std {
-  template<class T, class E>
-  class expected<T&, E> {
+template<class T, class E>
+class expected<T&, E> {
   public:
     using value_type      = T&;
     using error_type      = E;
-    using unexpected_type  = unexpected<E>;
-    template<class U> using rebind = expected<U, error_type>;
+    using unexpected_type = unexpected<E>;
+    template<class U>
+    using rebind = expected<U, error_type>;
 
     // constructors
-    constexpr expected() = delete;                      // T& cannot be null
+    constexpr expected() = delete;
     constexpr expected(const expected&);
-    constexpr expected(expected&&) noexcept(see below);
-    template<class U = T> constexpr explicit(see below) expected(U&&);   // binds T&
-    template<class U> constexpr expected(U&&) = delete; // binds a temporary: deleted
-    template<class U, class G> constexpr explicit(see below) expected(const expected<U&, G>&);
-    template<class U, class G> constexpr explicit(see below) expected(expected<U&, G>&&);
-    template<class G> constexpr explicit(see below) expected(const unexpected<G>&);
-    template<class G> constexpr explicit(see below) expected(unexpected<G>&&);
-    template<class... Args> constexpr expected(in_place_t, Args&&...) = delete;
-    template<class... Args> constexpr explicit expected(unexpect_t, Args&&...);
+    constexpr expected(expected&&) noexcept(@\seebelow@);
+    template<class U = T>
+    constexpr explicit(@\seebelow@) expected(U&&);
+    template<class U>
+    constexpr expected(U&&) = delete;
+    template<class U, class G>
+    constexpr explicit(@\seebelow@) expected(const expected<U&, G>&);
+    template<class U, class G>
+    constexpr explicit(@\seebelow@) expected(expected<U&, G>&&);
+    template<class G>
+    constexpr explicit(@\seebelow@) expected(const unexpected<G>&);
+    template<class G>
+    constexpr explicit(@\seebelow@) expected(unexpected<G>&&);
+    template<class... Args>
+    constexpr expected(in_place_t, Args&&...) = delete;
+    template<class... Args>
+    constexpr explicit expected(unexpect_t, Args&&...);
+    template<class U, class... Args>
+    constexpr explicit expected(unexpect_t, initializer_list<U>, Args&&...);
 
-    // assignment: rebind, never assign-through
+    constexpr ~expected();
+
+    // assignment
     constexpr expected& operator=(const expected&);
-    constexpr expected& operator=(expected&&) noexcept(see below);
-    template<class U = T> constexpr expected& operator=(U&&);            // rebinds
-    template<class G> constexpr expected& operator=(const unexpected<G>&);
-    template<class G> constexpr expected& operator=(unexpected<G>&&);
-    template<class U = T> constexpr T& emplace(U&&) noexcept(see below); // rebinds
+    constexpr expected& operator=(expected&&) noexcept(@\seebelow@);
+    template<class U = T>
+    constexpr expected& operator=(U&&);
+    template<class G>
+    constexpr expected& operator=(const unexpected<G>&);
+    template<class G>
+    constexpr expected& operator=(unexpected<G>&&);
+    template<class U = T>
+    constexpr T& emplace(U&&) noexcept(@\seebelow@);
 
-    constexpr void swap(expected&) noexcept(see below);
+    constexpr void        swap(expected&) noexcept(@\seebelow@);
+    friend constexpr void swap(expected&, expected&) noexcept(@\seebelow@);
 
-    // observers: const is shallow
-    constexpr T* operator->() const noexcept;
-    constexpr T& operator*() const noexcept;
-    constexpr explicit operator bool() const noexcept;
-    constexpr bool has_value() const noexcept;
-    constexpr T& value() const&;
-    constexpr T& value() &&;
+    // observers
+    constexpr T*        operator->() const noexcept;
+    constexpr T&        operator*() const noexcept;
+    constexpr explicit  operator bool() const noexcept;
+    constexpr bool      has_value() const noexcept;
+    constexpr T&        value() const&;
+    constexpr T&        value() &&;
     constexpr const E&  error() const& noexcept;
     constexpr E&        error() & noexcept;
     constexpr const E&& error() const&& noexcept;
     constexpr E&&       error() && noexcept;
-    template<class U = remove_cv_t<T>> constexpr remove_cv_t<T> value_or(U&&) const;
-    template<class G = E>              constexpr E error_or(G&&) const&;
+    template<class U = remove_cv_t<T>>
+    constexpr remove_cv_t<T> value_or(U&&) const;
+    template<class G = E>
+    constexpr E error_or(G&&) const&;
 
-    // monadic operations: the callable always receives T&
-    template<class F> constexpr auto and_then(F&&) &;
-    template<class F> constexpr auto or_else(F&&) &;
-    template<class F> constexpr auto transform(F&&) &;
-    template<class F> constexpr auto transform_error(F&&) &;
-    // ... const&, &&, const&& overloads as in the primary template
+    // monadic operations
+    template<class F>
+    constexpr auto and_then(F&&) &;
+    template<class F>
+    constexpr auto and_then(F&&) &&;
+    template<class F>
+    constexpr auto and_then(F&&) const&;
+    template<class F>
+    constexpr auto and_then(F&&) const&&;
+    template<class F>
+    constexpr auto or_else(F&&) &;
+    template<class F>
+    constexpr auto or_else(F&&) &&;
+    template<class F>
+    constexpr auto or_else(F&&) const&;
+    template<class F>
+    constexpr auto or_else(F&&) const&&;
+    template<class F>
+    constexpr auto transform(F&&) &;
+    template<class F>
+    constexpr auto transform(F&&) &&;
+    template<class F>
+    constexpr auto transform(F&&) const&;
+    template<class F>
+    constexpr auto transform(F&&) const&&;
+    template<class F>
+    constexpr auto transform_error(F&&) &;
+    template<class F>
+    constexpr auto transform_error(F&&) &&;
+    template<class F>
+    constexpr auto transform_error(F&&) const&;
+    template<class F>
+    constexpr auto transform_error(F&&) const&&;
+
+    // equality operators
+    template<class T2, class E2>
+    friend constexpr bool operator==(const expected&, const expected<T2, E2>&);
+    template<class T2>
+    friend constexpr bool operator==(const expected&, const T2&);
+    template<class E2>
+    friend constexpr bool operator==(const expected&, const unexpected<E2>&);
 
   private:
-    bool has_val_;
-    union { T* val_; E unex_; };   // exposition only
-  };
+    bool @\exposid{has_val}@;   // \expos
+    union {
+        T* @\exposid{val}@;     // \expos
+        E  @\exposid{unex}@;    // \expos
+    };
+};
 }
-\end{minted}
+\end{codeblock}
 
 The reference implementation lives in the Beman Project's
 \tcode{beman.expected} library \cite{Downey_beman_expected}, and is described
