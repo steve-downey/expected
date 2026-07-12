@@ -54,10 +54,18 @@ $(DEPS_DIR):
 .PHONY: papers
 papers: D4280R0.pdf ## Compile papers
 
-D4280R0.pdf : D4280R0.tex wg21.bib
+D4280R0.pdf : D4280R0.tex expected-new.tex wg21.bib
 
 %.pdf : %.tex $(DEPS_DIR) | $(VENV)
 	latexmk -f -shell-escape -pdflua -use-make -deps -deps-out=$(DEPS_DIR)/$@.d -MP $<
+
+.PHONY: strip-wording
+strip-wording: expected-clean.tex ## Strip change markup to clean [expected] wording
+
+# expected-clean.tex is the marked-up wording copy with \added/\removed markup
+# removed: the text to submit as a pull request against the C++ working draft.
+expected-clean.tex: expected-new.tex strip-wording.py
+	python3 strip-wording.py expected-new.tex -o $@
 
 define curl_cmd =
 	curl https://wg21.link/index.bib > wg21.bib
