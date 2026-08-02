@@ -84,6 +84,25 @@ TEST_CASE("expected<void,E&>: convert from expected<void, G&>", "[expected_void_
     CHECK(&dst.error() == &err);
 }
 
+// Distinct from the copy constructor above: G differs from E, so the
+// expected<void, G&> converting constructor is selected. Adding const to the
+// referenced type is the case that constructor exists for.
+static_assert(std::is_constructible_v<expected<void, const int&>, const expected<void, int&>&>);
+
+TEST_CASE("expected<void,E&>: convert from expected<void, G&> adding const", "[expected_void_ref_e]") {
+    int                        err = 7;
+    const expected<void, int&> src(unexpect, err);
+    expected<void, const int&> dst(src);
+    REQUIRE(!dst.has_value());
+    CHECK(&dst.error() == &err);
+}
+
+TEST_CASE("expected<void,E&>: convert value state from expected<void, G&>", "[expected_void_ref_e]") {
+    const expected<void, int&> src;
+    expected<void, const int&> dst(src);
+    CHECK(dst.has_value());
+}
+
 // ---------------------------------------------------------------------------
 // Error rebind semantics on assignment
 // ---------------------------------------------------------------------------

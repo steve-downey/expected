@@ -10,3 +10,11 @@ print-summary = yes
 filter = .*/include/beman/expected/.*
 coveralls = coverage.json
 coveralls-pretty = yes
+
+# BEMAN_EXPECTED_TRAP() expands to __builtin_trap() (or __debugbreak/abort).
+# Reaching one of these lines kills the process with SIGILL before libgcov
+# flushes, so no .gcda is written at all -- a test that triggers a hardened
+# precondition violation would not merely fail to mark the line covered, it
+# would discard the whole run's counters. They are uncoverable by construction,
+# not untested, so they are excluded rather than left as permanent residue.
+exclude-lines-by-pattern = .*BEMAN_EXPECTED_TRAP\(\).*
