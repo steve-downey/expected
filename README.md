@@ -5,11 +5,11 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 -->
 
 <!-- markdownlint-disable-next-line line-length -->
-[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model) ![Continuous Integration Tests](https://github.com/steve-downey/sandbox-expected/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/steve-downey/sandbox-expected/actions/workflows/pre-commit-check.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/steve-downey/sandbox-expected/badge.svg?branch=main)](https://coveralls.io/github/steve-downey/sandbox-expected?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg)
+[![Library Status](https://raw.githubusercontent.com/bemanproject/beman/refs/heads/main/images/badges/beman_badge-beman_library_under_development.svg)](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#the-beman-library-maturity-model) ![Continuous Integration Tests](https://github.com/steve-downey/expected/actions/workflows/ci_tests.yml/badge.svg) ![Lint Check (pre-commit)](https://github.com/steve-downey/expected/actions/workflows/pre-commit-check.yml/badge.svg) [![Coverage](https://coveralls.io/repos/github/steve-downey/expected/badge.svg?branch=main)](https://coveralls.io/github/steve-downey/expected?branch=main) ![Standard Target](https://github.com/bemanproject/beman/blob/main/images/badges/cpp29.svg)
 
 `beman.expected` is a C++ library implementing the std::expected specification conforming to [The Beman Standard](https://github.com/bemanproject/beman/blob/main/docs/beman_standard.md).
 
-**Implements**: `std::expected` proposed in [Expected over References (D4280R0)](https://wg21.link/D4280R0).
+**Implements**: `std::expected` proposed in [Expected over References (D4280R0, draft)](papers/D4280R0.tex).
 
 **Status**: [Under development and not yet ready for production use.](https://github.com/bemanproject/beman/blob/main/docs/beman_library_maturity_model.md#under-development-and-not-yet-ready-for-production-use)
 

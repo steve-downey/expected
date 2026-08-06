@@ -106,7 +106,7 @@ This matches `T* const` (const pointer to non-const T), `std::reference_wrapper`
 
 ### What was done
 
-For `expected<T, E&>`, `expected<T&, E&>`, and `expected<void, E&>`, construction from `unexpected<G>` is allowed **only when `G` is itself a reference** (i.e. from `unexpected<E&>`), and `= delete`d when `G` is a value type. Assignment from `unexpected<G>` is still not offered for reference `E` (construction-only, for now).
+For `expected<T, E&>`, `expected<T&, E&>`, and `expected<void, E&>`, construction from `unexpected<G>` is allowed **only when `G` is itself a reference** (i.e. from `unexpected<E&>`), and `= delete`d when `G` is a value type. Rebinding assignment from `unexpected<E&>` is now supported alongside construction, following the same reference-`G`-only rule.
 
 ```cpp
 int err = 42;
