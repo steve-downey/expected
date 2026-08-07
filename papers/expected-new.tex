@@ -659,7 +659,7 @@ the \oldconcept{Destructible} requirements.
 
 \pnum
 The exposition-only variable template \exposid{converts-from-any-cvref}
-defined in \ref{optional.ctor}
+defined in [optional.ctor]
 is used by some constructors for \tcode{expected}.
 
 \indexlibraryctor{expected}%
@@ -712,7 +712,7 @@ This constructor is defined as deleted unless
 \item
 \tcode{is_copy_constructible_v<T>} is \tcode{true} and
 \item
-\tcode{is_copy_constructible_v<E>} is \tcode{true}.
+\tcode{is_copy_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}}.
 \end{itemize}
 
 \pnum
@@ -737,7 +737,7 @@ constexpr expected(expected&& rhs) noexcept(@\seebelow@);
 \item
 \tcode{is_move_constructible_v<T>} is \tcode{true} and
 \item
-\tcode{is_move_constructible_v<E>} is \tcode{true}.
+\tcode{is_move_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}}.
 \end{itemize}
 
 \pnum
@@ -1076,6 +1076,14 @@ Otherwise, equivalent to \tcode{\exposid{unex} = rhs.\exposid{unex}}.
 Then, if no exception was thrown,
 equivalent to: \tcode{\exposid{has_val} = rhs.has_value(); return *this;}
 
+\begin{addedblock}
+\pnum
+When \tcode{E} is an lvalue reference type, each of the cases above that
+initializes or assigns \exposid{unex} rebinds it: \exposid{unex} comes to
+refer to the same object as \tcode{rhs}'s error. No previously or
+subsequently referenced object is assigned through.
+\end{addedblock}
+
 \pnum
 \returns
 \tcode{*this}.
@@ -1089,9 +1097,9 @@ This operator is defined as deleted unless:
 \item
 \tcode{is_copy_constructible_v<T>} is \tcode{true} and
 \item
-\tcode{is_copy_assignable_v<E>} is \tcode{true} and
+\tcode{is_copy_assignable_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}} and
 \item
-\tcode{is_copy_constructible_v<E>} is \tcode{true} and
+\tcode{is_copy_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}} and
 \item
 \tcode{is_nothrow_move_constructible_v<T> || is_nothrow_move_constructible_v<E>}
 is \tcode{true}.
@@ -1123,9 +1131,9 @@ constexpr expected& operator=(expected&& rhs) noexcept(@\seebelow@);
 \item
 \tcode{is_move_assignable_v<T>} is \tcode{true} and
 \item
-\tcode{is_move_constructible_v<E>} is \tcode{true} and
+\tcode{is_move_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}} and
 \item
-\tcode{is_move_assignable_v<E>} is \tcode{true} and
+\tcode{is_move_assignable_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}} and
 \item
 \tcode{is_nothrow_move_constructible_v<T> || is_nothrow_move_constructible_v<E>}
 is \tcode{true}.
@@ -1152,6 +1160,14 @@ Otherwise, equivalent to \tcode{\exposid{unex} = std::move(rhs.\exposid{unex})}.
 \end{itemize}
 Then, if no exception was thrown,
 equivalent to: \tcode{has_val = rhs.has_value(); return *this;}
+
+\begin{addedblock}
+\pnum
+When \tcode{E} is an lvalue reference type, each of the cases above that
+initializes or assigns \exposid{unex} rebinds it: \exposid{unex} comes to
+refer to the same object as \tcode{rhs}'s error. No previously or
+subsequently referenced object is assigned through.
+\end{addedblock}
 
 \pnum
 \returns
@@ -2101,7 +2117,7 @@ Any exception thrown by the initialization of \exposid{unex}.
 \pnum
 \remarks
 This constructor is defined as deleted
-unless \tcode{is_copy_constructible_v<E>} is \tcode{true}.
+unless \tcode{is_copy_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}}.
 
 \pnum
 This constructor is trivial
@@ -2116,7 +2132,7 @@ constexpr expected(expected&& rhs) noexcept(is_nothrow_move_constructible_v<E>);
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_move_constructible_v<E>} is \tcode{true}.
+\tcode{is_move_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}}.
 
 \pnum
 \effects
@@ -2321,6 +2337,14 @@ destroys \exposid{unex} and sets \exposid{has_val} to \tcode{true}.
 Otherwise, equivalent to \tcode{\exposid{unex} = rhs.\exposid{unex}}.
 \end{itemize}
 
+\begin{addedblock}
+\pnum
+When \tcode{E} is an lvalue reference type, each of the cases above that
+initializes or assigns \exposid{unex} rebinds it: \exposid{unex} comes to
+refer to the same object as \tcode{rhs}'s error. No previously or
+subsequently referenced object is assigned through.
+\end{addedblock}
+
 \pnum
 \returns
 \tcode{*this}.
@@ -2328,8 +2352,12 @@ Otherwise, equivalent to \tcode{\exposid{unex} = rhs.\exposid{unex}}.
 \pnum
 \remarks
 This operator is defined as deleted unless
-\tcode{is_copy_assignable_v<E>} is \tcode{true} and
-\tcode{is_copy_constructible_v<E>} is \tcode{true}.
+\begin{itemize}
+\item
+\tcode{is_copy_assignable_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}} and
+\item
+\tcode{is_copy_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}}.
+\end{itemize}
 
 \pnum
 This operator is trivial if
@@ -2347,8 +2375,12 @@ constexpr expected& operator=(expected&& rhs) noexcept(@\seebelow@);
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_move_constructible_v<E>} is \tcode{true} and
-\tcode{is_move_assignable_v<E>} is \tcode{true}.
+\begin{itemize}
+\item
+\tcode{is_move_constructible_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}} and
+\item
+\tcode{is_move_assignable_v<E>} is \tcode{true}\added{ or \tcode{is_reference_v<E>} is \tcode{true}}.
+\end{itemize}
 
 \pnum
 \effects
@@ -2367,6 +2399,14 @@ destroys \exposid{unex} and sets \exposid{has_val} to \tcode{true}.
 \item
 Otherwise, equivalent to \tcode{\exposid{unex} = std::move(rhs.\exposid{unex})}.
 \end{itemize}
+
+\begin{addedblock}
+\pnum
+When \tcode{E} is an lvalue reference type, each of the cases above that
+initializes or assigns \exposid{unex} rebinds it: \exposid{unex} comes to
+refer to the same object as \tcode{rhs}'s error. No previously or
+subsequently referenced object is assigned through.
+\end{addedblock}
 
 \pnum
 \returns
@@ -2631,7 +2671,7 @@ Let \tcode{U} be \tcode{remove_cvref_t<invoke_result_t<F>>}.
 
 \pnum
 \constraints
-\tcode{is_constructible_v<E, decltype(error())>>} is \tcode{true}.
+\tcode{is_constructible_v<E, decltype(error())>} is \tcode{true}.
 
 \pnum
 \mandates
