@@ -14,6 +14,27 @@
 using namespace beman::expected;
 
 // =============================================================================
+// Finding 5: feature-test macro for the reference-E / reference-T extensions
+// =============================================================================
+
+#ifndef __cpp_lib_expected_ref
+    #error "__cpp_lib_expected_ref must be defined by <beman/expected/expected.hpp>"
+#endif
+static_assert(__cpp_lib_expected_ref > 0);
+
+// =============================================================================
+// Finding 4: guarded delete-with-message macro (falls back to plain `delete`
+// pre-C++26; either way, the deleted overload stays deleted).
+// =============================================================================
+
+static_assert(!std::is_constructible_v<unexpected<int&>, int&&>,
+              "unexpected<E&> dangling-temporary ctor must stay deleted regardless of "
+              "BEMAN_EXPECTED_DELETE_MSG's expansion");
+static_assert(!std::is_default_constructible_v<expected<int&, int>>,
+              "expected<T&,E> must stay non-default-constructible regardless of "
+              "BEMAN_EXPECTED_DELETE_MSG's expansion");
+
+// =============================================================================
 // Type-level static assertions
 // =============================================================================
 
@@ -36,6 +57,14 @@ static_assert(std::is_same_v<decltype(std::declval<const expected<int, int&>>().
 // Copy/move constructible
 static_assert(std::is_copy_constructible_v<expected<int, int&>>);
 static_assert(std::is_move_constructible_v<expected<int, int&>>);
+
+// Finding 1: copy/move assignment must be available for reference E, including
+// const-reference E, where E itself is not assignable (is_copy_assignable_v<const
+// int&> is false) but the stored unexpected<E&> rebinds via pointer assignment.
+static_assert(std::is_copy_assignable_v<expected<int, int&>>);
+static_assert(std::is_move_assignable_v<expected<int, int&>>);
+static_assert(std::is_copy_assignable_v<expected<int, const int&>>);
+static_assert(std::is_move_assignable_v<expected<int, const int&>>);
 
 // Triviality: when T is trivial, copy/move/assign/destroy should be trivial
 static_assert(std::is_trivially_copy_constructible_v<expected<int, int&>>);
@@ -133,6 +162,26 @@ TEST_CASE("expected<T,E&>: rebind does NOT assign through error reference", "[ex
     a = b;
     CHECK(err1 == 10); // err1 unchanged
     CHECK(a.error() == 20);
+}
+
+TEST_CASE("expected<T,const E&>: copy assignment rebinds, does not assign through", "[expected_ref_e]") {
+    int                       a = 1, b = 2;
+    expected<int, const int&> e(unexpect, a);
+    expected<int, const int&> f(unexpect, b);
+    e = f;
+    REQUIRE(!e.has_value());
+    CHECK(&e.error() == &b); // rebound to f's referent
+    CHECK(a == 1);           // a unchanged — no assign-through
+}
+
+TEST_CASE("expected<T,const E&>: move assignment rebinds, does not assign through", "[expected_ref_e]") {
+    int                       a = 1, b = 2;
+    expected<int, const int&> e(unexpect, a);
+    expected<int, const int&> f(unexpect, b);
+    e = std::move(f);
+    REQUIRE(!e.has_value());
+    CHECK(&e.error() == &b);
+    CHECK(a == 1);
 }
 
 TEST_CASE("expected<T,E&>: assign value when in error state", "[expected_ref_e]") {
