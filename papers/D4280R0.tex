@@ -41,7 +41,7 @@
   is shallow --- the binding is fixed, the referent is not. Constructors that
   would bind a reference to a temporary are deleted, with a diagnostic. This
   completes reference support across the standard library's principal
-  fallible sum type, and delivers the second of the two follow-ons that
+  fallible sum type, and delivers the first of the two follow-ons that
   \cite{P2988R12} named.
 \end{abstract}
 
@@ -600,19 +600,24 @@ onto a reference the wrapper does not own, and steal from the caller's object.
 Because it is a guarantee and not merely an implementation habit, it belongs in
 the design.
 
-\section{Deleted functions carry messages (D10)}
+\section{Deleted functions carry messages, where the compiler allows it (D10)}
 
-Every deleted operation uses \tcode{= delete("...")} \cite{P2573R2} to say what
-is wrong and what to do instead --- for instance, ``\tcode{expected<T\&,E>: no
-default constructor; T\& cannot be null}.'' This raises the language floor for
-the reference specializations to \CppXXVI{}; the primary template does not need
-it. For a feature whose whole difficulty is explaining why a given
-construction is refused, a good diagnostic is worth the floor.
+Every deleted operation is written to say what is wrong and what to do
+instead --- for instance, ``\tcode{expected<T\&,E>: no default constructor;
+T\& cannot be null}.'' Deleted-function messages \cite{P2573R2} are
+\CppXXVI{}; this proposal does not raise the library's floor to get them. A
+macro emits \tcode{= delete("...")} when the compiler advertises support ---
+tested via \tcode{__cpp_deleted_function} --- and falls back to a plain
+\tcode{= delete} otherwise. The reference implementation, and this proposal,
+stay at \CppXX{}. For a feature whose whole difficulty is explaining why a
+given construction is refused, a good diagnostic is worth having when it is
+free, but not worth a floor.
 
 \section{Feature test macro (D11)}
 
 A feature test macro \tcode{__cpp_lib_expected_ref} is proposed, so code can
-detect the reference specializations.
+detect the reference specializations. The reference implementation defines it
+with a placeholder value, pending assignment by LWG on adoption.
 
 \section{The held \tcode{unexpected<E>} is exposition-only; the observable
   behavior is keyed on \tcode{E} (D12)}
