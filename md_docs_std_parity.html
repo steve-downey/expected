@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('md_docs_std_parity.html',''); initResi
   <div class="headertitle"><div class="title">std::expected Parity </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Before adding the reference specializations (<code>expected&lt;T&amp;, E&gt;</code> etc., plan steps 7–10), the behavioral test suite is run against <b>both</b> <code>beman::expected</code> and <code>std::expected</code> to prove there are no behavioral differences outside the reference extension.</p>
+<div class="textblock"><p>The reference specializations (<code>expected&lt;T&amp;, E&gt;</code> etc.) are now implemented. The behavioral test suite is run against <b>both</b> <code>beman::expected</code> and <code>std::expected</code> to confirm there are no behavioral differences outside the reference extension.</p>
 <h1><a class="anchor" id="autotoc_md658"></a>
 How it works</h1>
 <p>The portable <em>behavioral</em> test sources are parameterized over the implementation under test via <code>tests/beman/expected/test_expected.hpp</code>, which aliases the selected namespace as <code>test_ns</code>:</p>

@@ -186,7 +186,7 @@ What to discuss</h2>
 Decision 4: &lt;tt&gt;unexpected&lt;G&gt;&lt;/tt&gt; Construction for &lt;tt&gt;E&amp;&lt;/tt&gt; Specializations — Allowed Only When &lt;tt&gt;G&lt;/tt&gt; Is a Reference</h1>
 <h2><a class="anchor" id="autotoc_md169"></a>
 What was done</h2>
-<p>For <code>expected&lt;T, E&amp;&gt;</code>, <code>expected&lt;T&amp;, E&amp;&gt;</code>, and <code>expected&lt;void, E&amp;&gt;</code>, construction from <code>unexpected&lt;G&gt;</code> is allowed <b>only when <code>G</code> is itself a reference</b> (i.e. from <code>unexpected&lt;E&amp;&gt;</code>), and <code>= delete</code>d when <code>G</code> is a value type. Assignment from <code>unexpected&lt;G&gt;</code> is still not offered for reference <code>E</code> (construction-only, for now).</p>
+<p>For <code>expected&lt;T, E&amp;&gt;</code>, <code>expected&lt;T&amp;, E&amp;&gt;</code>, and <code>expected&lt;void, E&amp;&gt;</code>, construction from <code>unexpected&lt;G&gt;</code> is allowed <b>only when <code>G</code> is itself a reference</b> (i.e. from <code>unexpected&lt;E&amp;&gt;</code>), and <code>= delete</code>d when <code>G</code> is a value type. Rebinding assignment from <code>unexpected&lt;E&amp;&gt;</code> is now supported alongside construction, following the same reference-<code>G</code>-only rule.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> err = 42;</div>
 <div class="line">expected&lt;int, int&amp;&gt; a(unexpect, err);           <span class="comment">// OK: unexpect_t ctor takes an lvalue</span></div>
 <div class="line">expected&lt;int, int&amp;&gt; b(unexpected&lt;int&amp;&gt;(err));    <span class="comment">// OK: source holds a reference to external err</span></div>
