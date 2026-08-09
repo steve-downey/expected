@@ -1,9 +1,8 @@
 # std::expected Parity
 
-Before adding the reference specializations (`expected<T&, E>` etc., plan
-steps 7–10), the behavioral test suite is run against **both**
-`beman::expected` and `std::expected` to prove there are no behavioral
-differences outside the reference extension.
+The reference specializations (`expected<T&, E>` etc.) are now implemented. The
+behavioral test suite is run against **both** `beman::expected` and `std::expected`
+to confirm there are no behavioral differences outside the reference extension.
 
 ## How it works
 

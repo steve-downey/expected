@@ -96,7 +96,7 @@ All four `error()` overloads: **PASS**
 | T is not unexpect_t | PASS | |
 | T is not an array | PASS | |
 | T is not a specialization of unexpected | FIXED (Fix 4) | static_assert added |
-| E is not a reference | PASS | |
+| E is not a reference | RELAXED | E may be an lvalue reference (reference extension) |
 | E is not void | PASS | |
 | E is not an array | PASS | |
 
