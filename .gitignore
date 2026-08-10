@@ -22,3 +22,10 @@
 /uv.lock
 .build
 /.claude/
+
+# ignore emacs package cache and generated blog artifacts
+/.emacs.d/eln-cache/
+/.emacs.d/elpa-*/
+/.emacs.d/elpa/
+/.emacs.d/custom.el
+*.deps

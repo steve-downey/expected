@@ -264,6 +264,86 @@ endif
 install-uv: ## install uv via `pipx install uv`
 	$(install_uv_cmd)
 
+# ------------------------------------------------------------------------------
+# Blog: org-mode -> GFM markdown, with UUID-anchored source transclusion.
+#
+# docs/blog/*.org posts pull code out of the tree with org-transclusion,
+# resolved by the elisp in .emacs.d/. orgit-file: links are pinned to a
+# committed git rev, so a published post keeps showing the code its prose was
+# written about. See docs/blog/pins.md for the post-to-rev mapping.
+# ------------------------------------------------------------------------------
+EMACS := $(shell command -v emacs 2> /dev/null)
+
+ORGFILES := $(wildcard *.org)
+
+%.html : %.org
+	$(EMACS) --init-directory=.emacs.d/ \
+	--batch --load .emacs.d/init.el  \
+	-f package-initialize \
+	--eval "(setq enable-local-variables :all)" \
+	--visit $< \
+	--eval "(org-transclusion-mode t)" \
+	--eval "(org-export-to-file 'html \"$@\")"
+	echo $@ : \\ > $@.deps
+	echo "  $<" \\ >> $@.deps
+	sed -n "s/^.*\[\[file:\(\S*\)::.*$$/\1/p" < $<  | sort -u | xargs printf "  %s \\\\\\n" >> $@.deps
+
+-include $(wildcard $(ORGFILES:%.org=%.html.deps))
+
+%-slides.html : %.org
+	$(EMACS) --init-directory=.emacs.d/ \
+	--batch --load .emacs.d/init.el  \
+	-f package-initialize \
+	--eval "(setq enable-local-variables :all)" \
+	--visit $< \
+	--eval "(org-transclusion-mode t)" \
+	--eval "(org-export-to-file 're-reveal \"$@\")"
+	echo $@ : \\ > $@.deps
+	echo "  $<" \\ >> $@.deps
+	sed -n "s/^.*\[\[file:\(\S*\)::.*$$/\1/p" < $<  | sort -u | xargs printf "  %s \\\\\\n" >> $@.deps
+
+-include $(wildcard $(ORGFILES:%.org=%-slides.html.deps))
+
+BLOG_ORGFILES := $(wildcard docs/blog/*.org)
+
+docs/blog/%.md : docs/blog/%.org
+	$(EMACS) --init-directory=.emacs.d/ \
+	--batch --load .emacs.d/init.el  \
+	-f package-initialize \
+	--eval "(setq enable-local-variables :all)" \
+	--visit $< \
+	--eval "(org-transclusion-mode t)" \
+	--eval "(require 'ox-gfm)" \
+	--eval "(org-export-to-file 'gfm \"$(abspath $@)\")"
+	echo $@ : \\ > $@.deps
+	echo "  $<" \\ >> $@.deps
+	sed -n \
+	  -e "s/^.*\[\[file:\(\S*\)::.*$$/\1/p" \
+	  -e "s/^.*\[\[orgit:[^:]*::\([^:]*\)::.*$$/\1/p" \
+	  < $< | sort -u | xargs printf "  %s \\\\\\n" >> $@.deps
+
+-include $(wildcard $(BLOG_ORGFILES:.org=.md.deps))
+
+.PHONY: blog-md
+blog-md: $(BLOG_ORGFILES:.org=.md) ## convert docs/blog/*.org to GFM markdown
+
+.PHONY: clean-blog-md
+clean-blog-md:
+	-rm -f $(BLOG_ORGFILES:.org=.md) $(BLOG_ORGFILES:.org=.md.deps)
+clean: clean-blog-md
+
+
+.PHONY: clean-emacs.d
+clean-emacs.d:
+	-rm -rf .emacs.d/eln-cache
+	-rm -rf .emacs.d/elpa*
+
+realclean: clean-emacs.d
+
+.PHONY: clean-org-deps
+clean-org-deps:
+	-rm $(ORGFILES:%.org=%.org.deps)
+
 # Help target
 .PHONY: help
 help: ## Show this help.
