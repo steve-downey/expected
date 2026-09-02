@@ -77,6 +77,10 @@ The fix is to make each such member's definition token-identical to its
 declaration; that work is not done here simply because we do not have direct
 MSVC access to develop and verify the workarounds. Contributions with MSVC
 access are welcome.
+
+The Windows setup below is retained for contributors who want to investigate
+MSVC support. It is currently unsupported and unverified; the documented build
+and test commands are not expected to pass with MSVC yet.
 > These development environments are verified using our CI configuration.
 
 ## Development
@@ -138,15 +142,18 @@ brew install llvm
 <details>
 <summary> For Windows </summary>
 
-To build Beman libraries, you will need the MSVC compiler. MSVC can be obtained
-by installing Visual Studio; the free Visual Studio 2022 Community Edition can
-be downloaded from
+> [!WARNING]
+>
+> MSVC builds are currently unsupported and unverified. These instructions only
+> establish a Windows development environment for work on that support.
+
+The MSVC compiler can be obtained by installing Visual Studio; the free Visual
+Studio 2022 Community Edition can be downloaded from
 [Microsoft](https://visualstudio.microsoft.com/vs/community/).
 
 After Visual Studio has been installed, you can launch "Developer PowerShell for
 VS 2022" by typing it into Windows search bar. This shell environment will
-provide CMake, Ninja, and MSVC, allowing you to build the library and run the
-tests.
+provide CMake, Ninja, and MSVC for investigating the current build failures.
 
 </details>
 
@@ -259,6 +266,11 @@ include an appropriate `beman.expected` header from your source code.
 > Altering include search paths to spell the include target another way (e.g.
 > `#include <identity.hpp>`) is unsupported.
 
+Textual-header consumers can detect the reference extension with the public
+configuration macro `BEMAN_EXPECTED_HAS_REFERENCES`, whose value is `1`.
+Importing the `beman.expected` module does not import preprocessor macros;
+module support itself is unconditional when that build mode is selected.
+
 The process for incorporating `beman.expected` into your project depends on the
 build system being used. Instructions for CMake are provided in following sections.
 
@@ -296,6 +308,8 @@ This will generate the following directory structure at `/opt/beman`.
 │   └── beman
 │       └── expected
 │           ├── bad_expected_access.hpp
+│           ├── config.hpp
+│           ├── config_generated.hpp
 │           ├── expected.hpp
 │           └── unexpected.hpp
 └── lib
@@ -303,4 +317,5 @@ This will generate the following directory structure at `/opt/beman`.
         └── beman.expected
             ├── beman.expected-config.cmake
             ├── beman.expected-config-version.cmake
-            └── beman.expected-targets.cmake```
+            └── beman.expected-targets.cmake
+```

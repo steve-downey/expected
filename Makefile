@@ -55,7 +55,7 @@ VCPKG ?= $(shell command -v vcpkg 2> /dev/null)
 ifeq ($(VCPKG),)
 	_cmake_top_level?="./cmake/use-fetch-content.cmake"
 	_toolchain:=$(_local_toolchain)
-	_args=-DBEMANINFRA_googletest_REPO=file:///home/sdowney/bld/googletest/googletest.git
+	_args=
 else
 	_vcpkg_toolchain:=$(VCPKG_ROOT)/scripts/buildsystems/vcpkg.cmake
 	_cmake_top_level?=$(_vcpkg_toolchain)
@@ -117,7 +117,7 @@ compile-headers: $(_build_path)/CMakeCache.txt ## Compile the headers
 
 .PHONY: install
 install: $(_build_path)/CMakeCache.txt compile ## Install the project
-	$(CMAKE) --install $(_build_path) --config $(CONFIG) --component beman.expected --verbose
+	$(CMAKE) --install $(_build_path) --config $(CONFIG) --verbose
 
 .PHONY: clean-install
 clean-install:
@@ -155,7 +155,7 @@ env:
 
 .PHONY: papers
 papers:
-	$(MAKE) -C papers/P2988 papers
+	$(MAKE) -C papers papers
 
 .DEFAULT: $(_build_path)/CMakeCache.txt ## Other targets passed through to cmake
 	$(CMAKE) --build $(_build_path)  --config $(CONFIG) --target $@ -- -k 0
