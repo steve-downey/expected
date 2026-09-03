@@ -100,17 +100,17 @@ $(document).ready(function(){initNavTree('md_docs_conformance_fixes_index.html',
   <div class="headertitle"><div class="title">Plan: Conformance Fixes for expected&lt;T, E&gt; and expected&lt;void, E&gt; </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md137"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md143"></a>
 Motivation</h1>
 <p>A conformance audit (<code>docs/conformance-audit.md</code>) found gaps between the beman::expected implementation (Steps 1-6) and the C++26 working draft [expected.syn] through [expected.void.eq]. These must be fixed before beginning the reference specializations (Steps 7-10) because the reference specializations will clone many of the same constraint patterns, and we don't want to propagate the gaps.</p>
-<h1><a class="anchor" id="autotoc_md138"></a>
+<h1><a class="anchor" id="autotoc_md144"></a>
 Reference Materials</h1>
 <ul>
 <li>**<code>docs/conformance-audit.md</code>** — the audit; lists every gap with standard section references</li>
 <li>**<code>docs/standard/expected.txt</code>** — C++26 standard wording (plain text)</li>
 <li>**<code>docs/plan/index.md</code>** — original 10-step plan (this plan is a side quest)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md139"></a>
+<h1><a class="anchor" id="autotoc_md145"></a>
 Phase Overview</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -127,7 +127,7 @@ Phase Overview</h1>
 <td class="markdownTableBodyNone">F5   </td><td class="markdownTableBodyNone"><code>fix5-preconditions-and-minor</code>   </td><td class="markdownTableBodyNone">Hardened preconditions, unexpected swap, minor fixes   </td><td class="markdownTableBodyNone">—   </td></tr>
 </table>
 <p>F1-F3 are independent and may run in parallel. F4 depends on F3 (monadic Mandates go on the same functions as monadic Constraints). F5 is independent of the others.</p>
-<h1><a class="anchor" id="autotoc_md140"></a>
+<h1><a class="anchor" id="autotoc_md146"></a>
 Standing Conventions</h1>
 <p>Same as <code>docs/plan/index.md</code>:</p><ul>
 <li>Include guards: <code>#ifndef</code>/<code>#define</code>/<code>#endif</code></li>
@@ -138,10 +138,10 @@ Standing Conventions</h1>
 <li>Namespace: <code>beman::expected</code></li>
 <li>Test files include <code>tests/beman/expected/test_config.hpp</code> (aliases <code>namespace expt</code>); new tests use <code>expt::</code> so they run against both beman and std modes — except for tests that verify beman-specific diagnostics (static_assert messages, hardened preconditions)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md141"></a>
+<h2><a class="anchor" id="autotoc_md147"></a>
 std cross-check rule</h2>
 <p>Constraint and Mandates fixes should not break the <code>beman.expected.tests.std</code> target (tests compiled against <code>std::expected</code>). If a new test exercises a constraint that libstdc++ doesn't enforce, put it in the beman-only target.</p>
-<h1><a class="anchor" id="autotoc_md142"></a>
+<h1><a class="anchor" id="autotoc_md148"></a>
 Step Details</h1>
 <ul>
 <li><a class="el" href="md_docs_conformance_fixes_fix1_constraints.html">Fix 1: Constructor, assignment, and equality constraints</a></li>
@@ -150,7 +150,7 @@ Step Details</h1>
 <li><a class="el" href="md_docs_conformance_fixes_fix4_mandates.html">Fix 4: Mandates static_asserts</a></li>
 <li><a class="el" href="md_docs_conformance_fixes_fix5_preconditions_and_minor.html">Fix 5: Hardened preconditions and minor fixes</a></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md143"></a>
+<h1><a class="anchor" id="autotoc_md149"></a>
 Checklist</h1>
 <ul>
 <li>[x] Fix 1: Constructor/assignment/equality constraints</li>
@@ -159,7 +159,7 @@ Checklist</h1>
 <li>[x] Fix 4: Mandates static_asserts</li>
 <li>[x] Fix 5: Hardened preconditions and minor fixes</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md144"></a>
+<h1><a class="anchor" id="autotoc_md150"></a>
 After All Fixes</h1>
 <p>Update <code>docs/conformance-audit.md</code> to mark resolved items. Update <code>docs/plan/handoff-next.md</code> with the post-fix state. Then proceed to Step 7 (<code>docs/plan/step7-expected-ref-t.md</code>). </p>
 </div></div><!-- contents -->

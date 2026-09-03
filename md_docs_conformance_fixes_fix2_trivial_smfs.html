@@ -102,11 +102,11 @@ $(document).ready(function(){initNavTree('md_docs_conformance_fixes_fix2_trivial
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>fix2-trivial-smfs</code> <b>Depends on:</b> — <b>Read first:</b> <code>docs/conformance-audit.md</code> (sections 4.3, 4.5, 5.4)</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md86"></a>
+<h1><a class="anchor" id="autotoc_md92"></a>
 Goal</h1>
 <p>Add trivial paths for copy/move constructors and copy/move assignment operators on the primary template. The void specialization already has trivial copy/move constructors but needs trivial assignment operators.</p>
 <p>These are audit items 8-12.</p>
-<h1><a class="anchor" id="autotoc_md87"></a>
+<h1><a class="anchor" id="autotoc_md93"></a>
 Background</h1>
 <p>The standard requires these operations to be trivial when T and E (or just E for void) are trivially copy/move constructible/assignable/destructible. The current implementation always uses <code>construct_at</code>/<code>destroy_at</code>, which prevents the compiler from recognizing triviality.</p>
 <p>The pattern is: provide a <code>= default</code> overload guarded by a triviality requires clause, and a non-trivial overload guarded by the complement. The void specialization already demonstrates this for constructors:</p>
@@ -116,9 +116,9 @@ Background</h1>
 <div class="line"> </div>
 <div class="line"><span class="keyword">constexpr</span> expected(<span class="keyword">const</span> expected&amp; rhs)</div>
 <div class="line">    <span class="keyword">requires</span>(std::is_copy_constructible_v&lt;E&gt; &amp;&amp; !std::is_trivially_copy_constructible_v&lt;E&gt;);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md88"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md94"></a>
 Changes</h1>
-<h2><a class="anchor" id="autotoc_md89"></a>
+<h2><a class="anchor" id="autotoc_md95"></a>
 Primary template: trivial copy constructor</h2>
 <div class="fragment"><div class="line"><span class="keyword">constexpr</span> expected(<span class="keyword">const</span> expected&amp;)</div>
 <div class="line">    <span class="keyword">requires</span>(std::is_trivially_copy_constructible_v&lt;T&gt; &amp;&amp;</div>
@@ -129,10 +129,10 @@ Primary template: trivial copy constructor</h2>
 <div class="line">    <span class="keyword">requires</span>(std::is_copy_constructible_v&lt;T&gt; &amp;&amp; std::is_copy_constructible_v&lt;E&gt; &amp;&amp;</div>
 <div class="line">             !(std::is_trivially_copy_constructible_v&lt;T&gt; &amp;&amp;</div>
 <div class="line">               std::is_trivially_copy_constructible_v&lt;E&gt;));</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md90"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md96"></a>
 Primary template: trivial move constructor</h2>
 <p>Same pattern with <code>move</code> variants.</p>
-<h2><a class="anchor" id="autotoc_md91"></a>
+<h2><a class="anchor" id="autotoc_md97"></a>
 Primary template: trivial copy assignment</h2>
 <div class="fragment"><div class="line"><span class="keyword">constexpr</span> expected&amp; operator=(<span class="keyword">const</span> expected&amp;)</div>
 <div class="line">    <span class="keyword">requires</span>(std::is_trivially_copy_constructible_v&lt;T&gt; &amp;&amp;</div>
@@ -143,20 +143,20 @@ Primary template: trivial copy assignment</h2>
 <div class="line">             std::is_trivially_destructible_v&lt;E&gt;)</div>
 <div class="line">= <span class="keywordflow">default</span>;</div>
 </div><!-- fragment --><p>The non-trivial overload keeps all the existing constraints from [expected.object.assign] para 4.</p>
-<h2><a class="anchor" id="autotoc_md92"></a>
+<h2><a class="anchor" id="autotoc_md98"></a>
 Primary template: trivial move assignment</h2>
 <p>Same pattern with <code>move</code> variants plus the para 10 conditions.</p>
-<h2><a class="anchor" id="autotoc_md93"></a>
+<h2><a class="anchor" id="autotoc_md99"></a>
 Void specialization: trivial copy assignment</h2>
 <div class="fragment"><div class="line"><span class="keyword">constexpr</span> expected&amp; operator=(<span class="keyword">const</span> expected&amp;)</div>
 <div class="line">    <span class="keyword">requires</span>(std::is_trivially_copy_constructible_v&lt;E&gt; &amp;&amp;</div>
 <div class="line">             std::is_trivially_copy_assignable_v&lt;E&gt; &amp;&amp;</div>
 <div class="line">             std::is_trivially_destructible_v&lt;E&gt;)</div>
 <div class="line">= <span class="keywordflow">default</span>;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md94"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md100"></a>
 Void specialization: trivial move assignment</h2>
 <p>Same pattern.</p>
-<h1><a class="anchor" id="autotoc_md95"></a>
+<h1><a class="anchor" id="autotoc_md101"></a>
 Tests</h1>
 <p>Add to a new file <code>tests/beman/expected/expected_trivial.test.cpp</code> (beman-only — triviality is implementation quality, libstdc++ may differ):</p>
 <div class="fragment"><div class="line"><span class="comment">// Primary template</span></div>
@@ -176,11 +176,11 @@ Tests</h1>
 <div class="line"><span class="comment">// Non-trivial when type is non-trivial</span></div>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_trivially_copy_constructible_v&lt;expt::expected&lt;std::string, int&gt;&gt;);</div>
 </div><!-- fragment --><p>All existing tests must still pass.</p>
-<h1><a class="anchor" id="autotoc_md96"></a>
+<h1><a class="anchor" id="autotoc_md102"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md97"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md103"></a>
 Handoff</h1>
 <p>Merge (&ndash;no-ff) into <code>expected-over-references</code>. </p>
 </div></div><!-- contents -->

@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_conformance_fixes_fix5_precond
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>fix5-preconditions-and-minor</code> <b>Depends on:</b> — <b>Read first:</b> <code>docs/conformance-audit.md</code> (sections 1.4, 4.7, 5.6, 5.7)</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md124"></a>
+<h1><a class="anchor" id="autotoc_md130"></a>
 Goal</h1>
 <p>Add hardened precondition checks to observers, fix the <code>unexpected</code> friend swap constraint, and address the two minor deviations in the void specialization's monadic operations.</p>
 <p>These are audit items 23-28.</p>
-<h1><a class="anchor" id="autotoc_md125"></a>
+<h1><a class="anchor" id="autotoc_md131"></a>
 Changes</h1>
-<h2><a class="anchor" id="autotoc_md126"></a>
+<h2><a class="anchor" id="autotoc_md132"></a>
 1. Hardened preconditions (&lt;tt&gt;include/beman/expected/expected.hpp&lt;/tt&gt;)</h2>
 <p>The standard specifies "Hardened preconditions" on several observers. Guard these with the <code>BEMAN_EXPECTED_HARDENED</code> macro (matching the project's existing convention from <code>docs/plan</code>).</p>
 <p>For the primary template, add to each observer implementation:</p>
@@ -137,13 +137,13 @@ Changes</h1>
 <div class="line">    <span class="keywordflow">if</span> (has_val_) __builtin_trap();</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --><p>Use <code>__builtin_trap()</code> (available on GCC and Clang) for the trap. Do not throw — these are precondition violations, not recoverable errors.</p>
-<h2><a class="anchor" id="autotoc_md127"></a>
+<h2><a class="anchor" id="autotoc_md133"></a>
 2. unexpected friend swap constraint (&lt;tt&gt;include/beman/expected/unexpected.hpp&lt;/tt&gt;)</h2>
 <p>The standard says the friend swap has <em>Constraints</em> (SFINAE): <code>is_swappable_v&lt;E&gt;</code> is true. Add a <code>requires</code> clause:</p>
 <div class="fragment"><div class="line"><span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">void</span> swap(unexpected&amp; x, unexpected&amp; y) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(x.swap(y)))</div>
 <div class="line">    <span class="keyword">requires</span> std::is_swappable_v&lt;E&gt;</div>
 <div class="line">{ x.swap(y); }</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md128"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md134"></a>
 3. Void specialization &lt;tt&gt;or_else&lt;/tt&gt;: use &lt;tt&gt;is_same_v&lt;/tt&gt; not &lt;tt&gt;is_void_v&lt;/tt&gt;</h2>
 <p>In all 4 <code>or_else</code> overloads of the void specialization, change:</p>
 <div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_void_v&lt;typename G::value_type&gt;,</div>
@@ -152,7 +152,7 @@ Changes</h1>
 <div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_same_v&lt;typename G::value_type, T&gt;,</div>
 <div class="line">              <span class="stringliteral">&quot;or_else: F must return expected with the same value_type&quot;</span>);</div>
 </div><!-- fragment --><p>This matches the standard wording <code>is_same_v&lt;typename G::value_type, T&gt;</code> and correctly handles <code>const void</code> and other cv-void types.</p>
-<h2><a class="anchor" id="autotoc_md129"></a>
+<h2><a class="anchor" id="autotoc_md135"></a>
 4. Void specialization &lt;tt&gt;transform_error&lt;/tt&gt;: use &lt;tt&gt;expected&lt;T, G&gt;&lt;/tt&gt; not &lt;tt&gt;expected&lt;void, G&gt;&lt;/tt&gt;</h2>
 <p>In all 4 <code>transform_error</code> overloads of the void specialization, change <code>expected&lt;void, G&gt;</code> to <code>expected&lt;T, G&gt;</code>:</p>
 <div class="fragment"><div class="line"><span class="comment">// Before:</span></div>
@@ -162,9 +162,9 @@ Changes</h1>
 <div class="line"><span class="comment">// After:</span></div>
 <div class="line"><span class="keywordflow">return</span> expected&lt;T, G&gt;();</div>
 <div class="line"><span class="keywordflow">return</span> expected&lt;T, G&gt;(unexpect, ...);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md130"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md136"></a>
 Tests</h1>
-<h2><a class="anchor" id="autotoc_md131"></a>
+<h2><a class="anchor" id="autotoc_md137"></a>
 Hardened precondition tests</h2>
 <p>Add a new test file <code>tests/beman/expected/expected_hardened.test.cpp</code> (beman-only target). These tests must be compiled with <code>-DBEMAN_EXPECTED_HARDENED</code>:</p>
 <ul>
@@ -175,21 +175,21 @@ Hardened precondition tests</h2>
 </ul>
 <p>If Catch2 doesn't support death tests easily, instead just verify the precondition checks compile correctly and the happy paths work. The important thing is the code compiles with <code>BEMAN_EXPECTED_HARDENED</code> defined.</p>
 <p>Add a CMake target that compiles the test suite with <code>-DBEMAN_EXPECTED_HARDENED</code> to ensure the precondition code is at least compiled.</p>
-<h2><a class="anchor" id="autotoc_md132"></a>
+<h2><a class="anchor" id="autotoc_md138"></a>
 unexpected swap constraint test</h2>
 <p>Add a <code>static_assert</code> (beman-only) verifying that <code>swap(x, y)</code> is not well-formed for non-swappable E via a requires-expression check:</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>NoSwap { NoSwap(NoSwap&amp;&amp;) = <span class="keyword">delete</span>; };</div>
 <div class="line"><span class="keyword">static_assert</span>(!<span class="keyword">requires</span>(expt::unexpected&lt;NoSwap&gt;&amp; a, expt::unexpected&lt;NoSwap&gt;&amp; b) {</div>
 <div class="line">    swap(a, b);</div>
 <div class="line">});</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md133"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md139"></a>
 or_else / transform_error minor fix tests</h2>
 <p>The existing void monadic tests already exercise these paths. No new tests required unless you want to explicitly test <code>expected&lt;const void, E&gt;</code> — which is an extremely unlikely type but technically valid.</p>
-<h1><a class="anchor" id="autotoc_md134"></a>
+<h1><a class="anchor" id="autotoc_md140"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md135"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md141"></a>
 Handoff</h1>
 <p>Merge (&ndash;no-ff) into <code>expected-over-references</code>. </p>
 </div></div><!-- contents -->

@@ -100,22 +100,22 @@ $(document).ready(function(){initNavTree('md_docs_plan_handoff.html',''); initRe
   <div class="headertitle"><div class="title">Handoff: Current State </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md280"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md257"></a>
 Repository</h1>
 <p><code>beman.expected</code> — a Beman C++ Standards track reference implementation for <code>std::expected</code> with reference support (P2988 / targeting C++29).</p>
-<h1><a class="anchor" id="autotoc_md281"></a>
+<h1><a class="anchor" id="autotoc_md258"></a>
 Working Branch</h1>
 <p>All step branches are created from and merged back into **<code>expected-over-references</code>** (not <code>main</code>). The <code>main</code> branch tracks upstream; <code>expected-over-references</code> is the integration branch for this work.</p>
-<h1><a class="anchor" id="autotoc_md282"></a>
+<h1><a class="anchor" id="autotoc_md259"></a>
 Current State</h1>
 <p>All 10 steps are complete. Steps 1–9 are merged into <code>expected-over-references</code>. Step 10 is on branch <code>step10-expected-void-ref-e</code>, ready to merge. The implementation includes the full conformant <code>expected&lt;T,E&gt;</code> primary template, <code>expected&lt;void,E&gt;</code>, monadic operations for both, <code>expected&lt;T&amp;,E&gt;</code> (P2988 reference-value specialization), <code>expected&lt;T,E&amp;&gt;</code> (P2988 reference-error specialization), <code>expected&lt;T&amp;,E&amp;&gt;</code> (P2988 both-reference specialization), and <code>expected&lt;void,E&amp;&gt;</code> (P2988 void+reference-error specialization). 470 tests pass.</p>
-<h2><a class="anchor" id="autotoc_md283"></a>
+<h2><a class="anchor" id="autotoc_md260"></a>
 Key Files</h2>
 <ul>
 <li><code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code> — full implementation: <code>unexpected&lt;E&gt;</code>, <code>bad_expected_access</code>, <code>expected&lt;T,E&gt;</code>, <code>expected&lt;void,E&gt;</code>, <code>expected&lt;T&amp;,E&gt;</code>, <code>expected&lt;T,E&amp;&gt;</code>, <code>expected&lt;T&amp;,E&amp;&gt;</code>, <code>expected&lt;void,E&amp;&gt;</code> (with monadic ops for all)</li>
 <li><code>tests/beman/expected/</code> — comprehensive test suite (470 tests)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md284"></a>
+<h2><a class="anchor" id="autotoc_md261"></a>
 Step 10 Design Notes</h2>
 <ul>
 <li><code>expected&lt;void, E&amp;&gt;</code> is a partial specialization <code>template&lt;class E&gt; class expected&lt;void, E&amp;&gt;</code> This is more specific than both <code>expected&lt;T,E&gt; requires is_void_v&lt;T&gt;</code> and <code>expected&lt;T,E&amp;&gt;</code>, so it is correctly selected for <code>expected&lt;void, int&amp;&gt;</code>.</li>
@@ -129,7 +129,7 @@ Step 10 Design Notes</h2>
 <li>**<code>transform_error(F)</code>** returns <code>expected&lt;void, G&gt;</code> — the plain void specialization (non-reference error, since F transforms E&amp; → G by value)</li>
 <li><b>Removed <code>expected_void_ref_fail</code> negative compile test</b>: this test asserted <code>expected&lt;void, int&amp;&gt;</code> was ill-formed in <code>expected&lt;T,E&amp;&gt;</code>. Now that Step 10 adds <code>expected&lt;void, E&amp;&gt;</code>, this is valid and the test was removed.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md285"></a>
+<h2><a class="anchor" id="autotoc_md262"></a>
 Build System</h2>
 <ul>
 <li>CMake 3.30+, Ninja Multi-Config</li>
@@ -138,7 +138,7 @@ Build System</h2>
 <li>Header-only INTERFACE library (unless modules enabled)</li>
 <li>Default config: Asan</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md286"></a>
+<h2><a class="anchor" id="autotoc_md263"></a>
 Coding Rules</h2>
 <ul>
 <li>Namespace: <code>beman::expected</code> (nested, not <code>beman::expected::inline_namespace</code>)</li>
@@ -149,15 +149,15 @@ Coding Rules</h2>
 <li><code>constexpr</code> everything</li>
 <li>Test includes: header under test twice (idempotence), then Catch2, then std</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md287"></a>
+<h2><a class="anchor" id="autotoc_md264"></a>
 Reference Implementation</h2>
 <p>For <code>optional&lt;T&amp;&gt;</code> patterns, see <code>~/src/steve-downey/optional/main</code>:</p><ul>
 <li><code>include/beman/optional/optional.hpp</code> lines 1515-2119 for the reference specialization</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md288"></a>
+<h1><a class="anchor" id="autotoc_md265"></a>
 Plan</h1>
 <p>See <code>docs/plan/index.md</code> for the full plan with step index, checklist, and links to individual step files. <b>All 10 steps are now complete.</b></p>
-<h1><a class="anchor" id="autotoc_md289"></a>
+<h1><a class="anchor" id="autotoc_md266"></a>
 What Comes Next</h1>
 <p>The core implementation is complete. The full set of specializations:</p>
 <table class="markdownTable">

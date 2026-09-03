@@ -100,12 +100,12 @@ $(document).ready(function(){initNavTree('md_docs_llm_code_review_guide.html',''
   <div class="headertitle"><div class="title">LLM Code Review Guide: <code>beman::expected</code> </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><b>Target Audience:</b> High-context Large Language Models acting as rigorous C++ code reviewers. <b>Scope:</b> The entire <code>include/beman/expected/</code> header set — one 4400-line header (<code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code>) plus two small companions (<code><a class="el" href="unexpected_8hpp_source.html">unexpected.hpp</a></code>, <code><a class="el" href="bad__expected__access_8hpp_source.html">bad_expected_access.hpp</a></code>).</p>
-<h1><a class="anchor" id="autotoc_md208"></a>
+<div class="textblock"><p><b>Target Audience:</b> High-context Large Language Models acting as rigorous C++ code reviewers. <b>Scope:</b> The entire <code>include/beman/expected/</code> header set — one 3,413-line header (<code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code>) plus two small companions (<code><a class="el" href="unexpected_8hpp_source.html">unexpected.hpp</a></code>, <code><a class="el" href="bad__expected__access_8hpp_source.html">bad_expected_access.hpp</a></code>). The suite has 19 positive test files with 688 Catch2 <code>TEST_CASE</code>s and 59 negative compile tests.</p>
+<h1><a class="anchor" id="autotoc_md214"></a>
 Mission</h1>
 <p>You are reviewing a proposed <b>C++29</b> reference implementation of <code>std::expected</code> that extends the C++26 standard with reference specializations. The implementation targets standardization via the Beman Project. Your job is not to praise working code — it is to find defects, inconsistencies, specification violations, and latent footguns. "Looks good" is not an acceptable conclusion unless you can demonstrate why every clause was checked.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md210"></a>
+<h1><a class="anchor" id="autotoc_md216"></a>
 Specification Sources (Authoritative, In-Repo)</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -119,11 +119,11 @@ Specification Sources (Authoritative, In-Repo)</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Conformance audit   </td><td class="markdownTableBodyNone"><code>docs/conformance-audit.md</code>   </td><td class="markdownTableBodyNone">Every clause checked with PASS/EXT/FIXED status    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">P2988 (optional&lt;T&amp;&gt;)   </td><td class="markdownTableBodyNone">External: open-std.org/P2988   </td><td class="markdownTableBodyNone">Rebind semantics design source for reference specializations    </td></tr>
+<td class="markdownTableBodyNone">P2988R12 (optional&lt;T&amp;&gt;)   </td><td class="markdownTableBodyNone"><a href="https://wg21.link/P2988R12">wg21.link/P2988R12</a>   </td><td class="markdownTableBodyNone">Rebind semantics design source for reference specializations    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">beman/optional reference impl   </td><td class="markdownTableBodyNone"><code>~/src/steve-downey/optional/main/</code>   </td><td class="markdownTableBodyNone">Pattern source for T&amp; storage and dangling prevention   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md211"></a>
+<h2><a class="anchor" id="autotoc_md217"></a>
 What You Have No Normative Source For</h2>
 <p><b>This is critical.</b> The reference specializations (<code>expected&lt;T&amp;, E&gt;</code>, <code>expected&lt;T, E&amp;&gt;</code>, <code>expected&lt;T&amp;, E&amp;&gt;</code>, <code>expected&lt;void, E&amp;&gt;</code>) have <b>no published standard wording</b>. They are an extension proposed for C++29. The only design authority is:</p>
 <ol type="1">
@@ -133,20 +133,20 @@ What You Have No Normative Source For</h2>
 </ol>
 <p>This means: for the primary template and void specialization, you can check clause-by-clause against <code>[expected.object.*]</code> and <code>[expected.void.*]</code>. For reference specializations, you must instead check <b>internal consistency</b> and <b>design-principle adherence</b>. Don't fabricate standard references that don't exist.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md213"></a>
+<h1><a class="anchor" id="autotoc_md219"></a>
 Review Protocol</h1>
-<h2><a class="anchor" id="autotoc_md214"></a>
+<h2><a class="anchor" id="autotoc_md220"></a>
 Phase 1: Structural Inventory</h2>
 <p>Before reading line-by-line, establish the shape:</p>
 <ol type="1">
-<li><b>Count specializations.</b> There should be exactly 6: <code>&lt;T,E&gt;</code>, <code>&lt;void,E&gt;</code>, <code>&lt;T&amp;,E&gt;</code>, <code>&lt;T,E&amp;&gt;</code>, <code>&lt;T&amp;,E&amp;&gt;</code>, <code>&lt;void,E&amp;&gt;</code>. Each should have complete API surface (constructors, assignment, observers, swap, equality, monadic ops).</li>
-<li><b>Identify the storage model</b> for each specialization. Primary uses union of T and E. Void uses union of E only. Reference specializations store pointers. Verify no specialization accidentally uses a union member for a reference type.</li>
+<li><b>Count class-template forms.</b> There should be exactly 3: primary <code>&lt;T,E&gt;</code>, partial specialization <code>&lt;void,E&gt;</code>, and partial specialization <code>&lt;T&amp;,E&gt;</code>. Allowing <code>E</code> to be an lvalue reference yields the six value/error configurations without three additional class definitions.</li>
+<li><b>Identify the storage model</b> for each form. Every error arm is <code>unexpected&lt;E&gt;</code>; it owns an object for object <code>E</code> and stores a pointer for reference <code>E</code>. The <code>T&amp;</code> form stores its value as a pointer. Verify no union directly contains a reference.</li>
 <li><b>Map the helper utilities.</b> <code>reinit_expected</code> (lines 65-84) handles destroy-and-reconstruct for value-type transitions. <code>reference_constructs_from_temporary_v</code> (lines 88-100) is the dangling-prevention concept. Verify these are used correctly and only where applicable.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md215"></a>
+<h2><a class="anchor" id="autotoc_md221"></a>
 Phase 2: Clause-by-Clause for Primary and Void</h2>
 <p>For <code>expected&lt;T, E&gt;</code> and <code>expected&lt;void, E&gt;</code>, audit against the standard:</p>
-<h3><a class="anchor" id="autotoc_md216"></a>
+<h3><a class="anchor" id="autotoc_md222"></a>
 Constraints vs Mandates</h3>
 <p>The standard distinguishes:</p><ul>
 <li><b>Constraints</b> (<code>requires</code> clause on declaration): SFINAE-friendly, checked during overload resolution</li>
@@ -157,22 +157,22 @@ Constraints vs Mandates</h3>
 <li>Is any Constraint implemented as a <code>static_assert</code>? (This would cause hard errors when SFINAE should apply)</li>
 <li>The conformance audit at <code>docs/conformance-audit.md</code> claims all clauses are correct — verify independently by sampling 3-5 constructors against <code>[expected.object.cons]</code></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md217"></a>
+<h3><a class="anchor" id="autotoc_md223"></a>
 Explicit Conditions</h3>
 <p>Every converting constructor uses <code>explicit(bool-expr)</code>. The standard specifies exactly which <code>is_convertible_v</code> checks determine explicitness. Verify:</p><ul>
 <li>The logical structure matches (conjunction of negated <code>is_convertible_v</code> checks)</li>
 <li>The value categories in the <code>is_convertible_v</code> arguments match what the standard says (<code>const G&amp;</code> vs <code>G</code> vs <code>G&amp;&amp;</code>)</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md218"></a>
+<h3><a class="anchor" id="autotoc_md224"></a>
 noexcept Specifications</h3>
 <p>The implementation adds conditional <code>noexcept</code> on some constructors where the standard is silent. <code>docs/conformance-audit.md</code> marks these as "EXT" (conforming extension). Verify:</p><ul>
 <li>These are genuinely conforming (strengthening, not weakening)</li>
 <li>They don't accidentally constrain the overload set via SFINAE on <code>noexcept</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md219"></a>
+<h2><a class="anchor" id="autotoc_md225"></a>
 Phase 3: Reference Specialization Consistency</h2>
 <p>Since there's no standard wording, check:</p>
-<h3><a class="anchor" id="autotoc_md220"></a>
+<h3><a class="anchor" id="autotoc_md226"></a>
 1. API Surface Parity</h3>
 <p>Each reference specialization should offer the <b>same user-facing operations</b> as the primary, adapted for reference semantics. Missing operations are bugs unless explicitly justified. Check:</p>
 <table class="markdownTable">
@@ -193,7 +193,7 @@ Phase 3: Reference Specialization Consistency</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Value assignment   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">rebind   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">N/A    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">unexpected assignment   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone"><b>deleted</b>   </td><td class="markdownTableBodyNone"><b>deleted</b>   </td><td class="markdownTableBodyNone">N/A    </td></tr>
+<td class="markdownTableBodyNone">unexpected assignment   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">from <code>&lt;G&amp;&gt;</code> only   </td><td class="markdownTableBodyNone">from <code>&lt;G&amp;&gt;</code> only   </td><td class="markdownTableBodyNone">from <code>&lt;G&amp;&gt;</code> only    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">emplace   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">rebind   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">rebind   </td><td class="markdownTableBodyNone">emplace() (void)    </td></tr>
 <tr class="markdownTableRowEven">
@@ -214,8 +214,8 @@ Phase 3: Reference Specialization Consistency</h2>
 <td class="markdownTableBodyNone">equality   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">yes   </td><td class="markdownTableBodyNone">yes   </td></tr>
 </table>
 <p>Verify each cell. Pay special attention to the <b>deleted</b> entries — each should have a <code>= delete("message")</code> with a clear diagnostic and a corresponding negative compile test.</p>
-<p>For the <code>from &lt;G&amp;&gt; only</code> cells: construction from <code>unexpected&lt;G&gt;</code> is permitted for reference <code>E</code> <b>only when <code>G</code> is itself a reference</b> (<code>unexpected&lt;E&amp;&gt;</code>, which holds a pointer to an external object). Construction from a value-typed <code>unexpected&lt;G&gt;</code> stays <code>= delete</code>d (it would dangle), and rebinding <em>assignment</em> from <code>unexpected&lt;G&gt;</code> is not offered for reference <code>E</code>. Verify: <code>is_constructible_v&lt;expected&lt;int, int&amp;&gt;, unexpected&lt;int&amp;&gt;&gt;</code> is true, <code>is_constructible_v&lt;expected&lt;int, int&amp;&gt;, unexpected&lt;int&gt;&gt;</code> is false, and <code>unexpected&lt;const int&amp;&gt;</code> → <code>int&amp;</code> is rejected (const drop).</p>
-<h3><a class="anchor" id="autotoc_md221"></a>
+<p>For the <code>from &lt;G&amp;&gt; only</code> cells: construction and rebinding assignment from <code>unexpected&lt;G&gt;</code> are permitted for reference <code>E</code> <b>only when <code>G</code> is itself a reference</b> (<code>unexpected&lt;E&amp;&gt;</code>, which holds a pointer to an external object). The value-typed form stays deleted because it would dangle. Verify construction and assignment traits for the accepted reference case, rejected value case, and rejected const-dropping case.</p>
+<h3><a class="anchor" id="autotoc_md227"></a>
 2. Dangling Prevention</h3>
 <p>For every constructor or assignment that accepts a forwarding reference where the destination is <code>T&amp;</code> or <code>E&amp;</code>:</p><ul>
 <li>Verify <code>!detail::reference_constructs_from_temporary_v&lt;T&amp;, U&gt;</code> appears in the <code>requires</code> clause</li>
@@ -223,20 +223,20 @@ Phase 3: Reference Specialization Consistency</h2>
 <li>Verify the deleted overload's message is tested by a <code>_fail.cpp</code> negative test</li>
 </ul>
 <p><b>Known subtlety:</b> For <code>expected&lt;int&amp;, int&gt;</code> constructing from <code>42</code>, the constraint rejects via "no matching function" (SFINAE), not via the deleted overload. The deleted overload fires only when <code>reference_constructs_from_temporary_v</code> is true (e.g., <code>const int&amp;</code> from <code>int</code>). Both paths prevent the dangerous construction, but the diagnostic differs. This is correct behavior.</p>
-<h3><a class="anchor" id="autotoc_md222"></a>
+<h3><a class="anchor" id="autotoc_md228"></a>
 3. Storage Layout</h3>
 <ul>
-<li><code>expected&lt;T&amp;, E&gt;</code>: pointer <code>T*</code> plus union <code>{ E unex_; }</code> plus <code>bool has_val_</code></li>
-<li><code>expected&lt;T, E&amp;&gt;</code>: value <code>T</code> in union plus <code>E*</code> pointer plus <code>bool has_val_</code></li>
-<li><code>expected&lt;T&amp;, E&amp;&gt;</code>: two pointers <code>T*</code>, <code>E*</code> plus <code>bool has_val_</code></li>
-<li><code>expected&lt;void, E&amp;&gt;</code>: pointer <code>E*</code> plus <code>bool has_val_</code></li>
+<li><code>expected&lt;T&amp;, E&gt;</code>: union of <code>T*</code> and <code>unexpected&lt;E&gt;</code> plus <code>bool has_val_</code></li>
+<li><code>expected&lt;T, E&amp;&gt;</code>: union of <code>T</code> and pointer-holding <code>unexpected&lt;E&amp;&gt;</code> plus <code>bool has_val_</code></li>
+<li><code>expected&lt;T&amp;, E&amp;&gt;</code>: union of <code>T*</code> and pointer-holding <code>unexpected&lt;E&amp;&gt;</code> plus <code>bool has_val_</code></li>
+<li><code>expected&lt;void, E&amp;&gt;</code>: pointer-holding <code>unexpected&lt;E&amp;&gt;</code> plus <code>bool has_val_</code></li>
 </ul>
 <p>Verify:</p><ul>
 <li>No union contains a reference or pointer where the active member tracking could be wrong</li>
 <li>Assignment to reference specializations reassigns pointers (rebind), never destroys/reconstructs</li>
 <li><code>reinit_expected</code> is NOT called for pointer-only transitions</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md223"></a>
+<h3><a class="anchor" id="autotoc_md229"></a>
 4. Monadic Value Categories</h3>
 <p>For each monadic operation across all specializations, verify:</p><ul>
 <li>The callable receives the correct value category of the stored value</li>
@@ -244,30 +244,30 @@ Phase 3: Reference Specialization Consistency</h2>
 <li>For <code>E&amp;</code> specializations: error forwarding passes <code>E&amp;</code> (dereferenced pointer), never <code>E&amp;&amp;</code></li>
 <li>Return type wrapping preserves the reference nature where appropriate</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md224"></a>
+<h2><a class="anchor" id="autotoc_md230"></a>
 Phase 4: Cross-Cutting Checks</h2>
-<h3><a class="anchor" id="autotoc_md225"></a>
+<h3><a class="anchor" id="autotoc_md231"></a>
 constexpr Correctness</h3>
 <p>Every function in this implementation should be <code>constexpr</code>. Verify:</p><ul>
 <li>Union member activation via placement-new or <code>std::construct_at</code> is constexpr-valid</li>
 <li>Pointer dereference in reference specializations is constexpr-valid</li>
 <li>No <code>reinterpret_cast</code> or <code>void*</code> arithmetic that would fail constant evaluation</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md226"></a>
+<h3><a class="anchor" id="autotoc_md232"></a>
 Trivial Special Member Functions</h3>
-<p>The primary and void specializations must be trivially copyable/movable/destructible when T and E are. Reference specializations (pointer-based) should be trivially everything unconditionally. Verify:</p><ul>
+<p>The primary and void forms must be trivially copyable/movable/destructible when their stored alternatives permit it. Pointer-only <code>T&amp;</code>/<code>E&amp;</code> configurations should be trivial, while <code>expected&lt;T&amp;, E&gt;</code> still follows object-<code>E</code> properties. Verify:</p><ul>
 <li><code>= default</code> paths exist for trivial cases</li>
 <li>The conditional dispatch between trivial and non-trivial paths is correct</li>
 <li>Reference specializations don't accidentally have non-trivial destructors</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md227"></a>
+<h3><a class="anchor" id="autotoc_md233"></a>
 Hardened Preconditions</h3>
 <p>Under <code>#if defined(BEMAN_EXPECTED_HARDENED)</code>:</p><ul>
 <li><code>operator*</code> and <code>operator-&gt;</code> trap when <code>!has_value()</code></li>
 <li><code>error()</code> traps when <code>has_value()</code></li>
 <li>Verify these guards exist in ALL specializations, not just the primary</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md228"></a>
+<h3><a class="anchor" id="autotoc_md234"></a>
 Value Category in Converting Operations (deref-then-move anti-pattern)</h3>
 <p>Every converting constructor/assignment from <code>expected&lt;U, G&gt;</code> or <code>unexpected&lt;G&gt;</code> must build the target value/error by <b>moving the wrapper, then accessing</b> — <code>*std::move(rhs)</code>, <code>std::move(rhs).error()</code>, <code>std::move(e).error()</code> — never by <b>accessing, then moving</b> — <code>std::move(*rhs)</code>, <code>std::move(rhs.error())</code>, <code>std::move(e.error())</code>.</p>
 <p>The deref-then-move form is a defect for reference specializations: the accessor is shallow and returns a reference to an <b>external</b> object, and the <code>std::move</code> then steals from it — the <code>boost::optional&lt;T&amp;&gt;</code> move-steal bug. Both forms compile and are <b>indistinguishable by eye</b>, so verify by behavior, not inspection:</p><ul>
@@ -276,7 +276,7 @@ Value Category in Converting Operations (deref-then-move anti-pattern)</h3>
 </ul>
 <p>Mechanical audit: grep the header for <code>std::move(*</code> and <code>std::move(&lt;ident&gt;.value()/error())</code> — every hit is a candidate defect; the safe forms wrap the whole object (<code>*std::move(x)</code>, <code>std::move(x).accessor()</code>). This rests on the invariant that rvalue accessors are shallow for reference specializations and deep for value ones (Phase 2 accessor checks).</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md230"></a>
+<h1><a class="anchor" id="autotoc_md236"></a>
 Known Issues to Confirm or Refute</h1>
 <p>These are areas where the implementation may have latent bugs. Investigate each:</p>
 <ol type="1">
@@ -287,7 +287,7 @@ Known Issues to Confirm or Refute</h1>
 <li><b>Swap for <code>expected&lt;T&amp;, E&amp;&gt;</code>.</b> Swapping two pointer-only expected objects should be trivial (swap pointers and bool). Verify no unnecessary destroy/reconstruct logic is invoked.</li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md232"></a>
+<h1><a class="anchor" id="autotoc_md238"></a>
 Output Format</h1>
 <p>Structure your review as:</p>
 <div class="fragment"><div class="line">## [Specialization or Section Name]</div>

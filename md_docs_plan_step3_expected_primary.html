@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_step3_expected_primary.ht
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step3-expected-primary</code> <b>Depends on:</b> Steps 1-2 (unexpected&lt;E&gt;, bad_expected_access&lt;E&gt;) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md338"></a>
+<h1><a class="anchor" id="autotoc_md322"></a>
 Goal</h1>
 <p>Implement the <code>expected&lt;T, E&gt;</code> primary template per [expected.object] — the non-reference, non-void case. This is the largest single step in the plan. Monadic operations (and_then, or_else, transform, transform_error) are deferred to Step 5.</p>
-<h1><a class="anchor" id="autotoc_md339"></a>
+<h1><a class="anchor" id="autotoc_md323"></a>
 Context for Executing Agent</h1>
 <p>The file <code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code> has the full specification as comments (lines 37-153). Steps 1-2 have already implemented <code>unexpected&lt;E&gt;</code> and <code>bad_expected_access&lt;E&gt;</code>, so those types are available.</p>
-<h2><a class="anchor" id="autotoc_md340"></a>
+<h2><a class="anchor" id="autotoc_md324"></a>
 Key files</h2>
 <ul>
 <li><code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code> — implement here (keep the spec comments, add real code in the namespace)</li>
@@ -116,7 +116,7 @@ Key files</h2>
 <li><code><a class="el" href="bad__expected__access_8hpp_source.html">include/beman/expected/bad_expected_access.hpp</a></code> — provides exception types</li>
 <li><code>tests/beman/expected/expected.test.cpp</code> — expand from breathing test</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md341"></a>
+<h2><a class="anchor" id="autotoc_md325"></a>
 Standard reference (non-monadic subset)</h2>
 <p>The class needs:</p>
 <p><b>Types:</b></p><ul>
@@ -164,14 +164,14 @@ Standard reference (non-monadic subset)</h2>
 <li><code>operator==(const T2&amp;)</code> (comparison with value)</li>
 <li><code>operator==(const unexpected&lt;E2&gt;&amp;)</code> (comparison with unexpected)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md342"></a>
+<h2><a class="anchor" id="autotoc_md326"></a>
 Storage</h2>
 <p>Use a discriminated union: </p><div class="fragment"><div class="line"><span class="keywordtype">bool</span> has_val_;</div>
 <div class="line"><span class="keyword">union </span>{</div>
 <div class="line">    T val_;</div>
 <div class="line">    E unex_;</div>
 <div class="line">};</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md343"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md327"></a>
 Constraints</h2>
 <p>Many constructors are constrained with <code>requires</code> clauses and use <code>explicit(see below)</code> — the explicit-ness depends on whether conversions are implicit. Follow the standard wording carefully. Key constraints:</p>
 <ul>
@@ -179,13 +179,13 @@ Constraints</h2>
 <li><code>E</code> must not be a reference, array, function, void, or a specialization of <code>unexpected</code></li>
 <li>Converting constructors are explicit if the source types are not implicitly convertible</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md344"></a>
+<h2><a class="anchor" id="autotoc_md328"></a>
 Exception safety in assignment</h2>
 <p>Assignment to <code>expected</code> is complex because the old value/error must be destroyed and the new one constructed. The standard specifies a careful protocol using <code>reinit_expected</code> helper logic:</p><ul>
 <li>When transitioning between value and error states, if the new construction can throw, store the old value temporarily, destroy it, try to construct the new one, and if that throws, reconstruct the old value from the backup.</li>
 </ul>
 <p>For this step, you may use a simpler approach if the full exception-safety protocol is too complex: use <code>std::construct_at</code> / <code>std::destroy_at</code> with basic try/catch. The key invariant is: after assignment, the expected is in a valid state (either has value or has error, never empty).</p>
-<h1><a class="anchor" id="autotoc_md345"></a>
+<h1><a class="anchor" id="autotoc_md329"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — full primary template:<ul>
@@ -215,7 +215,7 @@ Deliverables</h1>
 </ul>
 </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md346"></a>
+<h1><a class="anchor" id="autotoc_md330"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch <code>step3-expected-primary</code> from <code>main</code> (with Steps 1-2 merged)</li>
@@ -237,11 +237,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md347"></a>
+<h1><a class="anchor" id="autotoc_md331"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md348"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md332"></a>
 Handoff to Step 4</h1>
 <p>Step 3 done, next read <code>docs/plan/step4-expected-void.md</code>. The primary template is now available. Step 4 adds the void specialization, Step 5 adds monadic operations to this template. </p>
 </div></div><!-- contents -->

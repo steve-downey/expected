@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_step7_expected_ref_t.html
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step7-expected-ref-t</code> <b>Depends on:</b> Steps 3, 5 (primary template with monadic ops) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md383"></a>
+<h1><a class="anchor" id="autotoc_md367"></a>
 Goal</h1>
 <p>Implement <code>expected&lt;T&amp;, E&gt;</code> — a specialization of <code>expected</code> where the value type is a reference. This uses rebind semantics (not assign-through) per the design adopted for <code>std::optional&lt;T&amp;&gt;</code> in C++26 (P2988).</p>
 <p>This is the core novel work of the proposal.</p>
-<h1><a class="anchor" id="autotoc_md384"></a>
+<h1><a class="anchor" id="autotoc_md368"></a>
 Context for Executing Agent</h1>
-<h2><a class="anchor" id="autotoc_md385"></a>
+<h2><a class="anchor" id="autotoc_md369"></a>
 Design principles (from optional&lt;T&amp;&gt;)</h2>
 <p>The reference implementation for <code>optional&lt;T&amp;&gt;</code> at <code>~/src/steve-downey/optional/main/include/beman/optional/optional.hpp</code> (lines 1515-2119) provides the pattern to follow. Key design choices:</p>
 <ol type="1">
@@ -118,7 +118,7 @@ Design principles (from optional&lt;T&amp;&gt;)</h2>
 <li><b>Dangling prevention</b>: Constructors that would bind temporaries are <code>= delete</code> using <code>reference_constructs_from_temporary_v</code></li>
 <li><b>No in-place construction for value</b>: <code>in_place_t</code> constructors for the value are not useful (just take a reference directly), but <code>unexpect_t</code> constructors for the error still exist</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md386"></a>
+<h2><a class="anchor" id="autotoc_md370"></a>
 Storage model</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> E&gt;</div>
 <div class="line"><span class="keyword">class </span>expected&lt;T&amp;, E&gt; {</div>
@@ -149,7 +149,7 @@ Storage model</h2>
 <div class="line">        E unex_;</div>
 <div class="line">    };</div>
 </div><!-- fragment --><p>This mirrors the primary template structure. When <code>has_val_</code> is true, <code>val_</code> is a pointer to the referred object. When false, <code>unex_</code> is the error.</p>
-<h2><a class="anchor" id="autotoc_md387"></a>
+<h2><a class="anchor" id="autotoc_md371"></a>
 Reference binding helper</h2>
 <p>Following optional&lt;T&amp;&gt;, use a helper to bind references safely:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> U&gt;</div>
@@ -157,7 +157,7 @@ Reference binding helper</h2>
 <div class="line">    T&amp; r(std::forward&lt;U&gt;(u));</div>
 <div class="line">    val_ = std::addressof(r);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md388"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md372"></a>
 Constructors</h2>
 <p><b>Value constructors</b> — take a <code>U</code> that can bind to <code>T&amp;</code>: </p><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U = T&gt;</div>
 <div class="line">    <span class="keyword">requires</span> (std::is_constructible_v&lt;T&amp;, U&gt; &amp;&amp;</div>
@@ -176,7 +176,7 @@ Constructors</h2>
 </div><!-- fragment --><p><b>unexpect_t constructors</b> — same as primary (constructs error in-place): </p><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
 <div class="line">    <span class="keyword">constexpr</span> <span class="keyword">explicit</span> expected(unexpect_t, Args&amp;&amp;...);</div>
 </div><!-- fragment --><p><b>No default constructor</b> — <code>expected&lt;T&amp;, E&gt;</code> cannot be default-constructed (there is no null reference).</p>
-<h2><a class="anchor" id="autotoc_md389"></a>
+<h2><a class="anchor" id="autotoc_md373"></a>
 Assignment (rebind semantics)</h2>
 <p>Assignment to an expected holding a reference rebinds the reference:</p>
 <div class="fragment"><div class="line"><span class="comment">// From a value — rebind reference</span></div>
@@ -193,7 +193,7 @@ Assignment (rebind semantics)</h2>
 <div class="line">    }</div>
 <div class="line">    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md390"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md374"></a>
 Observers</h2>
 <ul>
 <li><code>operator*()</code> returns <code>T&amp;</code> (not <code>T*</code>), dereferencing the pointer</li>
@@ -202,17 +202,17 @@ Observers</h2>
 <li><code>error()</code> — same as primary template</li>
 <li><code>value_or(U&amp;&amp;)</code> returns <code>T</code> (by value, because the alternative needs a common type) — or could return <code>T&amp;</code> if U converts to T&amp;. Follow the standard wording carefully.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md391"></a>
+<h2><a class="anchor" id="autotoc_md375"></a>
 Monadic operations</h2>
 <p>Same structure as primary but <code>value()</code> returns <code>T&amp;</code>:</p><ul>
 <li><code>and_then(F)</code>: <code>invoke(f, **this)</code> — passes T&amp; to F</li>
 <li><code>transform(F)</code>: wraps <code>invoke(f, **this)</code> in expected&lt;U, E&gt;</li>
 <li><code>or_else(F)</code>, <code>transform_error(F)</code>: same as primary</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md392"></a>
+<h2><a class="anchor" id="autotoc_md376"></a>
 reference_constructs_from_temporary_v</h2>
 <p>If <code>__reference_constructs_from_temporary</code> compiler built-in is not available (it's a GCC 13+ / Clang 16+ extension), provide a conservative approximation. See <code>optional.hpp</code> lines 1480-1511 for the portable fallback implementation using <code>is_convertible_v</code> checks.</p>
-<h1><a class="anchor" id="autotoc_md393"></a>
+<h1><a class="anchor" id="autotoc_md377"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — add <code>expected&lt;T&amp;, E&gt;</code> partial specialization after the void specialization</li>
@@ -237,7 +237,7 @@ Deliverables</h1>
 </li>
 <li><b>Update <code>tests/beman/expected/CMakeLists.txt</code></b></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md394"></a>
+<h1><a class="anchor" id="autotoc_md378"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch from <code>expected-over-references</code></li>
@@ -253,11 +253,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md395"></a>
+<h1><a class="anchor" id="autotoc_md379"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md396"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md380"></a>
 Handoff to Step 8</h1>
 <p>Step 7 done, next read <code>docs/plan/step8-expected-ref-e.md</code>. <code>expected&lt;T&amp;, E&gt;</code> is complete. Step 8 does the mirror — <code>expected&lt;T, E&amp;&gt;</code> where the error type is a reference. </p>
 </div></div><!-- contents -->

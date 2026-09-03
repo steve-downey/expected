@@ -100,10 +100,10 @@ $(document).ready(function(){initNavTree('md_docs_plan_handoff_next.html',''); i
   <div class="headertitle"><div class="title">Handoff: After Step 7 (expected&lt;T&amp;, E&gt; Complete) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md271"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md248"></a>
 What Was Done</h1>
 <p>Step 7 is complete. Branch <code>step7-expected-ref-t</code> implements <code>expected&lt;T&amp;, E&gt;</code> — the reference-value partial specialization (P2988). 313 tests pass, lint clean.</p>
-<h2><a class="anchor" id="autotoc_md272"></a>
+<h2><a class="anchor" id="autotoc_md249"></a>
 Changes in Step 7</h2>
 <p>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>:**</p><ul>
 <li>Added <code>detail::reference_constructs_from_temporary_v</code> (portable fallback using <code>__cpp_lib_reference_from_temporary</code> when available, otherwise approximation via <code>is_convertible_v</code>)</li>
@@ -145,26 +145,26 @@ Changes in Step 7</h2>
 <li>Added <code>beman.expected.tests.expected_ref_constraints</code> target</li>
 <li>Added all 7 negative-compile fail targets</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md273"></a>
+<h2><a class="anchor" id="autotoc_md250"></a>
 Test count</h2>
 <p>313 tests total, all passing.</p>
-<h1><a class="anchor" id="autotoc_md274"></a>
+<h1><a class="anchor" id="autotoc_md251"></a>
 Build Commands</h1>
 <div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test   # 313 tests, all passing</div>
 <div class="line">make lint                    # all linters pass</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md275"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md252"></a>
 Step 7 Checklist</h1>
 <ul>
 <li>[x] Step 7: <code>expected&lt;T&amp;, E&gt;</code> — pointer storage, rebind assignment, observers returning T&amp;, value_or, monadic ops, dangling prevention</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md276"></a>
+<h1><a class="anchor" id="autotoc_md253"></a>
 What Comes Next</h1>
 <p><b>Step 8: <code>expected&lt;T, E&amp;&gt;</code> error-reference specialization.</b></p>
 <p>Read <code>docs/plan/step8-expected-ref-e.md</code> for the full specification.</p>
-<h2><a class="anchor" id="autotoc_md277"></a>
+<h2><a class="anchor" id="autotoc_md254"></a>
 Key differences from Step 7</h2>
 <p>The <code>expected-over-references</code> branch now has a fully conformant <code>expected&lt;T,E&gt;</code> and <code>expected&lt;void,E&gt;</code> (modulo the extensions noted in the audit as conforming). All constraint, Mandates, trivial SMF, monadic SFINAE, and precondition gaps identified in the audit are resolved.</p>
-<h1><a class="anchor" id="autotoc_md278"></a>
+<h1><a class="anchor" id="autotoc_md255"></a>
 Upstream Merge (2026-06-02)</h1>
 <p>Branch <code>merge-upstream</code> merged 94 commits from <code>bemanproject/sandbox-expected</code> main and landed portability fixes for the full CI matrix. Now merged to <code>main</code>.</p>
 <p>Key changes in the merge:</p><ul>

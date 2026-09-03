@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_step10_expected_void_ref_
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step10-expected-void-ref-e</code> <b>Depends on:</b> Steps 4, 6 (expected&lt;void, E&gt; with monadic ops) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md313"></a>
+<h1><a class="anchor" id="autotoc_md297"></a>
 Goal</h1>
 <p>Implement <code>expected&lt;void, E&amp;&gt;</code> — the final specialization combining void value semantics (from Step 4/6) with error-reference semantics (from Step 8).</p>
-<h1><a class="anchor" id="autotoc_md314"></a>
+<h1><a class="anchor" id="autotoc_md298"></a>
 Context for Executing Agent</h1>
 <p>This is the intersection of the void specialization and the error-reference specialization. There is no value storage (void), and the error is a non-owning reference with rebind semantics.</p>
-<h2><a class="anchor" id="autotoc_md315"></a>
+<h2><a class="anchor" id="autotoc_md299"></a>
 Storage model</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> E&gt;</div>
 <div class="line">    <span class="keyword">requires</span> std::is_void_v&lt;T&gt;</div>
@@ -128,7 +128,7 @@ Storage model</h2>
 <div class="line">    E* unex_ptr_ = <span class="keyword">nullptr</span>;</div>
 <div class="line">    <span class="keywordtype">bool</span> has_val_ = <span class="keyword">true</span>;</div>
 </div><!-- fragment --><p>When <code>has_val_</code> is true, <code>unex_ptr_</code> is irrelevant (void/success state). When <code>has_val_</code> is false, <code>unex_ptr_</code> points to the error object.</p>
-<h2><a class="anchor" id="autotoc_md316"></a>
+<h2><a class="anchor" id="autotoc_md300"></a>
 Key properties</h2>
 <ul>
 <li><b>Default constructible</b>: void state is valid, sets <code>has_val_ = true</code></li>
@@ -136,7 +136,7 @@ Key properties</h2>
 <li><b>Error is reference</b>: <code>error()</code> returns <code>E&amp;</code>, rebind on assignment</li>
 <li><b>Fully trivial operations</b>: no non-trivial members to destroy</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md317"></a>
+<h2><a class="anchor" id="autotoc_md301"></a>
 Constructors</h2>
 <ul>
 <li>Default: <code>has_val_ = true</code></li>
@@ -146,14 +146,14 @@ Constructors</h2>
 <li><code>(unexpect_t, Args...)</code> — binds E&amp;</li>
 <li>Converting from <code>expected&lt;void, G&amp;&gt;</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md318"></a>
+<h2><a class="anchor" id="autotoc_md302"></a>
 Assignment</h2>
 <ul>
 <li>Copy/move (trivial)</li>
 <li>From <code>unexpected&lt;G&gt;</code> — rebinds error pointer</li>
 <li><code>emplace()</code> — transitions from error to void state (just set <code>has_val_ = true</code>)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md319"></a>
+<h2><a class="anchor" id="autotoc_md303"></a>
 Observers</h2>
 <ul>
 <li><code>operator*()</code> — void, no-op</li>
@@ -162,7 +162,7 @@ Observers</h2>
 <li><code>error_or(G&amp;&amp;)</code> → <code>E</code> by value</li>
 <li>No <code>operator-&gt;()</code>, no <code>value_or()</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md320"></a>
+<h2><a class="anchor" id="autotoc_md304"></a>
 Monadic operations</h2>
 <p>Combine void-value patterns (Step 6) with error-reference patterns (Step 8):</p><ul>
 <li><code>and_then(F)</code> — invoke F with no args (void value), propagate E&amp;</li>
@@ -170,7 +170,7 @@ Monadic operations</h2>
 <li><code>transform(F)</code> — invoke F with no args</li>
 <li><code>transform_error(F)</code> — invoke F with E&amp;</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md321"></a>
+<h1><a class="anchor" id="autotoc_md305"></a>
 Deliverables</h1>
 <ol type="1">
 <li><p class="startli">**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — add <code>expected&lt;void, E&amp;&gt;</code> specialization (or handle via requires clause combining is_void and is_lvalue_reference)</p>
@@ -194,7 +194,7 @@ Deliverables</h1>
 </li>
 <li><b>Update <code>tests/beman/expected/CMakeLists.txt</code></b></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md322"></a>
+<h1><a class="anchor" id="autotoc_md306"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch from <code>expected-over-references</code></li>
@@ -208,11 +208,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write final <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md323"></a>
+<h1><a class="anchor" id="autotoc_md307"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md324"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md308"></a>
 Completion</h1>
 <p>Step 10 is the final step. After completion, all specializations of <code>expected</code> are implemented:</p>
 <table class="markdownTable">

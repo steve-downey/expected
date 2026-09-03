@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_step9_expected_ref_both.h
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step9-expected-ref-both</code> <b>Depends on:</b> Steps 7, 8 (expected&lt;T&amp;, E&gt; and expected&lt;T, E&amp;&gt;) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md413"></a>
+<h1><a class="anchor" id="autotoc_md397"></a>
 Goal</h1>
 <p>Implement <code>expected&lt;T&amp;, E&amp;&gt;</code> — a specialization where both the value and error types are references. Both sides use rebind semantics and pointer storage.</p>
-<h1><a class="anchor" id="autotoc_md414"></a>
+<h1><a class="anchor" id="autotoc_md398"></a>
 Context for Executing Agent</h1>
 <p>This combines the patterns from Steps 7 and 8. With both sides being references, the storage is maximally simple — just two pointers and a bool.</p>
-<h2><a class="anchor" id="autotoc_md415"></a>
+<h2><a class="anchor" id="autotoc_md399"></a>
 Storage model</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> E&gt;</div>
 <div class="line"><span class="keyword">class </span>expected&lt;T&amp;, E&amp;&gt; {</div>
@@ -120,7 +120,7 @@ Storage model</h2>
 <div class="line">    };</div>
 <div class="line">};</div>
 </div><!-- fragment --><p>Since both sides are pointers (same size, trivially constructible), the union is simple. Alternatively, since pointers are trivial, you could even avoid the union and just use two pointers, but the union approach is cleaner semantically and matches the other specializations.</p>
-<h2><a class="anchor" id="autotoc_md416"></a>
+<h2><a class="anchor" id="autotoc_md400"></a>
 Key properties</h2>
 <ul>
 <li><b>No default constructor</b>: <code>T&amp;</code> cannot be default-constructed</li>
@@ -129,7 +129,7 @@ Key properties</h2>
 <li><b>Shallow const on both sides</b>: <code>const expected&lt;int&amp;, err&amp;&gt;</code> allows mutation through both <code>*e</code> and <code>e.error()</code></li>
 <li><b>Dangling prevention on both sides</b>: constructors that would bind temporaries to either T&amp; or E&amp; are deleted</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md417"></a>
+<h2><a class="anchor" id="autotoc_md401"></a>
 Constructors</h2>
 <p>Combine the value-side constructors from Step 7 with the error-side constructors from Step 8:</p>
 <ul>
@@ -139,7 +139,7 @@ Constructors</h2>
 <li>Copy/move — copies pointers</li>
 <li>Converting from <code>expected&lt;U&amp;, G&amp;&gt;</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md418"></a>
+<h2><a class="anchor" id="autotoc_md402"></a>
 Assignment</h2>
 <ul>
 <li>From value <code>U&amp;&amp;</code> — rebinds T* (destroying E if transitioning from error)</li>
@@ -148,7 +148,7 @@ Assignment</h2>
 </ul>
 <p>Since both sides are pointers, state transitions are trivial: </p><div class="fragment"><div class="line"><span class="comment">// Transition from error to value: just set the pointer and flip the bool</span></div>
 <div class="line"><span class="comment">// No destroy_at needed since pointers have trivial destruction</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md419"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md403"></a>
 Observers</h2>
 <ul>
 <li><code>operator*()</code> → <code>T&amp;</code></li>
@@ -158,7 +158,7 @@ Observers</h2>
 <li><code>value_or(U&amp;&amp;)</code> → <code>T</code> by value</li>
 <li><code>error_or(G&amp;&amp;)</code> → <code>E</code> by value</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md420"></a>
+<h2><a class="anchor" id="autotoc_md404"></a>
 Monadic operations</h2>
 <p>Same structure as primary but with reference semantics on both sides:</p><ul>
 <li><code>and_then(F)</code> passes <code>T&amp;</code> to F, propagates <code>E&amp;</code> on error</li>
@@ -166,7 +166,7 @@ Monadic operations</h2>
 <li><code>transform(F)</code> passes <code>T&amp;</code> to F</li>
 <li><code>transform_error(F)</code> passes <code>E&amp;</code> to F</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md421"></a>
+<h1><a class="anchor" id="autotoc_md405"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — add <code>expected&lt;T&amp;, E&amp;&gt;</code> partial specialization</li>
@@ -192,7 +192,7 @@ Deliverables</h1>
 </li>
 <li><b>Update <code>tests/beman/expected/CMakeLists.txt</code></b></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md422"></a>
+<h1><a class="anchor" id="autotoc_md406"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch from <code>expected-over-references</code></li>
@@ -207,11 +207,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md423"></a>
+<h1><a class="anchor" id="autotoc_md407"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md424"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md408"></a>
 Handoff to Step 10</h1>
 <p>Step 9 done, next read <code>docs/plan/step10-expected-void-ref-e.md</code>. <code>expected&lt;T&amp;, E&amp;&gt;</code> is complete. Step 10 is the final specialization: <code>expected&lt;void, E&amp;&gt;</code>. </p>
 </div></div><!-- contents -->

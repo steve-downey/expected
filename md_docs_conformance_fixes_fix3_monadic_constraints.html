@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_conformance_fixes_fix3_monadic
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>fix3-monadic-constraints</code> <b>Depends on:</b> — <b>Read first:</b> <code>docs/conformance-audit.md</code> (sections 4.8, 5.7), <code>docs/standard/expected.txt</code> [expected.object.monadic] and [expected.void.monadic]</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md100"></a>
+<h1><a class="anchor" id="autotoc_md106"></a>
 Goal</h1>
 <p>Add <code>requires</code> clauses to all monadic operations that the standard marks as Constraints. Currently, all monadic operations only have <code>static_assert</code> for their Mandates but no SFINAE-friendly constraints.</p>
 <p>These are audit items 13-16.</p>
-<h1><a class="anchor" id="autotoc_md101"></a>
+<h1><a class="anchor" id="autotoc_md107"></a>
 Which operations need constraints</h1>
-<h2><a class="anchor" id="autotoc_md102"></a>
+<h2><a class="anchor" id="autotoc_md108"></a>
 Primary template &lt;tt&gt;expected&lt;T, E&gt;&lt;/tt&gt;</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -130,7 +130,7 @@ Primary template &lt;tt&gt;expected&lt;T, E&gt;&lt;/tt&gt;</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>transform_error</code>   </td><td class="markdownTableBodyNone"><code>&amp;&amp;</code>, <code>const&amp;&amp;</code>   </td><td class="markdownTableBodyNone"><code>is_constructible_v&lt;T, decltype(std::move(*(*this)))&gt;</code>   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md103"></a>
+<h2><a class="anchor" id="autotoc_md109"></a>
 Void specialization &lt;tt&gt;expected&lt;void, E&gt;&lt;/tt&gt;</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -148,7 +148,7 @@ Void specialization &lt;tt&gt;expected&lt;void, E&gt;&lt;/tt&gt;</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>transform_error</code>   </td><td class="markdownTableBodyNone">all   </td><td class="markdownTableBodyNone">No constraints in standard (none needed)   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md104"></a>
+<h1><a class="anchor" id="autotoc_md110"></a>
 Implementation</h1>
 <p>For each affected declaration, add a <code>requires</code> clause. Example for <code>and_then</code> lvalue overload on the primary template:</p>
 <p><b>Declaration (in class body):</b> </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> F&gt;</div>
@@ -168,7 +168,7 @@ Implementation</h1>
 <li><code>&amp;&amp;</code>: <code>requires std::is_constructible_v&lt;T, T&amp;&amp;&gt;</code> (move-constructible)</li>
 <li><code>const&amp;&amp;</code>: <code>requires std::is_constructible_v&lt;T, const T&amp;&amp;&gt;</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md105"></a>
+<h1><a class="anchor" id="autotoc_md111"></a>
 Tests</h1>
 <p>Add to a new file <code>tests/beman/expected/expected_monadic_constraints.test.cpp</code> (beman-only target — constraint SFINAE behavior):</p>
 <ul>
@@ -178,11 +178,11 @@ Tests</h1>
 <li>Same pattern for <code>or_else</code>, <code>transform</code>, <code>transform_error</code>.</li>
 </ul>
 <p>All existing monadic tests must still pass (the constraints should be satisfied in all existing test cases).</p>
-<h1><a class="anchor" id="autotoc_md106"></a>
+<h1><a class="anchor" id="autotoc_md112"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md107"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md113"></a>
 Handoff</h1>
 <p>Merge (&ndash;no-ff) into <code>expected-over-references</code>. F4 (Mandates) adds <code>static_assert</code> to the same functions. </p>
 </div></div><!-- contents -->

@@ -102,10 +102,10 @@ $(document).ready(function(){initNavTree('md_docs_plan_step4_expected_void.html'
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step4-expected-void</code> <b>Depends on:</b> Steps 1-2 (unexpected&lt;E&gt;, bad_expected_access) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md351"></a>
+<h1><a class="anchor" id="autotoc_md335"></a>
 Goal</h1>
 <p>Implement the partial specialization <code>expected&lt;T, E&gt; requires is_void_v&lt;T&gt;</code> per [expected.void]. This handles the case where there is no value — only success (void) or error.</p>
-<h1><a class="anchor" id="autotoc_md352"></a>
+<h1><a class="anchor" id="autotoc_md336"></a>
 Context for Executing Agent</h1>
 <p>The specification is in <code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code> lines 156-249 as comments. This specialization differs from the primary template:</p>
 <ul>
@@ -115,7 +115,7 @@ Context for Executing Agent</h1>
 <li><code>emplace()</code> takes no arguments</li>
 <li>Still has error storage, <code>error()</code>, <code>error_or()</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md353"></a>
+<h2><a class="anchor" id="autotoc_md337"></a>
 Key differences from primary template</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -141,7 +141,7 @@ Key differences from primary template</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>in_place_t</code> ctor   </td><td class="markdownTableBodyNone"><code>(in_place_t, Args...)</code>   </td><td class="markdownTableBodyNone"><code>(in_place_t)</code> only   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md354"></a>
+<h2><a class="anchor" id="autotoc_md338"></a>
 Constructors [expected.void.cons]</h2>
 <ul>
 <li>Default: <code>has_val_ = true</code></li>
@@ -151,14 +151,14 @@ Constructors [expected.void.cons]</h2>
 <li><code>(in_place_t)</code> — explicit, no args</li>
 <li><code>(unexpect_t, Args...)</code>, <code>(unexpect_t, initializer_list&lt;U&gt;, Args...)</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md355"></a>
+<h2><a class="anchor" id="autotoc_md339"></a>
 Storage</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">bool</span> has_val_;</div>
 <div class="line"><span class="keyword">union </span>{</div>
 <div class="line">    E unex_;</div>
 <div class="line">};</div>
 </div><!-- fragment --><p>When <code>has_val_</code> is true, the union member is not active (void state).</p>
-<h1><a class="anchor" id="autotoc_md356"></a>
+<h1><a class="anchor" id="autotoc_md340"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — add the void specialization after the primary template</li>
@@ -180,7 +180,7 @@ Deliverables</h1>
 </li>
 <li><b>Update <code>tests/beman/expected/CMakeLists.txt</code></b> — add new test file</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md357"></a>
+<h1><a class="anchor" id="autotoc_md341"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch <code>step4-expected-void</code> from <code>main</code> (with Steps 1-2 merged)</li>
@@ -197,11 +197,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md358"></a>
+<h1><a class="anchor" id="autotoc_md342"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md359"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md343"></a>
 Handoff to Step 5</h1>
 <p>Step 4 done, next read <code>docs/plan/step5-expected-primary-monadic.md</code> or <code>docs/plan/step6-expected-void-monadic.md</code> depending on which is next. </p>
 </div></div><!-- contents -->

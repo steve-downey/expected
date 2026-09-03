@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_conformance_fixes_fix1_constra
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>fix1-constraints</code> <b>Depends on:</b> — <b>Read first:</b> <code>docs/conformance-audit.md</code> (sections 4.3, 4.5, 4.9), <code>docs/standard/expected.txt</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md70"></a>
+<h1><a class="anchor" id="autotoc_md76"></a>
 Goal</h1>
 <p>Fix constraint bugs in the primary template that affect overload resolution or reject valid programs. These are the audit's "Critical" items 1-7.</p>
-<h1><a class="anchor" id="autotoc_md71"></a>
+<h1><a class="anchor" id="autotoc_md77"></a>
 Changes</h1>
 <p>All changes are in <code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>, primary template only. The void specialization's corresponding constructors are already correct or do not apply.</p>
-<h2><a class="anchor" id="autotoc_md72"></a>
+<h2><a class="anchor" id="autotoc_md78"></a>
 1. Add &lt;tt&gt;converts_from_any_cvref&lt;/tt&gt; helper</h2>
 <p>Add to <code>namespace detail</code>:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> W&gt;</div>
@@ -118,7 +118,7 @@ Changes</h1>
 <div class="line">        std::is_constructible&lt;T, W&gt;,        std::is_convertible&lt;W, T&gt;,</div>
 <div class="line">        std::is_constructible&lt;T, const W&amp;&gt;, std::is_convertible&lt;const W&amp;, T&gt;,</div>
 <div class="line">        std::is_constructible&lt;T, const W&gt;,  std::is_convertible&lt;const W, T&gt;&gt;;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md73"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md79"></a>
 2. Fix converting constructors from expected&lt;U, G&gt;</h2>
 <p>In the <code>requires</code> clause of both <code>expected(const expected&lt;U, G&gt;&amp;)</code> and <code>expected(expected&lt;U, G&gt;&amp;&amp;)</code>, replace the 8-line <code>!is_constructible/!is_convertible</code> block with:</p>
 <div class="fragment"><div class="line">(std::is_same_v&lt;bool, std::remove_cv_t&lt;T&gt;&gt; ||</div>
@@ -127,22 +127,22 @@ Changes</h1>
 is false". The English conditional "if T is not cv bool, X is false" translates to C++ as <code>(T IS cv bool) || (X is false)</code>, i.e. <code>(is_same_v&lt;bool, remove_cv_t&lt;T&gt;&gt; || !converts_from_any_cvref&lt;...&gt;)</code>. When T IS cv bool the first operand is <code>true</code>, short-circuiting the whole expression to <code>true</code> (constraint satisfied, converting ctor enabled). When T is not cv bool the first operand is <code>false</code>, so the second operand must be <code>true</code> (i.e. converts-from-any-cvref must be false).</p>
 <p>Note: an earlier draft of this document incorrectly wrote <code>!is_same_v&lt;bool, remove_cv_t&lt;T&gt;&gt;</code> (with a leading <code>!</code>), which would invert the short-circuit and re-introduce the bug. The standard wording at [expected.object.cons] para 18.3 is correct; only this local spec document had the error. Cross-checked against both <code>docs/standard/expected.txt</code> (line 663) and <code>~/src/steve-downey/draft/draft/source/utilities.tex</code> (line 8749).</p>
 <p>Keep the four <code>!is_constructible_v&lt;unexpected&lt;E&gt;, ...&gt;</code> lines unchanged (constraints 18.4-18.7).</p>
-<h2><a class="anchor" id="autotoc_md74"></a>
+<h2><a class="anchor" id="autotoc_md80"></a>
 3. Fix value constructor &lt;tt&gt;expected(U&amp;&amp;)&lt;/tt&gt; constraints</h2>
 <p>Add these two constraints to the <code>requires</code> clause:</p>
 <div class="fragment"><div class="line">&amp;&amp; !detail::is_unexpected_specialization&lt;std::remove_cvref_t&lt;U&gt;&gt;::value  // (23.4)</div>
 <div class="line">&amp;&amp; (!std::is_same_v&lt;bool, std::remove_cv_t&lt;T&gt;&gt; ||                       // (23.6)</div>
 <div class="line">    !detail::is_expected_specialization&lt;std::remove_cvref_t&lt;U&gt;&gt;::value)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md75"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md81"></a>
 4. Fix value assignment &lt;tt&gt;operator=(U&amp;&amp;)&lt;/tt&gt;</h2>
 <p>a) Change default template argument from <code>U = T</code> to <code>U = std::remove_cv_t&lt;T&gt;</code>.</p>
 <p>b) Replace <code>!std::is_same_v&lt;std::remove_cvref_t&lt;U&gt;, unexpect_t&gt;</code> with <code>!detail::is_unexpected_specialization&lt;std::remove_cvref_t&lt;U&gt;&gt;::value</code>.</p>
-<h2><a class="anchor" id="autotoc_md76"></a>
+<h2><a class="anchor" id="autotoc_md82"></a>
 5. Fix move assignment constraint</h2>
 <p>Add to the <code>requires</code> clause:</p>
 <div class="fragment"><div class="line">&amp;&amp; (std::is_nothrow_move_constructible_v&lt;T&gt; || std::is_nothrow_move_constructible_v&lt;E&gt;)</div>
 </div><!-- fragment --><p>This is constraint (6.5).</p>
-<h2><a class="anchor" id="autotoc_md77"></a>
+<h2><a class="anchor" id="autotoc_md83"></a>
 6. Fix &lt;tt&gt;operator==(const expected&amp;, const T2&amp;)&lt;/tt&gt;</h2>
 <p>Add constraints to the hidden friend:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T2&gt;</div>
@@ -152,9 +152,9 @@ is false". The English conditional "if T is not cv bool, X is false" translates 
 <div class="line">}</div>
 </div><!-- fragment --><p>The standard also says "`*x == v` is well-formed and its result is
 convertible to bool" is a Constraint. This requires a more elaborate requires-expression. At minimum, add the specialization guard.</p>
-<h1><a class="anchor" id="autotoc_md78"></a>
+<h1><a class="anchor" id="autotoc_md84"></a>
 Tests</h1>
-<h2><a class="anchor" id="autotoc_md79"></a>
+<h2><a class="anchor" id="autotoc_md85"></a>
 New tests (beman-only target — these test constraint behavior)</h2>
 <p>Add to a new file <code>tests/beman/expected/expected_constraints.test.cpp</code>:</p>
 <ul>
@@ -164,19 +164,19 @@ New tests (beman-only target — these test constraint behavior)</h2>
 <li>Move assignment is deleted when neither T nor E is nothrow move constructible (use <code>static_assert(!is_move_assignable_v&lt;...&gt;)</code>)</li>
 <li><code>expected&lt;int, int&gt; == expected&lt;int, int&gt;</code> uses the expected-expected overload, not the value overload</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md80"></a>
+<h2><a class="anchor" id="autotoc_md86"></a>
 Negative compile tests</h2>
 <ul>
 <li><code>expected_bool_value_ctor_from_expected_fail.cpp</code> — when T=bool, <code>expected&lt;bool, E&gt;(expected&lt;U, G&gt;{})</code> must use the converting ctor, not the value ctor</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md81"></a>
+<h2><a class="anchor" id="autotoc_md87"></a>
 Existing tests</h2>
 <p>Run the full suite. No existing test should break.</p>
-<h1><a class="anchor" id="autotoc_md82"></a>
+<h1><a class="anchor" id="autotoc_md88"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md83"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md89"></a>
 Handoff</h1>
 <p>Merge (&ndash;no-ff) into <code>expected-over-references</code>. </p>
 </div></div><!-- contents -->

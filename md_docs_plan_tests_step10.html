@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step10.html',''); i
 <div class="contents">
 <div class="textblock"><p><b>Standard section:</b> Novel — intersection of Step 4 (void) and Step 8 (E&amp;). <b>Test file:</b> <code>tests/beman/expected/expected_void_ref_e.test.cpp</code> <b>Negative-compile files:</b> <code>tests/beman/expected/expected_void_ref_e_*_fail.cpp</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md471"></a>
+<h1><a class="anchor" id="autotoc_md455"></a>
 Testing Strategy</h1>
 <p>Catch2. Include header twice. This is the final specialization: void value semantics combined with reference error semantics. No value storage at all; error is stored as <code>E*</code>.</p>
 <p>Key properties:</p><ul>
@@ -113,7 +113,7 @@ Testing Strategy</h1>
 <li><b>Dangling prevention</b> — constructors that bind temporaries to E&amp; are deleted</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md473"></a>
+<h1><a class="anchor" id="autotoc_md457"></a>
 Type-Level Tests (static_assert)</h1>
 <div class="fragment"><div class="line"><span class="comment">// Default constructible (void state)</span></div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_default_constructible_v&lt;expected&lt;void, int&amp;&gt;&gt;);</div>
@@ -136,7 +136,7 @@ Type-Level Tests (static_assert)</h1>
 <div class="line"><span class="comment">// operator* returns void</span></div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_void_v&lt;<span class="keyword">decltype</span>(*std::declval&lt;expected&lt;void, int&amp;&gt;&gt;())&gt;);</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md475"></a>
+<h1><a class="anchor" id="autotoc_md459"></a>
 Test Outline</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -475,11 +475,11 @@ Test Outline</h1>
 <div class="line">}</div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:78</div></div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:121</div></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:47</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:58</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md477"></a>
+<h1><a class="anchor" id="autotoc_md461"></a>
 Negative Compile Tests</h1>
-<h2><a class="anchor" id="autotoc_md478"></a>
+<h2><a class="anchor" id="autotoc_md462"></a>
 &lt;tt&gt;expected_void_ref_e_temporary_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: cannot bind temporary to E&amp; — dangling prevention</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -487,7 +487,7 @@ Negative Compile Tests</h1>
 <div class="line">    <span class="comment">// 42 is a temporary — must not compile</span></div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;void, int&amp;&gt;</a> e(beman::expected::unexpect, 42);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md479"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md463"></a>
 &lt;tt&gt;expected_void_ref_e_const_lvalue_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: cannot bind const lvalue to non-const E&amp;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -495,7 +495,7 @@ Negative Compile Tests</h1>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">int</span> err = 5;</div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;void, int&amp;&gt;</a> e(beman::expected::unexpect, err);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md480"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md464"></a>
 &lt;tt&gt;expected_void_ref_e_no_value_or_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: expected&lt;void, E&amp;&gt; has no value_or member</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -504,7 +504,7 @@ Negative Compile Tests</h1>
 <div class="line">    e.value_or(0);  <span class="comment">// must not compile — void has no value to fall back from</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md482"></a>
+<h1><a class="anchor" id="autotoc_md466"></a>
 CMakeLists additions</h1>
 <p>Same pattern as all previous steps: OBJECT library + EXCLUDE_FROM_ALL + WILL_FAIL ctest for each <code>_fail.cpp</code>. </p>
 </div></div><!-- contents -->

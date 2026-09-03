@@ -102,19 +102,19 @@ $(document).ready(function(){initNavTree('md_docs_conformance_fixes_fix4_mandate
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>fix4-mandates</code> <b>Depends on:</b> Fix 3 (monadic operations should have their requires clauses first) <b>Read first:</b> <code>docs/conformance-audit.md</code> (sections 4.2, 4.7, 4.8, 5.6, 5.7)</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md110"></a>
+<h1><a class="anchor" id="autotoc_md116"></a>
 Goal</h1>
 <p>Add <code>static_assert</code> checks for all standard <em>Mandates</em> that are currently missing. Mandates are unconditional compile-time requirements — they produce hard errors with clear diagnostics, not SFINAE.</p>
 <p>These are audit items 17-22.</p>
-<h1><a class="anchor" id="autotoc_md111"></a>
+<h1><a class="anchor" id="autotoc_md117"></a>
 Changes</h1>
 <p>All changes are in <code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>.</p>
-<h2><a class="anchor" id="autotoc_md112"></a>
+<h2><a class="anchor" id="autotoc_md118"></a>
 1. Primary template static_assert: T not a specialization of unexpected</h2>
 <p>Add to the existing block of static_asserts at the top of the class:</p>
 <div class="fragment"><div class="line"><span class="keyword">static_assert</span>(!detail::is_unexpected_specialization&lt;std::remove_cv_t&lt;T&gt;&gt;::value,</div>
 <div class="line">              <span class="stringliteral">&quot;T must not be a specialization of unexpected&quot;</span>);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md113"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md119"></a>
 2. value() Mandates — primary template</h2>
 <p>**<code>value() const&amp;</code> and <code>value() &amp;</code>** — add inside the function body: </p><div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_copy_constructible_v&lt;E&gt;,</div>
 <div class="line">              <span class="stringliteral">&quot;value() requires is_copy_constructible_v&lt;E&gt;&quot;</span>);</div>
@@ -122,25 +122,25 @@ Changes</h1>
 <div class="line">              std::is_constructible_v&lt;E, <span class="keyword">decltype</span>(std::move(error()))&gt;,</div>
 <div class="line">              <span class="stringliteral">&quot;value() &amp;&amp; requires E be copy-constructible and constructible from move(error())&quot;</span>);</div>
 </div><!-- fragment --><p>**<code>value() const&amp;&amp;</code>** — same as <code>&amp;&amp;</code> variant.</p>
-<h2><a class="anchor" id="autotoc_md114"></a>
+<h2><a class="anchor" id="autotoc_md120"></a>
 3. value() Mandates — void specialization</h2>
 <p>**<code>value() const&amp;</code>** — add: </p><div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_copy_constructible_v&lt;E&gt;,</div>
 <div class="line">              <span class="stringliteral">&quot;value() requires is_copy_constructible_v&lt;E&gt;&quot;</span>);</div>
 </div><!-- fragment --><p>**<code>value() &amp;&amp;</code>** — add: </p><div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_copy_constructible_v&lt;E&gt; &amp;&amp; std::is_move_constructible_v&lt;E&gt;,</div>
 <div class="line">              <span class="stringliteral">&quot;value() &amp;&amp; requires E be copy-constructible and move-constructible&quot;</span>);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md115"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md121"></a>
 4. value_or() Mandates — primary template</h2>
 <p>**<code>value_or(U&amp;&amp;) const&amp;</code>:** </p><div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_copy_constructible_v&lt;T&gt;, <span class="stringliteral">&quot;value_or requires is_copy_constructible_v&lt;T&gt;&quot;</span>);</div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_convertible_v&lt;U, T&gt;, <span class="stringliteral">&quot;value_or requires is_convertible_v&lt;U, T&gt;&quot;</span>);</div>
 </div><!-- fragment --><p>**<code>value_or(U&amp;&amp;) &amp;&amp;</code>:** </p><div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_move_constructible_v&lt;T&gt;, <span class="stringliteral">&quot;value_or requires is_move_constructible_v&lt;T&gt;&quot;</span>);</div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_convertible_v&lt;U, T&gt;, <span class="stringliteral">&quot;value_or requires is_convertible_v&lt;U, T&gt;&quot;</span>);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md116"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md122"></a>
 5. error_or() Mandates — both primary and void</h2>
 <p>**<code>error_or(G&amp;&amp;) const&amp;</code>:** </p><div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_copy_constructible_v&lt;E&gt;, <span class="stringliteral">&quot;error_or requires is_copy_constructible_v&lt;E&gt;&quot;</span>);</div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_convertible_v&lt;G, E&gt;, <span class="stringliteral">&quot;error_or requires is_convertible_v&lt;G, E&gt;&quot;</span>);</div>
 </div><!-- fragment --><p>**<code>error_or(G&amp;&amp;) &amp;&amp;</code>:** </p><div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_move_constructible_v&lt;E&gt;, <span class="stringliteral">&quot;error_or requires is_move_constructible_v&lt;E&gt;&quot;</span>);</div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_convertible_v&lt;G, E&gt;, <span class="stringliteral">&quot;error_or requires is_convertible_v&lt;G, E&gt;&quot;</span>);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md117"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md123"></a>
 6. transform() Mandates — both primary and void</h2>
 <p>In each transform overload, after computing <code>U</code>, add:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::is_void_v&lt;U&gt;) {</div>
@@ -153,7 +153,7 @@ Changes</h1>
 <div class="line">                  <span class="stringliteral">&quot;transform: U must not be a specialization of unexpected&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>The "well-formed declaration" Mandates (<code>U u(invoke(...))</code>) will naturally produce a diagnostic if violated, so an explicit static_assert is optional.</p>
-<h2><a class="anchor" id="autotoc_md118"></a>
+<h2><a class="anchor" id="autotoc_md124"></a>
 7. transform_error() Mandates — both primary and void</h2>
 <p>After computing <code>G</code>, add:</p>
 <div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_object_v&lt;G&gt;, <span class="stringliteral">&quot;transform_error: G must be an object type&quot;</span>);</div>
@@ -162,18 +162,18 @@ Changes</h1>
 <div class="line">              <span class="stringliteral">&quot;transform_error: G must not be cv-qualified&quot;</span>);</div>
 <div class="line"><span class="keyword">static_assert</span>(!detail::is_unexpected_specialization&lt;G&gt;::value,</div>
 <div class="line">              <span class="stringliteral">&quot;transform_error: G must not be a specialization of unexpected&quot;</span>);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md119"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md125"></a>
 Tests</h1>
 <p>Add to a new file <code>tests/beman/expected/expected_mandates.test.cpp</code> (beman-only target):</p>
 <ul>
 <li>Verify <code>static_assert</code> fires for <code>expected&lt;unexpected&lt;int&gt;, int&gt;</code> (T is unexpected specialization) — this is a negative compile test (<code>expected_unexpected_value_type_fail.cpp</code>)</li>
 </ul>
 <p>Existing tests already exercise value_or/error_or/transform/transform_error with valid types, so they verify the static_asserts don't fire for good inputs.</p>
-<h1><a class="anchor" id="autotoc_md120"></a>
+<h1><a class="anchor" id="autotoc_md126"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md121"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md127"></a>
 Handoff</h1>
 <p>Merge (&ndash;no-ff) into <code>expected-over-references</code>. </p>
 </div></div><!-- contents -->

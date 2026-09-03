@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step3.html',''); in
 <li><code>tests/beman/expected/expected_*_fail.cpp</code> — negative compile tests</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md498"></a>
+<h1><a class="anchor" id="autotoc_md482"></a>
 Testing Strategy</h1>
 <p>Catch2 + header included twice. This step covers [expected.object.cons] through [expected.object.eq] but NOT monadic operations (Step 5).</p>
 <p><b>Three tiers of negative tests:</b></p>
@@ -118,7 +118,7 @@ Testing Strategy</h1>
 </div><!-- fragment --></li>
 </ol>
 <hr  />
-<h1><a class="anchor" id="autotoc_md500"></a>
+<h1><a class="anchor" id="autotoc_md484"></a>
 Ill-Formed Instantiations [expected.object.general] para 2–3</h1>
 <blockquote class="doxtable">
 <p>&zwj;A program which instantiates class template expected&lt;T, E&gt; with an argument T that is not a valid value type for expected is ill-formed. </p>
@@ -150,9 +150,9 @@ Ill-Formed Instantiations [expected.object.general] para 2–3</h1>
 <td class="markdownTableBodyNone"><code>expected&lt;int, const int&gt;</code>   </td><td class="markdownTableBodyNone">fail-file   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md502"></a>
+<h1><a class="anchor" id="autotoc_md486"></a>
 Constructors [expected.object.cons]</h1>
-<h2><a class="anchor" id="autotoc_md503"></a>
+<h2><a class="anchor" id="autotoc_md487"></a>
 Default constructor</h2>
 <ul>
 <li><b>Constraints:</b> <code>is_default_constructible_v&lt;T&gt;</code></li>
@@ -167,7 +167,7 @@ Default constructor</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>NoDefault { NoDefault(<span class="keywordtype">int</span>); };</div>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_default_constructible_v&lt;expected&lt;NoDefault, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md504"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md488"></a>
 Copy constructor</h2>
 <ul>
 <li><b>Deleted unless:</b> <code>is_copy_constructible_v&lt;T&gt; &amp;&amp; is_copy_constructible_v&lt;E&gt;</code></li>
@@ -194,7 +194,7 @@ Copy constructor</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Trivially copyable when T and E are trivially copyable</span></div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;expected&lt;int, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md505"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md489"></a>
 Move constructor</h2>
 <ul>
 <li><b>Constraints:</b> <code>is_move_constructible_v&lt;T&gt; &amp;&amp; is_move_constructible_v&lt;E&gt;</code></li>
@@ -216,7 +216,7 @@ Move constructor</h2>
 <div class="line">    ThrowingMove(ThrowingMove&amp;&amp;) noexcept(false);</div>
 <div class="line">};</div>
 <div class="line">static_assert(!std::is_nothrow_move_constructible_v&lt;expected&lt;ThrowingMove, <span class="keywordtype">int</span>&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md506"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md490"></a>
 Converting constructor from expected&lt;U, G&gt;</h2>
 <ul>
 <li><b>Constraints (18.1–18.7):</b> constructibility of T from UF, E from GF; anti-hijacking checks (no construction of unexpected&lt;E&gt; from the source)</li>
@@ -239,7 +239,7 @@ Converting constructor from expected&lt;U, G&gt;</h2>
 <div class="line"><span class="comment">// explicit when conversion is not implicit</span></div>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_convertible_v&lt;expected&lt;int, int&gt;, expected&lt;long, double&gt;&gt;</div>
 <div class="line">              || std::is_convertible_v&lt;int, long&gt; &amp;&amp; std::is_convertible_v&lt;int, double&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md507"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md491"></a>
 Converting constructor from value U&amp;&amp;</h2>
 <ul>
 <li><b>Constraints (23.1–23.6):</b> U is not in_place_t/expected/unexpect_t/unexpected&lt;X&gt;; <code>is_constructible_v&lt;T, U&gt;</code>; if T is cv bool, U is not expected specialization</li>
@@ -263,7 +263,7 @@ Converting constructor from value U&amp;&amp;</h2>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_constructible_v&lt;</div>
 <div class="line">    expected&lt;int, int&gt;,</div>
 <div class="line">    unexpected&lt;int&gt;&gt;);  <span class="comment">// should use the unexpected&lt;G&gt; constructor, not this one</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md508"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md492"></a>
 Constructors from unexpected&lt;G&gt;</h2>
 <ul>
 <li><b>Constraint:</b> <code>is_constructible_v&lt;E, GF&gt;</code></li>
@@ -279,7 +279,7 @@ Constructors from unexpected&lt;G&gt;</h2>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_constructible_v&lt;</div>
 <div class="line">    expected&lt;int, int&gt;,</div>
 <div class="line">    unexpected&lt;std::string&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md509"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md493"></a>
 In-place constructors</h2>
 <ul>
 <li><code>(in_place_t, Args...)</code>: <b>Constraint:</b> <code>is_constructible_v&lt;T, Args...&gt;</code>; postcondition <code>has_value() == true</code></li>
@@ -305,7 +305,7 @@ In-place constructors</h2>
 <div class="line">    CHECK(e-&gt;size() == 3);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md511"></a>
+<h1><a class="anchor" id="autotoc_md495"></a>
 Destructor [expected.object.dtor]</h1>
 <ul>
 <li>Destroys <code>val</code> if <code>has_value()</code>, else destroys <code>unex</code></li>
@@ -327,9 +327,9 @@ Destructor [expected.object.dtor]</h1>
 <div class="line">    CHECK(destroyed &gt;= 1);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md513"></a>
+<h1><a class="anchor" id="autotoc_md497"></a>
 Assignment [expected.object.assign]</h1>
-<h2><a class="anchor" id="autotoc_md514"></a>
+<h2><a class="anchor" id="autotoc_md498"></a>
 Copy assignment</h2>
 <ul>
 <li><b>Deleted unless:</b> <code>is_copy_assignable_v&lt;T&gt; &amp;&amp; is_copy_constructible_v&lt;T&gt; &amp;&amp; is_copy_assignable_v&lt;E&gt; &amp;&amp; is_copy_constructible_v&lt;E&gt; &amp;&amp; (nothrow_move_constructible&lt;T&gt; || nothrow_move_constructible&lt;E&gt;)</code></li>
@@ -366,7 +366,7 @@ Copy assignment</h2>
 <div class="line">    REQUIRE(!a.has_value());</div>
 <div class="line">    CHECK(a.error() == 2);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md515"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md499"></a>
 Move assignment</h2>
 <ul>
 <li><b>Constraints (6.1–6.5):</b> move-assignable and move-constructible for T and E; <code>nothrow_move_constructible&lt;T&gt; || nothrow_move_constructible&lt;E&gt;</code></li>
@@ -379,7 +379,7 @@ Move assignment</h2>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_nothrow_move_assignable_v&lt;expected&lt;int, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md516"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md500"></a>
 Assign from value U&amp;&amp;</h2>
 <ul>
 <li><b>Constraints (11.1–11.5):</b> U != expected, U not unexpected&lt;X&gt;, constructible&lt;T,U&gt;, assignable&lt;T&amp;,U&gt;, <code>nothrow_constructible&lt;T,U&gt; || nothrow_move_constructible&lt;T&gt; || nothrow_move_constructible&lt;E&gt;</code></li>
@@ -397,7 +397,7 @@ Assign from value U&amp;&amp;</h2>
 <div class="line">    REQUIRE(e.has_value());</div>
 <div class="line">    CHECK(*e == 42);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md517"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md501"></a>
 Assign from unexpected&lt;G&gt;</h2>
 <ul>
 <li><b>Constraints (15.1–15.3):</b> constructible&lt;E,GF&gt;, assignable&lt;E&amp;,GF&gt;, nothrow guard</li>
@@ -415,7 +415,7 @@ Assign from unexpected&lt;G&gt;</h2>
 <div class="line">    CHECK(e.error() == <span class="stringliteral">&quot;new&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md519"></a>
+<h1><a class="anchor" id="autotoc_md503"></a>
 Emplace [expected.object.assign] para 18–21</h1>
 <ul>
 <li><b>Constraint:</b> <code>is_nothrow_constructible_v&lt;T, Args...&gt;</code></li>
@@ -443,7 +443,7 @@ Emplace [expected.object.assign] para 18–21</h1>
 <div class="line">    <span class="keyword">decltype</span>(&amp;expected&lt;MightThrow, int&gt;::emplace&lt;<span class="keywordtype">int</span>&gt;),</div>
 <div class="line">    expected&lt;MightThrow, int&gt;&amp;, <span class="keywordtype">int</span>&gt;);</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md521"></a>
+<h1><a class="anchor" id="autotoc_md505"></a>
 Swap [expected.object.swap]</h1>
 <ul>
 <li><b>Constraints (1.1–1.4):</b> <code>swappable&lt;T&gt;</code>, <code>swappable&lt;E&gt;</code>, <code>move_constructible&lt;T&gt; &amp;&amp; move_constructible&lt;E&gt;</code>, <code>nothrow_move_constructible&lt;T&gt; || nothrow_move_constructible&lt;E&gt;</code></li>
@@ -489,9 +489,9 @@ Swap [expected.object.swap]</h1>
 <div class="line">    REQUIRE(b.has_value());</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md523"></a>
+<h1><a class="anchor" id="autotoc_md507"></a>
 Observers [expected.object.obs]</h1>
-<h2><a class="anchor" id="autotoc_md524"></a>
+<h2><a class="anchor" id="autotoc_md508"></a>
 operator-&gt;() — Hardened precondition: has_value()</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected: operator-&gt; returns pointer to value&quot;</span>, <span class="stringliteral">&quot;[expected]&quot;</span>) {</div>
 <div class="line">    expected&lt;std::string, int&gt; e(<span class="stringliteral">&quot;hello&quot;</span>);</div>
@@ -506,7 +506,7 @@ operator-&gt;() — Hardened precondition: has_value()</h2>
 <div class="line">    REQUIRE_THROWS(e.operator-&gt;());</div>
 <div class="line">}</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md525"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md509"></a>
 operator*() — Hardened precondition: has_value()</h2>
 <p>All 4 ref-qualified overloads:</p>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected: operator* ref qualifications&quot;</span>, <span class="stringliteral">&quot;[expected]&quot;</span>) {</div>
@@ -518,7 +518,7 @@ operator*() — Hardened precondition: has_value()</h2>
 <div class="line">        <span class="keyword">decltype</span>(*std::move(std::as_const(e))), <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;&amp;&gt;);</div>
 <div class="line">    CHECK(*e == 42);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md526"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md510"></a>
 has_value() / operator bool()</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected: has_value and bool conversion&quot;</span>, <span class="stringliteral">&quot;[expected]&quot;</span>) {</div>
 <div class="line">    expected&lt;int, int&gt; a(1), b(unexpect, 0);</div>
@@ -527,7 +527,7 @@ has_value() / operator bool()</h2>
 <div class="line">    CHECK(!b.has_value());</div>
 <div class="line">    CHECK(!<span class="keywordtype">bool</span>(b));</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md527"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md511"></a>
 value() — throws bad_expected_access when empty</h2>
 <ul>
 <li><b>Mandates (&amp; / const&amp; overloads):</b> <code>is_copy_constructible_v&lt;E&gt;</code></li>
@@ -566,7 +566,7 @@ value() — throws bad_expected_access when empty</h2>
 <div class="line"><span class="comment">// value() should not be callable when E is not copy-constructible</span></div>
 <div class="line"><span class="comment">// (This is a mandate, not a constraint — test with static_assert or fail-file)</span></div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:78</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md528"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md512"></a>
 error() — Hardened precondition: !has_value()</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected: error() returns error&quot;</span>, <span class="stringliteral">&quot;[expected]&quot;</span>) {</div>
 <div class="line">    expected&lt;int, std::string&gt; e(unexpect, <span class="stringliteral">&quot;bad&quot;</span>);</div>
@@ -579,7 +579,7 @@ error() — Hardened precondition: !has_value()</h2>
 <div class="line">    std::string s = std::move(e).error();</div>
 <div class="line">    CHECK(s == <span class="stringliteral">&quot;bad&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md529"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md513"></a>
 value_or()</h2>
 <ul>
 <li><b>Mandates (const&amp; overload):</b> <code>is_copy_constructible_v&lt;T&gt; &amp;&amp; is_convertible_v&lt;U, T&gt;</code></li>
@@ -600,7 +600,7 @@ value_or()</h2>
 <div class="line">    std::string s = std::move(e).value_or(<span class="stringliteral">&quot;default&quot;</span>);</div>
 <div class="line">    CHECK(s == <span class="stringliteral">&quot;default&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md530"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md514"></a>
 error_or()</h2>
 <ul>
 <li><b>Mandates (const&amp; overload):</b> <code>is_copy_constructible_v&lt;E&gt; &amp;&amp; is_convertible_v&lt;G, E&gt;</code></li>
@@ -616,9 +616,9 @@ error_or()</h2>
 <div class="line">    CHECK(e.error_or(0) == 7);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md532"></a>
+<h1><a class="anchor" id="autotoc_md516"></a>
 Equality Operators [expected.object.eq]</h1>
-<h2><a class="anchor" id="autotoc_md533"></a>
+<h2><a class="anchor" id="autotoc_md517"></a>
 expected == expected (T2 not void)</h2>
 <ul>
 <li><b>Constraint:</b> <code>*x == *y</code> and <code>x.error() == y.error()</code> both well-formed and bool-convertible</li>
@@ -639,7 +639,7 @@ expected == expected (T2 not void)</h2>
 <div class="line">    expected&lt;int, int&gt; a(1), b(unexpect, 1);</div>
 <div class="line">    CHECK(!(a == b));</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md534"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md518"></a>
 expected == T2 (comparison with value)</h2>
 <ul>
 <li><b>Constraint:</b> T2 is not a specialization of expected</li>
@@ -649,7 +649,7 @@ expected == T2 (comparison with value)</h2>
 <div class="line">    CHECK(a == 42);</div>
 <div class="line">    CHECK(!(b == 42));</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md535"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md519"></a>
 expected == unexpected&lt;E2&gt;</h2>
 <ul>
 <li><b>Constraint:</b> <code>x.error() == e.error()</code> well-formed and bool-convertible</li>
@@ -660,25 +660,25 @@ expected == unexpected&lt;E2&gt;</h2>
 <div class="line">    CHECK(!(b == unexpected(7)));</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md537"></a>
+<h1><a class="anchor" id="autotoc_md521"></a>
 Negative Compile Tests</h1>
-<h2><a class="anchor" id="autotoc_md538"></a>
+<h2><a class="anchor" id="autotoc_md522"></a>
 &lt;tt&gt;expected_t_ref_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: T is a reference type — ill-formed</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int&amp;, int&gt;</a> e;</div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:121</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md539"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md523"></a>
 &lt;tt&gt;expected_e_ref_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: E is a reference type — ill-formed</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int, int&amp;&gt;</a> e;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md540"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md524"></a>
 &lt;tt&gt;expected_t_array_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: T is an array type — ill-formed</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int[3], int&gt;</a> e;</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md541"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md525"></a>
 &lt;tt&gt;expected_value_mandate_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: value() mandates is_copy_constructible_v&lt;E&gt;</span></div>
 <div class="line"><span class="comment">// When E is not copy-constructible, value() is ill-formed</span></div>
@@ -692,7 +692,7 @@ Negative Compile Tests</h1>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int, NoCopyE&gt;</a> e(42);</div>
 <div class="line">    (void)e.value();  <span class="comment">// ill-formed: E not copy-constructible</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md542"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md526"></a>
 &lt;tt&gt;expected_emplace_throwing_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: emplace requires nothrow_constructible&lt;T, Args...&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>

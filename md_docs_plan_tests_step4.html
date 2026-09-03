@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step4.html',''); in
 <div class="contents">
 <div class="textblock"><p><b>Standard section:</b> [expected.void] (22.8.7) <b>Test file:</b> <code>tests/beman/expected/expected_void.test.cpp</code> <b>Negative-compile files:</b> <code>tests/beman/expected/expected_void_*_fail.cpp</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md545"></a>
+<h1><a class="anchor" id="autotoc_md529"></a>
 Testing Strategy</h1>
 <p>Catch2. Include header twice. This step tests the partial specialization <code>expected&lt;T, E&gt; requires is_void_v&lt;T&gt;</code> (i.e., <code>expected&lt;void, E&gt;</code>).</p>
 <p>Key differences from the primary template that need targeted tests:</p><ul>
@@ -114,7 +114,7 @@ Testing Strategy</h1>
 <li>Converting ctors require <code>is_void_v&lt;U&gt;</code> (constraint 13.1)</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md547"></a>
+<h1><a class="anchor" id="autotoc_md531"></a>
 Ill-Formed Instantiations [expected.void.general] para 2</h1>
 <blockquote class="doxtable">
 <p>&zwj;A program that instantiates the definition of the template expected&lt;T, E&gt; with a type for the E parameter that is not a valid template argument for unexpected is ill-formed. </p>
@@ -124,9 +124,9 @@ Ill-Formed Instantiations [expected.void.general] para 2</h1>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_constructible_v&lt;expected&lt;void, int&amp;&gt;&gt;);</div>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_constructible_v&lt;expected&lt;void, int[]&gt;&gt;);</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md549"></a>
+<h1><a class="anchor" id="autotoc_md533"></a>
 Constructors [expected.void.cons]</h1>
-<h2><a class="anchor" id="autotoc_md550"></a>
+<h2><a class="anchor" id="autotoc_md534"></a>
 Default constructor</h2>
 <ul>
 <li><b>noexcept</b> (no T initialization can throw)</li>
@@ -137,7 +137,7 @@ Default constructor</h2>
 <div class="line">    CHECK(e.has_value());</div>
 <div class="line">    <span class="keyword">static_assert</span>(std::is_nothrow_default_constructible_v&lt;expected&lt;void, int&gt;&gt;);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md551"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md535"></a>
 Copy constructor</h2>
 <ul>
 <li><b>Deleted unless</b> <code>is_copy_constructible_v&lt;E&gt;</code></li>
@@ -160,7 +160,7 @@ Copy constructor</h2>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_copy_constructible_v&lt;expected&lt;void, NoCopyE&gt;&gt;);</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;expected&lt;void, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md552"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md536"></a>
 Move constructor</h2>
 <ul>
 <li><b>Constraint:</b> <code>is_move_constructible_v&lt;E&gt;</code></li>
@@ -175,7 +175,7 @@ Move constructor</h2>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_nothrow_move_constructible_v&lt;expected&lt;void, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md553"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md537"></a>
 Converting constructor from expected&lt;U, G&gt; (void case)</h2>
 <ul>
 <li><b>Constraint 13.1:</b> <code>is_void_v&lt;U&gt;</code> — only converts from another void expected</li>
@@ -198,7 +198,7 @@ Converting constructor from expected&lt;U, G&gt; (void case)</h2>
 <div class="line"><span class="keyword">static_assert</span>(!std::is_constructible_v&lt;</div>
 <div class="line">    expected&lt;void, int&gt;,</div>
 <div class="line">    expected&lt;int, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md554"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md538"></a>
 Constructors from unexpected&lt;G&gt;</h2>
 <ul>
 <li><b>Constraint:</b> <code>is_constructible_v&lt;E, GF&gt;</code></li>
@@ -209,7 +209,7 @@ Constructors from unexpected&lt;G&gt;</h2>
 <div class="line">    REQUIRE(!e.has_value());</div>
 <div class="line">    CHECK(e.error() == <span class="stringliteral">&quot;fail&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md555"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md539"></a>
 in_place_t constructor</h2>
 <ul>
 <li><b>No arguments</b> (void, so nothing to initialize)</li>
@@ -221,7 +221,7 @@ in_place_t constructor</h2>
 <div class="line">    CHECK(e.has_value());</div>
 <div class="line">    <span class="keyword">static_assert</span>(<span class="keyword">noexcept</span>(expected&lt;void, int&gt;(std::in_place)));</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md556"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md540"></a>
 unexpect_t constructors</h2>
 <ul>
 <li><code>(unexpect_t, Args...)</code>: <code>is_constructible_v&lt;E, Args...&gt;</code></li>
@@ -239,7 +239,7 @@ unexpect_t constructors</h2>
 <div class="line">    CHECK(e-&gt;error().size() == 3);  <span class="comment">// NB: e.error() not e-&gt;error()</span></div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md558"></a>
+<h1><a class="anchor" id="autotoc_md542"></a>
 Destructor [expected.void.dtor]</h1>
 <ul>
 <li>Effects: if <code>has_value() == false</code>, destroys <code>unex</code></li>
@@ -257,9 +257,9 @@ Destructor [expected.void.dtor]</h1>
 <div class="line">    CHECK(destroyed &gt;= 1);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md560"></a>
+<h1><a class="anchor" id="autotoc_md544"></a>
 Assignment [expected.void.assign]</h1>
-<h2><a class="anchor" id="autotoc_md561"></a>
+<h2><a class="anchor" id="autotoc_md545"></a>
 Copy assignment</h2>
 <ul>
 <li><b>Deleted unless</b> <code>is_copy_assignable_v&lt;E&gt; &amp;&amp; is_copy_constructible_v&lt;E&gt;</code></li>
@@ -291,7 +291,7 @@ Copy assignment</h2>
 <div class="line">    a = b;</div>
 <div class="line">    CHECK(a.error() == 2);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md562"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md546"></a>
 Move assignment</h2>
 <ul>
 <li><b>Constraint:</b> <code>is_move_constructible_v&lt;E&gt; &amp;&amp; is_move_assignable_v&lt;E&gt;</code></li>
@@ -305,7 +305,7 @@ Move assignment</h2>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_nothrow_move_assignable_v&lt;expected&lt;void, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md563"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md547"></a>
 Assign from unexpected&lt;G&gt;</h2>
 <ul>
 <li><b>Constraint:</b> <code>is_constructible_v&lt;E, GF&gt; &amp;&amp; is_assignable_v&lt;E&amp;, GF&gt;</code></li>
@@ -323,7 +323,7 @@ Assign from unexpected&lt;G&gt;</h2>
 <div class="line">    e = unexpected(2);</div>
 <div class="line">    CHECK(e.error() == 2);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md564"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md548"></a>
 emplace()</h2>
 <ul>
 <li>No arguments, <b>noexcept</b></li>
@@ -342,7 +342,7 @@ emplace()</h2>
 <div class="line">    CHECK(e.has_value());</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md566"></a>
+<h1><a class="anchor" id="autotoc_md550"></a>
 Swap [expected.void.swap]</h1>
 <ul>
 <li><b>Constraints:</b> <code>is_swappable_v&lt;E&gt; &amp;&amp; is_move_constructible_v&lt;E&gt;</code></li>
@@ -371,9 +371,9 @@ Swap [expected.void.swap]</h1>
 <div class="line">    CHECK(b.error() == 1);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md568"></a>
+<h1><a class="anchor" id="autotoc_md552"></a>
 Observers [expected.void.obs]</h1>
-<h2><a class="anchor" id="autotoc_md569"></a>
+<h2><a class="anchor" id="autotoc_md553"></a>
 operator bool() / has_value()</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected&lt;void&gt;: has_value and bool&quot;</span>, <span class="stringliteral">&quot;[expected_void]&quot;</span>) {</div>
 <div class="line">    expected&lt;void, int&gt; a, b(unexpect, 0);</div>
@@ -382,7 +382,7 @@ operator bool() / has_value()</h2>
 <div class="line">    CHECK(!b.has_value());</div>
 <div class="line">    CHECK(!<span class="keywordtype">bool</span>(b));</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md570"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md554"></a>
 operator*() — void, noexcept, Hardened precondition: has_value()</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected&lt;void&gt;: operator* is void&quot;</span>, <span class="stringliteral">&quot;[expected_void]&quot;</span>) {</div>
 <div class="line">    expected&lt;void, int&gt; e;</div>
@@ -392,7 +392,7 @@ operator*() — void, noexcept, Hardened precondition: has_value()</h2>
 <div class="line"> </div>
 <div class="line"><span class="comment">// No operator-&gt; for void</span></div>
 <div class="line"><span class="keyword">static_assert</span>(!<span class="keyword">requires</span>(expected&lt;void, int&gt; e) { e.operator-&gt;(); });</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md571"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md555"></a>
 value() — returns void, throws when empty</h2>
 <ul>
 <li><b>Mandates (const&amp; overload):</b> <code>is_copy_constructible_v&lt;E&gt;</code></li>
@@ -416,7 +416,7 @@ value() — returns void, throws when empty</h2>
 <div class="line">        <a class="code hl_class" href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access&lt;int&gt;</a>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:78</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md572"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md556"></a>
 error() — Hardened precondition: !has_value()</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected&lt;void&gt;: error() all ref qualifications&quot;</span>, <span class="stringliteral">&quot;[expected_void]&quot;</span>) {</div>
 <div class="line">    expected&lt;void, int&gt; e(unexpect, 99);</div>
@@ -425,7 +425,7 @@ error() — Hardened precondition: !has_value()</h2>
 <div class="line">    <span class="keyword">static_assert</span>(std::is_same_v&lt;<span class="keyword">decltype</span>(std::move(e).error()), <span class="keywordtype">int</span>&amp;&amp;&gt;);</div>
 <div class="line">    CHECK(e.error() == 99);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md573"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md557"></a>
 error_or()</h2>
 <ul>
 <li><b>Mandates (const&amp; overload):</b> <code>is_copy_constructible_v&lt;E&gt; &amp;&amp; is_convertible_v&lt;G, E&gt;</code></li>
@@ -441,9 +441,9 @@ error_or()</h2>
 <div class="line">    CHECK(e.error_or(0) == 7);</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md575"></a>
+<h1><a class="anchor" id="autotoc_md559"></a>
 Equality Operators [expected.void.eq]</h1>
-<h2><a class="anchor" id="autotoc_md576"></a>
+<h2><a class="anchor" id="autotoc_md560"></a>
 expected&lt;void&gt; == expected&lt;void, E2&gt;</h2>
 <ul>
 <li><b>Requires</b> <code>is_void_v&lt;T2&gt;</code></li>
@@ -463,7 +463,7 @@ expected&lt;void&gt; == expected&lt;void, E2&gt;</h2>
 <div class="line">    expected&lt;void, int&gt; a, b(unexpect, 0);</div>
 <div class="line">    CHECK(!(a == b));</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md577"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md561"></a>
 expected&lt;void&gt; == unexpected&lt;E2&gt;</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected&lt;void&gt;: equality with unexpected&quot;</span>, <span class="stringliteral">&quot;[expected_void]&quot;</span>) {</div>
 <div class="line">    expected&lt;void, int&gt; a(unexpect, 3), b;</div>
@@ -471,7 +471,7 @@ expected&lt;void&gt; == unexpected&lt;E2&gt;</h2>
 <div class="line">    CHECK(!(b == unexpected(3)));</div>
 <div class="line">}</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md579"></a>
+<h1><a class="anchor" id="autotoc_md563"></a>
 No-value members (confirm absence)</h1>
 <div class="fragment"><div class="line"><span class="comment">// expected&lt;void, E&gt; has no operator-&gt;, value_or</span></div>
 <div class="line"><span class="keyword">static_assert</span>(!<span class="keyword">requires</span>(expected&lt;void, int&gt; e) { e.operator-&gt;(); });</div>

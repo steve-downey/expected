@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_fix_review_corrections.ht
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>fix-review-corrections</code> <b>Depends on:</b> <code>expected-over-references</code> (all 10 steps complete) <b>Read first:</b> <code>docs/plan/handoff.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md264"></a>
+<h1><a class="anchor" id="autotoc_md241"></a>
 Goal</h1>
 <p>Fix four issues identified in the PR #57 code review:</p>
 <ol type="1">
@@ -111,25 +111,25 @@ Goal</h1>
 <li>Tautological <code>requires</code> clause on <code>expected&lt;T&amp;, E&gt;</code> partial specialization</li>
 <li>Member layout inconsistency in <code>expected&lt;void, E&amp;&gt;</code> (unex_ptr_ before has_val_)</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md265"></a>
+<h1><a class="anchor" id="autotoc_md242"></a>
 Changes</h1>
-<h2><a class="anchor" id="autotoc_md266"></a>
+<h2><a class="anchor" id="autotoc_md243"></a>
 expected.hpp</h2>
 <p><b>Issue 1:</b> Replace <code>unexpected&lt;G&gt;</code> constructors (lines 3908-3922) with unconditionally deleted overloads matching <code>expected&lt;T, E&amp;&gt;</code> and <code>expected&lt;T&amp;, E&amp;&gt;</code>. Add deleted <code>operator=(unexpected&lt;G&gt;&amp;)</code> overloads after <code>operator=(expected&amp;&amp;)</code>.</p>
 <p><b>Issue 2 (investigated, no change):</b> The fallback <code>reference_constructs_from_temporary_v</code> concept is correct for how it is used. All constructor templates use forwarding references (U&amp;&amp;); lvalues deduce U=T&amp; (reference type), skipping the problematic disjunct 1. Rvalues deduce U=T (non-reference), correctly triggering deletion. GCC 11/12 hit the fallback and all CI checks pass.</p>
 <p><b>Issue 3:</b> <code>expected&lt;T&amp;, E&gt;::value() &amp;&amp;</code> static_assert changed from <code>is_copy_constructible_v&lt;E&gt; &amp;&amp; is_move_constructible_v&lt;E&gt;</code> to just <code>is_move_constructible_v&lt;E&gt;</code> (throw uses std::move). <code>expected&lt;void, E&amp;&gt;::value() &amp;&amp;</code> changed to just <code>is_copy_constructible_v&lt;E&gt;</code> (throw copies, no std::move).</p>
 <p><b>Issue 4:</b> Removed <code>requires std::is_lvalue_reference_v&lt;T&amp;&gt;</code> from the <code>expected&lt;T&amp;, E&gt;</code> partial specialization declaration. Always true by construction.</p>
 <p><b>Issue 5:</b> Swapped <code>expected&lt;void, E&amp;&gt;</code> member declaration order to <code>bool has_val_; E* unex_ptr_;</code> matching all other specializations. Fixed initializer-list order in default and in_place_t constructors.</p>
-<h2><a class="anchor" id="autotoc_md267"></a>
+<h2><a class="anchor" id="autotoc_md244"></a>
 New test files</h2>
 <ul>
 <li><code>expected_void_ref_e_construct_from_unexpected_fail.cpp</code></li>
 <li><code>expected_void_ref_e_assign_unexpected_fail.cpp</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md268"></a>
+<h2><a class="anchor" id="autotoc_md245"></a>
 CMakeLists.txt</h2>
 <p>Two new <code>add_fail_test()</code> entries with regex patterns matching the existing <code>expected_ref_e_construct_from_unexpected_fail</code> pattern.</p>
-<h1><a class="anchor" id="autotoc_md269"></a>
+<h1><a class="anchor" id="autotoc_md246"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make TOOLCHAIN=gcc-16 test</div>
 <div class="line">make lint</div>

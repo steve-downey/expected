@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_step8_expected_ref_e.html
 <div class="contents">
 <div class="textblock"><p><b>Branch:</b> <code>step8-expected-ref-e</code> <b>Depends on:</b> Steps 3, 5 (primary template with monadic ops) <b>Read first:</b> <code>docs/plan/handoff-next.md</code> and <code>docs/plan/index.md</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md399"></a>
+<h1><a class="anchor" id="autotoc_md383"></a>
 Goal</h1>
 <p>Implement <code>expected&lt;T, E&amp;&gt;</code> — a specialization where the error type is a reference. This allows an expected to hold a non-owning reference to an error object, with rebind semantics on error assignment.</p>
-<h1><a class="anchor" id="autotoc_md400"></a>
+<h1><a class="anchor" id="autotoc_md384"></a>
 Context for Executing Agent</h1>
 <p>This is the mirror image of Step 7. Where Step 7 has a reference for the value and a value for the error, this step has a value for the value and a reference for the error.</p>
-<h2><a class="anchor" id="autotoc_md401"></a>
+<h2><a class="anchor" id="autotoc_md385"></a>
 Storage model</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> E&gt;</div>
 <div class="line"><span class="keyword">class </span>expected&lt;T, E&amp;&gt; {</div>
@@ -120,7 +120,7 @@ Storage model</h2>
 <div class="line">    };</div>
 <div class="line">};</div>
 </div><!-- fragment --><p>When <code>has_val_</code> is true, <code>val_</code> is active (value type T, same as primary). When <code>has_val_</code> is false, <code>unex_ptr_</code> is active (pointer to the error object).</p>
-<h2><a class="anchor" id="autotoc_md402"></a>
+<h2><a class="anchor" id="autotoc_md386"></a>
 Design principles</h2>
 <p>Same rebind semantics as Step 7, applied to the error side:</p>
 <ol type="1">
@@ -129,7 +129,7 @@ Design principles</h2>
 <li><b>Error observers</b>: <code>error()</code> returns <code>E&amp;</code> (dereferencing the pointer)</li>
 <li><b>unexpected_type</b>: <code>unexpected_type</code> is <code>unexpected&lt;E&gt;</code> (not <code>unexpected&lt;E&amp;&gt;</code>)</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md403"></a>
+<h2><a class="anchor" id="autotoc_md387"></a>
 Constructors</h2>
 <ul>
 <li><b>Default</b>: value-initializes T (same as primary)</li>
@@ -149,7 +149,7 @@ Constructors</h2>
 <li><b>unexpect_t constructors</b>: <code>(unexpect_t, Args&amp;&amp;...)</code> where the args construct/bind <code>E&amp;</code> — practically <code>(unexpect_t, E&amp; ref)</code></li>
 <li><b>Dangling prevention</b>: delete constructors that would bind temporaries to <code>E&amp;</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md404"></a>
+<h2><a class="anchor" id="autotoc_md388"></a>
 Assignment (rebind on error side)</h2>
 <div class="fragment"><div class="line"><span class="comment">// From unexpected — rebind error reference</span></div>
 <div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
@@ -164,21 +164,21 @@ Assignment (rebind on error side)</h2>
 <div class="line">    }</div>
 <div class="line">    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md405"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md389"></a>
 Observers</h2>
 <ul>
 <li><code>operator*()</code>, <code>operator-&gt;()</code>, <code>value()</code>, <code>value_or()</code> — same as primary</li>
 <li><code>error()</code> returns <code>E&amp;</code> (dereferences <code>unex_ptr_</code>)</li>
 <li><code>error_or(G&amp;&amp;)</code> returns <code>E</code> by value (common type resolution)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md406"></a>
+<h2><a class="anchor" id="autotoc_md390"></a>
 Monadic operations</h2>
 <p>Same as primary but <code>error()</code> returns <code>E&amp;</code>:</p><ul>
 <li><code>or_else(F)</code>: passes <code>E&amp;</code> to F</li>
 <li><code>transform_error(F)</code>: passes <code>E&amp;</code> to F, wraps result</li>
 <li><code>and_then(F)</code>, <code>transform(F)</code>: same as primary (works on value)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md407"></a>
+<h1><a class="anchor" id="autotoc_md391"></a>
 Deliverables</h1>
 <ol type="1">
 <li>**<code><a class="el" href="expected_8hpp_source.html">include/beman/expected/expected.hpp</a></code>** — add <code>expected&lt;T, E&amp;&gt;</code> partial specialization</li>
@@ -199,7 +199,7 @@ Deliverables</h1>
 </li>
 <li><b>Update <code>tests/beman/expected/CMakeLists.txt</code></b></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md408"></a>
+<h1><a class="anchor" id="autotoc_md392"></a>
 Procedure</h1>
 <ol type="1">
 <li>Create branch from <code>expected-over-references</code></li>
@@ -214,11 +214,11 @@ Procedure</h1>
 <li>Run <code>make test</code> and <code>make lint</code></li>
 <li>Write <code>docs/plan/handoff-next.md</code></li>
 </ol>
-<h1><a class="anchor" id="autotoc_md409"></a>
+<h1><a class="anchor" id="autotoc_md393"></a>
 Verification</h1>
 <div class="fragment"><div class="line">make test</div>
 <div class="line">make lint</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md410"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md394"></a>
 Handoff to Step 9</h1>
 <p>Step 8 done, next read <code>docs/plan/step9-expected-ref-both.md</code>. <code>expected&lt;T, E&amp;&gt;</code> is complete. Step 9 combines both reference types. </p>
 </div></div><!-- contents -->

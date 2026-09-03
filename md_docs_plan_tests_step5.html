@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step5.html',''); in
 <div class="contents">
 <div class="textblock"><p><b>Standard section:</b> [expected.object.monadic] (22.8.6.7) <b>Test file:</b> <code>tests/beman/expected/expected_monadic.test.cpp</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md582"></a>
+<h1><a class="anchor" id="autotoc_md566"></a>
 Testing Strategy</h1>
 <p>Catch2. Include <code>&lt;<a class="el" href="expected_8hpp_source.html">beman/expected/expected.hpp</a>&gt;</code> twice for idempotence.</p>
 <p>Monadic operations have two categories of requirements:</p><ul>
@@ -111,9 +111,9 @@ Testing Strategy</h1>
 </ul>
 <p>The Mandates here are on the return type of the callable: e.g., for <code>and_then</code>, the callable must return a specialization of <code>expected</code> with the same error type. These are <em>not</em> constraints — they cannot be detected with <code>!is_invocable_v</code> at overload resolution; the program is simply ill-formed. Test them with negative compile files.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md584"></a>
+<h1><a class="anchor" id="autotoc_md568"></a>
 and_then [expected.object.monadic] para 1–8</h1>
-<h2><a class="anchor" id="autotoc_md585"></a>
+<h2><a class="anchor" id="autotoc_md569"></a>
 &lt;tt&gt;and_then(F)&lt;/tt&gt; — lvalue and const-lvalue overloads (para 1–4)</h2>
 <p><code>U = remove_cvref_t&lt;invoke_result_t&lt;F, decltype((val))&gt;&gt;</code></p>
 <ul>
@@ -121,7 +121,7 @@ and_then [expected.object.monadic] para 1–8</h1>
 <li><b>Mandates:</b> U is a specialization of expected; <code>U::error_type</code> is <code>E</code></li>
 <li><b>Effects:</b> if has_value(), return <code>invoke(f, val)</code>; else return <code>U(unexpect, error())</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md586"></a>
+<h2><a class="anchor" id="autotoc_md570"></a>
 &lt;tt&gt;and_then(F)&lt;/tt&gt; — rvalue and const-rvalue overloads (para 5–8)</h2>
 <p><code>U = remove_cvref_t&lt;invoke_result_t&lt;F, decltype(std::move(val))&gt;&gt;</code></p>
 <ul>
@@ -130,7 +130,7 @@ and_then [expected.object.monadic] para 1–8</h1>
 <li><b>Effects:</b> if has_value(), return <code>invoke(f, std::move(val))</code>; else return <code>U(unexpect, std::move(error()))</code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md588"></a>
+<h1><a class="anchor" id="autotoc_md572"></a>
 or_else [expected.object.monadic] para 9–16</h1>
 <p><code>G = remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code> (lvalue overloads)</p>
 <ul>
@@ -140,7 +140,7 @@ or_else [expected.object.monadic] para 9–16</h1>
 <li><b>Effects:</b> if has_value(), return <code>G(in_place, val)</code>; else return <code>invoke(f, error())</code></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md590"></a>
+<h1><a class="anchor" id="autotoc_md574"></a>
 transform [expected.object.monadic] para 17–24</h1>
 <p><code>U = remove_cv_t&lt;invoke_result_t&lt;F, decltype((val))&gt;&gt;</code></p>
 <ul>
@@ -156,7 +156,7 @@ transform [expected.object.monadic] para 17–24</h1>
 <p><u><u><u></p><hr  />
 <p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h1><a class="anchor" id="autotoc_md592"></a>
+<h1><a class="anchor" id="autotoc_md576"></a>
 transform_error [expected.object.monadic] para 25–32</h1>
 <p><u><u><u> <code>G = remove_cv_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code></u></u></u></p>
 <p><u><u><u></p><ul>
@@ -168,7 +168,7 @@ transform_error [expected.object.monadic] para 25–32</h1>
 <p><u><u><u></p><hr  />
 <p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h1><a class="anchor" id="autotoc_md594"></a>
+<h1><a class="anchor" id="autotoc_md578"></a>
 Test Outline</h1>
 <p><u><u><u> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -395,15 +395,15 @@ Test Outline</h1>
 <div class="line">    (void)(std::move(std::as_const(e)).and_then(f));</div>
 <div class="line">}</div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:121</div></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:47</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:58</div></div>
 </div><!-- fragment --><p></u></u></u></p>
 <p><u><u><u></p><hr  />
 <p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h1><a class="anchor" id="autotoc_md596"></a>
+<h1><a class="anchor" id="autotoc_md580"></a>
 Negative Compile Tests</h1>
 <p><u><u><u> </u></u></u></p>
-<h2><a class="anchor" id="autotoc_md597"></a>
+<h2><a class="anchor" id="autotoc_md581"></a>
 &lt;tt&gt;and_then_wrong_error_type_fail.cpp&lt;/tt&gt;</h2>
 <p><u><u><u></p><div class="fragment"><div class="line"><span class="comment">// NEGATIVE: and_then Mandates U::error_type == E</span></div>
 <div class="line"><span class="comment">// F returns expected&lt;int, double&gt; but E is std::string — ill-formed</span></div>
@@ -416,7 +416,7 @@ Negative Compile Tests</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h2><a class="anchor" id="autotoc_md598"></a>
+<h2><a class="anchor" id="autotoc_md582"></a>
 &lt;tt&gt;and_then_not_expected_fail.cpp&lt;/tt&gt;</h2>
 <p><u><u><u></p><div class="fragment"><div class="line"><span class="comment">// NEGATIVE: and_then Mandates U is a specialization of expected</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -426,7 +426,7 @@ Negative Compile Tests</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h2><a class="anchor" id="autotoc_md599"></a>
+<h2><a class="anchor" id="autotoc_md583"></a>
 &lt;tt&gt;or_else_wrong_value_type_fail.cpp&lt;/tt&gt;</h2>
 <p><u><u><u></p><div class="fragment"><div class="line"><span class="comment">// NEGATIVE: or_else Mandates G::value_type == T</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
@@ -436,7 +436,7 @@ Negative Compile Tests</h1>
 <div class="line">}</div>
 </div><!-- fragment --><p></u></u></u></p>
 <p><u><u><u></u></u></u></p>
-<h2><a class="anchor" id="autotoc_md600"></a>
+<h2><a class="anchor" id="autotoc_md584"></a>
 &lt;tt&gt;transform_error_not_valid_unexpected_arg_fail.cpp&lt;/tt&gt;</h2>
 <p><u><u><u></p><div class="fragment"><div class="line"><span class="comment">// NEGATIVE: transform_error Mandates G is valid for unexpected</span></div>
 <div class="line"><span class="comment">// (not a reference, not an array, etc.)</span></div>

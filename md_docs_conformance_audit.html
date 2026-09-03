@@ -108,9 +108,9 @@ $(document).ready(function(){initNavTree('md_docs_conformance_audit.html',''); i
 <li>FIXED = was a gap, now resolved (fix noted)</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 1. unexpected&lt;E&gt; [expected.unexpected]</h1>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 1.1 Static assertions [expected.un.general] para 2</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('md_docs_conformance_audit.html',''); i
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">E is not a specialization of unexpected   </td><td class="markdownTableBodyNone">PASS   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md10"></a>
 1.2 Constructors [expected.un.cons]</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -140,10 +140,10 @@ $(document).ready(function(){initNavTree('md_docs_conformance_audit.html',''); i
 </table>
 <p><b>EXT</b>: All non-defaulted constructors have conditional <code>noexcept(...)</code> specifications. The standard does not specify noexcept on these; it only says "Throws: Any exception
 thrown by the initialization of unex." This is a conforming strengthening of the exception specification (permitted by [res.on.exception.handling]).</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 1.3 Observers [expected.un.obs]</h2>
 <p>All four <code>error()</code> overloads: <b>PASS</b></p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 1.4 Swap [expected.un.swap]</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -155,14 +155,14 @@ thrown by the initialization of unex." This is a conforming strengthening of the
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Friend swap Constraints: <code>is_swappable_v&lt;E&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 5)   </td><td class="markdownTableBodyNone"><code>requires std::is_swappable_v&lt;E&gt;</code> added   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 1.5 Equality operator [expected.un.eq]</h2>
 <p><b>PASS</b> — hidden friend, correct signature.</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 1.6 CTAD</h2>
 <p><code>template&lt;class E&gt; unexpected(E) -&gt; unexpected&lt;E&gt;;</code> <b>PASS</b></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 2. bad_expected_access&lt;void&gt; [expected.bad.void]</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -175,7 +175,7 @@ thrown by the initialization of unex." This is a conforming strengthening of the
 <td class="markdownTableBodyNone"><code>what()</code> returns implementation-defined NTBS   </td><td class="markdownTableBodyNone">PASS   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 3. bad_expected_access&lt;E&gt; [expected.bad]</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -190,12 +190,12 @@ thrown by the initialization of unex." This is a conforming strengthening of the
 <td class="markdownTableBodyNone">All 4 <code>error()</code> overloads   </td><td class="markdownTableBodyNone">PASS   </td></tr>
 </table>
 <hr  />
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 4. expected&lt;T, E&gt; Primary Template [expected.expected]</h1>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 4.1 Type aliases and rebind</h2>
 <p><b>PASS</b> — <code>value_type</code>, <code>error_type</code>, <code>unexpected_type</code>, <code>rebind</code> all correct.</p>
-<h2><a class="anchor" id="autotoc_md16"></a>
+<h2><a class="anchor" id="autotoc_md22"></a>
 4.2 Static assertions [expected.object.general] para 2-3</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -219,9 +219,9 @@ thrown by the initialization of unex." This is a conforming strengthening of the
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">E is not an array   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone"></td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 4.3 Constructors [expected.object.cons]</h2>
-<h3><a class="anchor" id="autotoc_md18"></a>
+<h3><a class="anchor" id="autotoc_md24"></a>
 Default constructor</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -233,7 +233,7 @@ Default constructor</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">noexcept spec   </td><td class="markdownTableBodyNone">EXT   </td><td class="markdownTableBodyNone">Standard doesn't specify noexcept here; conforming extension   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md19"></a>
+<h3><a class="anchor" id="autotoc_md25"></a>
 Copy constructor</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -243,7 +243,7 @@ Copy constructor</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Trivial when both T and E are trivially copy-constructible   </td><td class="markdownTableBodyNone">FIXED (Fix 2)   </td><td class="markdownTableBodyNone"><code>= default</code> path added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md20"></a>
+<h3><a class="anchor" id="autotoc_md26"></a>
 Move constructor</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -255,7 +255,7 @@ Move constructor</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Trivial when both T and E are trivially move-constructible   </td><td class="markdownTableBodyNone">FIXED (Fix 2)   </td><td class="markdownTableBodyNone"><code>= default</code> path added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md21"></a>
+<h3><a class="anchor" id="autotoc_md27"></a>
 Converting constructors from expected&lt;U, G&gt;</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -271,7 +271,7 @@ Converting constructors from expected&lt;U, G&gt;</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">explicit condition   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone"></td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md22"></a>
+<h3><a class="anchor" id="autotoc_md28"></a>
 Value constructor &lt;tt&gt;expected(U&amp;&amp; v)&lt;/tt&gt;</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -289,16 +289,16 @@ Value constructor &lt;tt&gt;expected(U&amp;&amp; v)&lt;/tt&gt;</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">(23.6) if T is cv bool, <code>remove_cvref_t&lt;U&gt;</code> is not a specialization of expected   </td><td class="markdownTableBodyNone">FIXED (Fix 1)   </td><td class="markdownTableBodyNone">Constraint added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md23"></a>
+<h3><a class="anchor" id="autotoc_md29"></a>
 unexpected&lt;G&gt; constructors</h3>
 <p><b>PASS</b> — both const&amp; and &amp;&amp; overloads have correct constraints and explicit conditions.</p>
-<h3><a class="anchor" id="autotoc_md24"></a>
+<h3><a class="anchor" id="autotoc_md30"></a>
 in_place_t constructors</h3>
 <p><b>PASS</b> — both variadic and initializer_list versions, correct constraints.</p>
-<h3><a class="anchor" id="autotoc_md25"></a>
+<h3><a class="anchor" id="autotoc_md31"></a>
 unexpect_t constructors</h3>
 <p><b>PASS</b> — both variadic and initializer_list versions, correct constraints.</p>
-<h2><a class="anchor" id="autotoc_md26"></a>
+<h2><a class="anchor" id="autotoc_md32"></a>
 4.4 Destructor [expected.object.dtor]</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -308,9 +308,9 @@ unexpect_t constructors</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Trivial when both T and E are trivially destructible   </td><td class="markdownTableBodyNone">PASS   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md27"></a>
+<h2><a class="anchor" id="autotoc_md33"></a>
 4.5 Assignment [expected.object.assign]</h2>
-<h3><a class="anchor" id="autotoc_md28"></a>
+<h3><a class="anchor" id="autotoc_md34"></a>
 Copy assignment</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -322,7 +322,7 @@ Copy assignment</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Trivial when all trivially copy-constructible/assignable/destructible   </td><td class="markdownTableBodyNone">FIXED (Fix 2)   </td><td class="markdownTableBodyNone"><code>= default</code> path added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md29"></a>
+<h3><a class="anchor" id="autotoc_md35"></a>
 Move assignment</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -336,7 +336,7 @@ Move assignment</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Trivial when all trivially move-constructible/assignable/destructible   </td><td class="markdownTableBodyNone">FIXED (Fix 2)   </td><td class="markdownTableBodyNone"><code>= default</code> path added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md30"></a>
+<h3><a class="anchor" id="autotoc_md36"></a>
 Value assignment &lt;tt&gt;operator=(U&amp;&amp;)&lt;/tt&gt;</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -354,13 +354,13 @@ Value assignment &lt;tt&gt;operator=(U&amp;&amp;)&lt;/tt&gt;</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">(11.5) nothrow disjunction   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone"></td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md31"></a>
+<h3><a class="anchor" id="autotoc_md37"></a>
 unexpected&lt;G&gt; assignment</h3>
 <p><b>PASS</b> — both const&amp; and &amp;&amp; overloads correct.</p>
-<h3><a class="anchor" id="autotoc_md32"></a>
+<h3><a class="anchor" id="autotoc_md38"></a>
 emplace</h3>
 <p><b>PASS</b> — both overloads (variadic and initializer_list), correct constraints and implementation.</p>
-<h2><a class="anchor" id="autotoc_md33"></a>
+<h2><a class="anchor" id="autotoc_md39"></a>
 4.6 Swap [expected.object.swap]</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -374,9 +374,9 @@ emplace</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Friend swap   </td><td class="markdownTableBodyNone">PASS   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md40"></a>
 4.7 Observers [expected.object.obs]</h2>
-<h3><a class="anchor" id="autotoc_md35"></a>
+<h3><a class="anchor" id="autotoc_md41"></a>
 operator-&gt;</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -386,7 +386,7 @@ operator-&gt;</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Hardened preconditions: <code>has_value()</code> is true   </td><td class="markdownTableBodyNone">FIXED (Fix 5)   </td><td class="markdownTableBodyNone"><code>BEMAN_EXPECTED_HARDENED</code> guard added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md36"></a>
+<h3><a class="anchor" id="autotoc_md42"></a>
 operator*</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -396,10 +396,10 @@ operator*</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Hardened preconditions: <code>has_value()</code> is true   </td><td class="markdownTableBodyNone">FIXED (Fix 5)   </td><td class="markdownTableBodyNone"><code>BEMAN_EXPECTED_HARDENED</code> guard added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md37"></a>
+<h3><a class="anchor" id="autotoc_md43"></a>
 operator bool / has_value()</h3>
 <p><b>PASS</b></p>
-<h3><a class="anchor" id="autotoc_md38"></a>
+<h3><a class="anchor" id="autotoc_md44"></a>
 value()</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -411,7 +411,7 @@ value()</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Mandates (&amp;&amp;, const&amp;&amp;): <code>is_copy_constructible_v&lt;E&gt;</code> and <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 4)   </td><td class="markdownTableBodyNone">static_assert added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md39"></a>
+<h3><a class="anchor" id="autotoc_md45"></a>
 error()</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -421,7 +421,7 @@ error()</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Hardened preconditions: <code>has_value()</code> is false   </td><td class="markdownTableBodyNone">FIXED (Fix 5)   </td><td class="markdownTableBodyNone"><code>BEMAN_EXPECTED_HARDENED</code> guard added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md40"></a>
+<h3><a class="anchor" id="autotoc_md46"></a>
 value_or()</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -433,7 +433,7 @@ value_or()</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Mandates (&amp;&amp;): <code>is_move_constructible_v&lt;T&gt;</code> and <code>is_convertible_v&lt;U, T&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 4)   </td><td class="markdownTableBodyNone">static_assert added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md41"></a>
+<h3><a class="anchor" id="autotoc_md47"></a>
 error_or()</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -445,9 +445,9 @@ error_or()</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Mandates (&amp;&amp;): <code>is_move_constructible_v&lt;E&gt;</code> and <code>is_convertible_v&lt;G, E&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 4)   </td><td class="markdownTableBodyNone">static_assert added   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md42"></a>
+<h2><a class="anchor" id="autotoc_md48"></a>
 4.8 Monadic operations [expected.object.monadic]</h2>
-<h3><a class="anchor" id="autotoc_md43"></a>
+<h3><a class="anchor" id="autotoc_md49"></a>
 and_then (all 4 overloads)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -461,7 +461,7 @@ and_then (all 4 overloads)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Constraints (&amp;&amp;, const&amp;&amp;): <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 3)   </td><td class="markdownTableBodyNone">requires clause added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md44"></a>
+<h3><a class="anchor" id="autotoc_md50"></a>
 or_else (all 4 overloads)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -475,7 +475,7 @@ or_else (all 4 overloads)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Constraints (&amp;&amp;, const&amp;&amp;): <code>is_constructible_v&lt;T, decltype(std::move(val))&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 3)   </td><td class="markdownTableBodyNone">requires clause added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md45"></a>
+<h3><a class="anchor" id="autotoc_md51"></a>
 transform (all 4 overloads)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -493,7 +493,7 @@ transform (all 4 overloads)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Mandates (non-void U): declaration <code>U u(invoke(...))</code> is well-formed   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone">Checked by is_constructible in return   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md46"></a>
+<h3><a class="anchor" id="autotoc_md52"></a>
 transform_error (all 4 overloads)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -507,9 +507,9 @@ transform_error (all 4 overloads)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Mandates: G is valid template argument for unexpected   </td><td class="markdownTableBodyNone">FIXED (Fix 4)   </td><td class="markdownTableBodyNone">static_assert added   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md47"></a>
+<h2><a class="anchor" id="autotoc_md53"></a>
 4.9 Equality operators [expected.object.eq]</h2>
-<h3><a class="anchor" id="autotoc_md48"></a>
+<h3><a class="anchor" id="autotoc_md54"></a>
 operator==(expected, expected&lt;T2, E2&gt;)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -519,7 +519,7 @@ operator==(expected, expected&lt;T2, E2&gt;)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Correct semantics   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone"></td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md49"></a>
+<h3><a class="anchor" id="autotoc_md55"></a>
 operator==(expected, T2)</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -529,16 +529,16 @@ operator==(expected, T2)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Constraints: <code>*x == v</code> is well-formed and convertible to bool   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone">Uses <code>static_cast&lt;bool&gt;</code>   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md50"></a>
+<h3><a class="anchor" id="autotoc_md56"></a>
 operator==(expected, unexpected&lt;E2&gt;)</h3>
 <p><b>PASS</b></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md52"></a>
+<h1><a class="anchor" id="autotoc_md58"></a>
 5. expected&lt;void, E&gt; Specialization [expected.void]</h1>
-<h2><a class="anchor" id="autotoc_md53"></a>
+<h2><a class="anchor" id="autotoc_md59"></a>
 5.1 Static assertions</h2>
 <p><b>PASS</b> — Checks E is not reference, void, array, cv-qualified, or unexpected specialization.</p>
-<h2><a class="anchor" id="autotoc_md54"></a>
+<h2><a class="anchor" id="autotoc_md60"></a>
 5.2 Constructors [expected.void.cons]</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -566,10 +566,10 @@ operator==(expected, unexpected&lt;E2&gt;)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>expected(unexpect_t, initializer_list, Args...)</code>   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone"></td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md55"></a>
+<h2><a class="anchor" id="autotoc_md61"></a>
 5.3 Destructor [expected.void.dtor]</h2>
 <p><b>PASS</b> — Trivial when E is trivially destructible.</p>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md62"></a>
 5.4 Assignment [expected.void.assign]</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -587,10 +587,10 @@ operator==(expected, unexpected&lt;E2&gt;)</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Trivial move assignment   </td><td class="markdownTableBodyNone">FIXED (Fix 2)   </td><td class="markdownTableBodyNone"><code>= default</code> path added   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md57"></a>
+<h2><a class="anchor" id="autotoc_md63"></a>
 5.5 Swap [expected.void.swap]</h2>
 <p><b>PASS</b> — Constraints, noexcept spec, and all cases correct.</p>
-<h2><a class="anchor" id="autotoc_md58"></a>
+<h2><a class="anchor" id="autotoc_md64"></a>
 5.6 Observers [expected.void.obs]</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -618,9 +618,9 @@ operator==(expected, unexpected&lt;E2&gt;)</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>error_or()</code> Mandates   </td><td class="markdownTableBodyNone">FIXED (Fix 4)   </td><td class="markdownTableBodyNone">static_assert added   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md59"></a>
+<h2><a class="anchor" id="autotoc_md65"></a>
 5.7 Monadic operations [expected.void.monadic]</h2>
-<h3><a class="anchor" id="autotoc_md60"></a>
+<h3><a class="anchor" id="autotoc_md66"></a>
 and_then</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -632,7 +632,7 @@ and_then</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">Constraints (&amp;&amp;, const&amp;&amp;): <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 3)   </td><td class="markdownTableBodyNone">requires clause added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md61"></a>
+<h3><a class="anchor" id="autotoc_md67"></a>
 or_else</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -644,7 +644,7 @@ or_else</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">No Constraints in standard   </td><td class="markdownTableBodyNone">PASS   </td><td class="markdownTableBodyNone"></td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md62"></a>
+<h3><a class="anchor" id="autotoc_md68"></a>
 transform</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -658,7 +658,7 @@ transform</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Mandates: U is a valid value type   </td><td class="markdownTableBodyNone">FIXED (Fix 4)   </td><td class="markdownTableBodyNone">static_assert added   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md63"></a>
+<h3><a class="anchor" id="autotoc_md69"></a>
 transform_error</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -672,11 +672,11 @@ transform_error</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Returns <code>expected&lt;T, G&gt;</code> not <code>expected&lt;void, G&gt;</code>   </td><td class="markdownTableBodyNone">FIXED (Fix 5)   </td><td class="markdownTableBodyNone">Changed to use T   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md64"></a>
+<h2><a class="anchor" id="autotoc_md70"></a>
 5.8 Equality operators [expected.void.eq]</h2>
 <p><b>PASS</b> — Both <code>operator==(expected&lt;T2,E2&gt;)</code> and <code>operator==(unexpected&lt;E2&gt;)</code> correct.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md66"></a>
+<h1><a class="anchor" id="autotoc_md72"></a>
 Summary</h1>
 <p>All gaps identified in the original audit have been resolved across five fix branches:</p>
 <ul>
@@ -686,7 +686,7 @@ Summary</h1>
 <li><b>Fix 4</b> (Mandates): static_asserts on value(), value_or(), error_or(), transform(), transform_error(), and T-is-not-unexpected class-level check</li>
 <li><b>Fix 5</b> (preconditions + minor): Hardened precondition guards, unexpected friend swap constraint, void or_else is_same_v fix, void transform_error return type fix</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md67"></a>
+<h2><a class="anchor" id="autotoc_md73"></a>
 Extensions (not in standard, kept as conforming)</h2>
 <ul>
 <li>Conditional <code>noexcept</code> on unexpected constructors</li>

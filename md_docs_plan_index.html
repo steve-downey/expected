@@ -100,17 +100,17 @@ $(document).ready(function(){initNavTree('md_docs_plan_index.html',''); initResi
   <div class="headertitle"><div class="title">Plan: Implement expected&lt;T&amp;, E&gt; and expected&lt;T, E&amp;&gt; Reference Specializations </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md291"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md268"></a>
 Proposal</h1>
 <p>Implement <code>std::expected</code> over references for both <code>T</code> and <code>E</code> parameters, applying the same assign-through and rebind semantics adopted for C++26 <code>std::optional&lt;T&amp;&gt;</code> (P2988). This requires first completing a working primary template <code>expected&lt;T, E&gt;</code> from the existing skeleton.</p>
-<h1><a class="anchor" id="autotoc_md292"></a>
+<h1><a class="anchor" id="autotoc_md269"></a>
 Reference Materials</h1>
 <ul>
 <li><b>beman/optional</b> — reference implementation of <code>optional&lt;T&amp;&gt;</code> with rebind semantics (<code>~/src/steve-downey/optional/main</code>)</li>
 <li><b>C++26 standard wording</b> — <code>[expected.expected]</code>, <code>[expected.void]</code>, <code>[expected.unexpected]</code>, <code>[expected.bad]</code></li>
 <li><b>P2988</b> — <code>std::optional&lt;T&amp;&gt;</code> adopted design (rebind on assignment)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md293"></a>
+<h1><a class="anchor" id="autotoc_md270"></a>
 Phase Overview</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -137,9 +137,9 @@ Phase Overview</h1>
 <td class="markdownTableBodyNone">10   </td><td class="markdownTableBodyNone"><code>step10-expected-void-ref-e</code>   </td><td class="markdownTableBodyNone"><code>expected&lt;void, E&amp;&gt;</code> void+error-ref specialization   </td><td class="markdownTableBodyNone">Steps 4, 6   </td></tr>
 </table>
 <p>Steps 1-2 are independent foundations (can be parallel). Steps 3-4 depend on 1-2 and are independent of each other. Steps 5-6 add monadic ops to their respective primary/void templates. Steps 7-10 are the reference specializations (the novel work in this proposal).</p>
-<h1><a class="anchor" id="autotoc_md294"></a>
+<h1><a class="anchor" id="autotoc_md271"></a>
 Standing Conventions</h1>
-<h2><a class="anchor" id="autotoc_md295"></a>
+<h2><a class="anchor" id="autotoc_md272"></a>
 Code</h2>
 <ul>
 <li>Include guards: <code>#ifndef</code>/<code>#define</code>/<code>#endif</code> (never <code>#pragma once</code>)</li>
@@ -150,7 +150,7 @@ Code</h2>
 <li><code>constexpr</code> everything possible</li>
 <li>Namespace: <code>beman::expected</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md296"></a>
+<h2><a class="anchor" id="autotoc_md273"></a>
 Testing</h2>
 <ul>
 <li>Test framework: Catch2 (<code>Catch2::Catch2WithMain</code>)</li>
@@ -164,7 +164,7 @@ Testing</h2>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md297"></a>
+<h1><a class="anchor" id="autotoc_md274"></a>
 Step Details</h1>
 <ul>
 <li><a class="el" href="md_docs_plan_step1_unexpected.html">Step 1: unexpected&lt;E&gt;</a></li>
@@ -178,7 +178,7 @@ Step Details</h1>
 <li><a class="el" href="md_docs_plan_step9_expected_ref_both.html">Step 9: expected&lt;T&amp;,E&amp;&gt; both-reference specialization</a></li>
 <li><a class="el" href="md_docs_plan_step10_expected_void_ref_e.html">Step 10: expected&lt;void,E&amp;&gt; void+error-ref specialization</a></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md298"></a>
+<h1><a class="anchor" id="autotoc_md275"></a>
 Checklist</h1>
 <ul>
 <li>[x] Step 1: <code>unexpected&lt;E&gt;</code> — constructors, error() observers, swap, equality, deduction guide</li>

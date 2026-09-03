@@ -102,13 +102,13 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_step2.html',''); in
 <div class="contents">
 <div class="textblock"><p><b>Standard sections:</b> [expected.bad] (22.8.4), [expected.bad.void] (22.8.5) <b>Test file:</b> <code>tests/beman/expected/bad_expected_access.test.cpp</code></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md485"></a>
+<h1><a class="anchor" id="autotoc_md469"></a>
 Testing Strategy</h1>
 <p>Same framework as Step 1: Catch2, include header twice for idempotence. <code>bad_expected_access</code> has no Constraints or Hardened preconditions — only Effects and Returns. There are no negative compile tests for this step.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md487"></a>
+<h1><a class="anchor" id="autotoc_md471"></a>
 Testable Statements from the Standard</h1>
-<h2><a class="anchor" id="autotoc_md488"></a>
+<h2><a class="anchor" id="autotoc_md472"></a>
 [expected.bad.void] — base specialization</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">class </span>bad_expected_access&lt;void&gt; : <span class="keyword">public</span> exception { ... };</div>
 </div><!-- fragment --><ul>
@@ -117,7 +117,7 @@ Testable Statements from the Standard</h1>
 <li><code>what()</code> returns an implementation-defined ntbs</li>
 </ul>
 <div class="fragment"><div class="line"><span class="keyword">static_assert</span>(std::is_base_of_v&lt;std::exception, bad_expected_access&lt;void&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md489"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md473"></a>
 [expected.bad] — primary template</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> E&gt;</div>
 <div class="line"><span class="keyword">class </span>bad_expected_access : <span class="keyword">public</span> bad_expected_access&lt;void&gt; { ... };</div>
@@ -128,7 +128,7 @@ Testable Statements from the Standard</h1>
 <li><code>what()</code> — returns an implementation-defined ntbs</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md491"></a>
+<h1><a class="anchor" id="autotoc_md475"></a>
 Test Outline</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/expected/bad_expected_access.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/bad_expected_access.hpp&gt;</span></div>
@@ -224,11 +224,11 @@ Test Outline</h1>
 <div class="line">}</div>
 <div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:78</div></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md493"></a>
+<h1><a class="anchor" id="autotoc_md477"></a>
 Return value conventions</h1>
 <p>The standard says <code>what()</code> returns "an implementation-defined ntbs". The de facto convention (libstdc++, libc++) is <code>"bad expected access"</code>. It is valid to test <code>std::string_view(ex.what()).contains("bad")</code> but not mandatory.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md495"></a>
+<h1><a class="anchor" id="autotoc_md479"></a>
 No negative compile tests</h1>
 <p><code>bad_expected_access</code> has no Constraints or Mandates on its API surface. The only type requirement on E is that it be Cpp17Destructible, which is handled at the <code>expected</code> template level, not here. </p>
 </div></div><!-- contents -->

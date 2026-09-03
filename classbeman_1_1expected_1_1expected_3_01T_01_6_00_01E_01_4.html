@@ -137,20 +137,20 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (<a
 <tr class="memitem:a2f0c876031b3b3ab9b6e5f60d08c69b8"><td class="memItemLeft" align="right" valign="top"><a id="a2f0c876031b3b3ab9b6e5f60d08c69b8" name="a2f0c876031b3b3ab9b6e5f60d08c69b8"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt;)</td></tr>
 <tr class="separator:a2f0c876031b3b3ab9b6e5f60d08c69b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa78b27fa0a07c5e66e09f90210c2022"><td class="memTemplParams" colspan="2"><a id="aaa78b27fa0a07c5e66e09f90210c2022" name="aaa78b27fa0a07c5e66e09f90210c2022"></a>
+<tr class="memitem:a56cafba96e8dc2e0f5ec253120f5ad30"><td class="memTemplParams" colspan="2"><a id="a56cafba96e8dc2e0f5ec253120f5ad30" name="a56cafba96e8dc2e0f5ec253120f5ad30"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:aaa78b27fa0a07c5e66e09f90210c2022"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (std::in_place_t, Args &amp;&amp;...)=delete</td></tr>
-<tr class="separator:aaa78b27fa0a07c5e66e09f90210c2022"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56cafba96e8dc2e0f5ec253120f5ad30"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (std::in_place_t, Args &amp;&amp;...)</td></tr>
+<tr class="separator:a56cafba96e8dc2e0f5ec253120f5ad30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa52d7e900763d862de766a4c84134f3b"><td class="memTemplParams" colspan="2"><a id="aa52d7e900763d862de766a4c84134f3b" name="aa52d7e900763d862de766a4c84134f3b"></a>
 template&lt;class U  = T&gt; <br />
 requires (!std::is_same_v&lt;std::remove_cvref_t&lt;U&gt;, std::in_place_t&gt; &amp;&amp; !std::is_same_v&lt;std::remove_cvref_t&lt;U&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;T&amp;, E&gt;&gt; &amp;&amp; !detail::is_unexpected_specialization&lt;std::remove_cvref_t&lt;U&gt;&gt;::value &amp;&amp; std::is_constructible_v&lt;T&amp;, U&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;T&amp;, U&gt;)</td></tr>
 <tr class="memitem:aa52d7e900763d862de766a4c84134f3b"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>explicit</b> (!std::is_convertible_v&lt; U, T &amp; &gt;) <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>(U &amp;&amp;u) noexcept(std::is_nothrow_constructible_v&lt; T &amp;, U &gt;)</td></tr>
 <tr class="separator:aa52d7e900763d862de766a4c84134f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaecc8833dc85a4c120a5144a3f0bd996"><td class="memTemplParams" colspan="2"><a id="aaecc8833dc85a4c120a5144a3f0bd996" name="aaecc8833dc85a4c120a5144a3f0bd996"></a>
+<tr class="memitem:a7c08d8bf9390e18e90ab5a54c394e799"><td class="memTemplParams" colspan="2"><a id="a7c08d8bf9390e18e90ab5a54c394e799" name="a7c08d8bf9390e18e90ab5a54c394e799"></a>
 template&lt;class U &gt; <br />
 requires (detail::reference_constructs_from_temporary_v&lt;T&amp;, U&gt;)</td></tr>
-<tr class="memitem:aaecc8833dc85a4c120a5144a3f0bd996"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (U &amp;&amp;)=delete</td></tr>
-<tr class="separator:aaecc8833dc85a4c120a5144a3f0bd996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c08d8bf9390e18e90ab5a54c394e799"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (U &amp;&amp;)</td></tr>
+<tr class="separator:a7c08d8bf9390e18e90ab5a54c394e799"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31f8be856ba0f38ee1dd7b69700b282d"><td class="memTemplParams" colspan="2"><a id="a31f8be856ba0f38ee1dd7b69700b282d" name="a31f8be856ba0f38ee1dd7b69700b282d"></a>
 template&lt;class U , class G &gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;T&amp;, U&amp;&gt; &amp;&amp; std::is_constructible_v&lt;E, const G&amp;&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;T&amp;, U&amp;&gt;)</td></tr>
@@ -191,48 +191,53 @@ template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_reference_v&lt;G&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&gt;)</td></tr>
 <tr class="memitem:a6592b8c54dbdb0e0e1ae155ad2ecfd86"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>explicit</b> (!std::is_convertible_v&lt; G, E &gt;) <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>(<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e) noexcept</td></tr>
 <tr class="separator:a6592b8c54dbdb0e0e1ae155ad2ecfd86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab14b2bc4402c0c78f685aead0e35e5ff"><td class="memTemplParams" colspan="2"><a id="ab14b2bc4402c0c78f685aead0e35e5ff" name="ab14b2bc4402c0c78f685aead0e35e5ff"></a>
+<tr class="memitem:ac59da297a49dad0f9bb19340a354bbb2"><td class="memTemplParams" colspan="2"><a id="ac59da297a49dad0f9bb19340a354bbb2" name="ac59da297a49dad0f9bb19340a354bbb2"></a>
 template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:ab14b2bc4402c0c78f685aead0e35e5ff"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)=delete</td></tr>
-<tr class="separator:ab14b2bc4402c0c78f685aead0e35e5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f2ede14873ce4e20acbd2616c39d6c3"><td class="memTemplParams" colspan="2"><a id="a1f2ede14873ce4e20acbd2616c39d6c3" name="a1f2ede14873ce4e20acbd2616c39d6c3"></a>
+<tr class="memitem:ac59da297a49dad0f9bb19340a354bbb2"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)</td></tr>
+<tr class="separator:ac59da297a49dad0f9bb19340a354bbb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467b95903a2125a212bcde192d678331"><td class="memTemplParams" colspan="2"><a id="a467b95903a2125a212bcde192d678331" name="a467b95903a2125a212bcde192d678331"></a>
 template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:a1f2ede14873ce4e20acbd2616c39d6c3"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)=delete</td></tr>
-<tr class="separator:a1f2ede14873ce4e20acbd2616c39d6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467b95903a2125a212bcde192d678331"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
+<tr class="separator:a467b95903a2125a212bcde192d678331"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab53509b9b0816aa6f5f98c64cbc1c7ba"><td class="memTemplParams" colspan="2"><a id="ab53509b9b0816aa6f5f98c64cbc1c7ba" name="ab53509b9b0816aa6f5f98c64cbc1c7ba"></a>
 template&lt;class... Args&gt; <br />
 requires (std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
 <tr class="memitem:ab53509b9b0816aa6f5f98c64cbc1c7ba"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:ab53509b9b0816aa6f5f98c64cbc1c7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcb37d30cd7ec6b27786d7791619ef30"><td class="memTemplParams" colspan="2"><a id="abcb37d30cd7ec6b27786d7791619ef30" name="abcb37d30cd7ec6b27786d7791619ef30"></a>
+<tr class="memitem:a7bc7ee638827ed3bd54ebb2fa0d5d04b"><td class="memTemplParams" colspan="2"><a id="a7bc7ee638827ed3bd54ebb2fa0d5d04b" name="a7bc7ee638827ed3bd54ebb2fa0d5d04b"></a>
 template&lt;class... Args&gt; <br />
 requires (detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
-<tr class="memitem:abcb37d30cd7ec6b27786d7791619ef30"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)=delete</td></tr>
-<tr class="separator:abcb37d30cd7ec6b27786d7791619ef30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2654c49baf7cd78cf9932d27cd052bc"><td class="memTemplParams" colspan="2"><a id="ad2654c49baf7cd78cf9932d27cd052bc" name="ad2654c49baf7cd78cf9932d27cd052bc"></a>
+<tr class="memitem:a7bc7ee638827ed3bd54ebb2fa0d5d04b"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)</td></tr>
+<tr class="separator:a7bc7ee638827ed3bd54ebb2fa0d5d04b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5166f8f3b28cd0c65752f1341490dc49"><td class="memTemplParams" colspan="2"><a id="a5166f8f3b28cd0c65752f1341490dc49" name="a5166f8f3b28cd0c65752f1341490dc49"></a>
 template&lt;class... Args&gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
-<tr class="memitem:ad2654c49baf7cd78cf9932d27cd052bc"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)=delete</td></tr>
-<tr class="separator:ad2654c49baf7cd78cf9932d27cd052bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad38d913531ce75bd1d1da233847e19f3"><td class="memTemplParams" colspan="2"><a id="ad38d913531ce75bd1d1da233847e19f3" name="ad38d913531ce75bd1d1da233847e19f3"></a>
+<tr class="memitem:a5166f8f3b28cd0c65752f1341490dc49"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)</td></tr>
+<tr class="separator:a5166f8f3b28cd0c65752f1341490dc49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a435a4f46014357edb2489b767f77058e"><td class="memTemplParams" colspan="2"><a id="a435a4f46014357edb2489b767f77058e" name="a435a4f46014357edb2489b767f77058e"></a>
 template&lt;class U , class... Args&gt; <br />
-requires std::is_constructible_v&lt;E, std::initializer_list&lt;U&gt;&amp;, Args...&gt;</td></tr>
-<tr class="memitem:ad38d913531ce75bd1d1da233847e19f3"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, std::initializer_list&lt; U &gt; il, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:ad38d913531ce75bd1d1da233847e19f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, std::initializer_list&lt;U&gt;&amp;, Args...&gt;)</td></tr>
+<tr class="memitem:a435a4f46014357edb2489b767f77058e"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, std::initializer_list&lt; U &gt; il, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a435a4f46014357edb2489b767f77058e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad56af13fcf66306a958855084fc1ecc9"><td class="memTemplParams" colspan="2"><a id="ad56af13fcf66306a958855084fc1ecc9" name="ad56af13fcf66306a958855084fc1ecc9"></a>
+template&lt;class U , class... Args&gt; <br />
+requires std::is_reference_v&lt;E&gt;</td></tr>
+<tr class="memitem:ad56af13fcf66306a958855084fc1ecc9"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, std::initializer_list&lt; U &gt;, Args &amp;&amp;...)</td></tr>
+<tr class="separator:ad56af13fcf66306a958855084fc1ecc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae34317132f841912178d6a9dc0bffdc3"><td class="memItemLeft" align="right" valign="top"><a id="ae34317132f841912178d6a9dc0bffdc3" name="ae34317132f841912178d6a9dc0bffdc3"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;)=default</td></tr>
 <tr class="separator:ae34317132f841912178d6a9dc0bffdc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af87697d7a3126fb6348e59394c02b03d"><td class="memItemLeft" align="right" valign="top"><a id="af87697d7a3126fb6348e59394c02b03d" name="af87697d7a3126fb6348e59394c02b03d"></a>
+<tr class="memitem:a4b977003f7640de3886c63ae14bd1843"><td class="memItemLeft" align="right" valign="top"><a id="a4b977003f7640de3886c63ae14bd1843" name="a4b977003f7640de3886c63ae14bd1843"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;rhs) noexcept(std::is_nothrow_copy_constructible_v&lt; E &gt; &amp;&amp;std::is_nothrow_copy_assignable_v&lt; E &gt;)</td></tr>
-<tr class="separator:af87697d7a3126fb6348e59394c02b03d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a4b977003f7640de3886c63ae14bd1843"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1a202c7247ff8ad90d10237cf164004"><td class="memItemLeft" align="right" valign="top"><a id="af1a202c7247ff8ad90d10237cf164004" name="af1a202c7247ff8ad90d10237cf164004"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:af1a202c7247ff8ad90d10237cf164004"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a432f18d3bfa112e4e2de07be53afc093"><td class="memItemLeft" align="right" valign="top"><a id="a432f18d3bfa112e4e2de07be53afc093" name="a432f18d3bfa112e4e2de07be53afc093"></a>
+<tr class="memitem:a8a2c6df30fb2e94bdd45fec11e728a18"><td class="memItemLeft" align="right" valign="top"><a id="a8a2c6df30fb2e94bdd45fec11e728a18" name="a8a2c6df30fb2e94bdd45fec11e728a18"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt; &amp;&amp;std::is_nothrow_move_assignable_v&lt; E &gt;)</td></tr>
-<tr class="separator:a432f18d3bfa112e4e2de07be53afc093"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a8a2c6df30fb2e94bdd45fec11e728a18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac11ab9c7ad76f61ffbf5ecd17d757266"><td class="memTemplParams" colspan="2"><a id="ac11ab9c7ad76f61ffbf5ecd17d757266" name="ac11ab9c7ad76f61ffbf5ecd17d757266"></a>
 template&lt;class U  = T&gt; <br />
 requires (!std::is_same_v&lt;std::remove_cvref_t&lt;U&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;T&amp;, E&gt;&gt; &amp;&amp; !detail::is_unexpected_specialization&lt;std::remove_cvref_t&lt;U&gt;&gt;::value &amp;&amp; std::is_constructible_v&lt;T&amp;, U&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;T&amp;, U&gt;)</td></tr>
@@ -258,16 +263,16 @@ template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_reference_v&lt;G&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&gt;)</td></tr>
 <tr class="memitem:ac24c6fbf0233455966493e95e3b25f53"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e)</td></tr>
 <tr class="separator:ac24c6fbf0233455966493e95e3b25f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a67530003333ddfe2998b946e8f0ba3"><td class="memTemplParams" colspan="2"><a id="a8a67530003333ddfe2998b946e8f0ba3" name="a8a67530003333ddfe2998b946e8f0ba3"></a>
+<tr class="memitem:acbfcdff762642dadabe28bb00181d5fd"><td class="memTemplParams" colspan="2"><a id="acbfcdff762642dadabe28bb00181d5fd" name="acbfcdff762642dadabe28bb00181d5fd"></a>
 template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:a8a67530003333ddfe2998b946e8f0ba3"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)=delete</td></tr>
-<tr class="separator:a8a67530003333ddfe2998b946e8f0ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d4e65d86336b82ca77f8b843905fe9a"><td class="memTemplParams" colspan="2"><a id="a8d4e65d86336b82ca77f8b843905fe9a" name="a8d4e65d86336b82ca77f8b843905fe9a"></a>
+<tr class="memitem:acbfcdff762642dadabe28bb00181d5fd"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)</td></tr>
+<tr class="separator:acbfcdff762642dadabe28bb00181d5fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf478f5b1f9fa71570826ee49691a1b4"><td class="memTemplParams" colspan="2"><a id="aaf478f5b1f9fa71570826ee49691a1b4" name="aaf478f5b1f9fa71570826ee49691a1b4"></a>
 template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:a8d4e65d86336b82ca77f8b843905fe9a"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)=delete</td></tr>
-<tr class="separator:a8d4e65d86336b82ca77f8b843905fe9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf478f5b1f9fa71570826ee49691a1b4"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
+<tr class="separator:aaf478f5b1f9fa71570826ee49691a1b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabe54d0ece555327b5d27ec4be5dc7e8"><td class="memTemplParams" colspan="2"><a id="aabe54d0ece555327b5d27ec4be5dc7e8" name="aabe54d0ece555327b5d27ec4be5dc7e8"></a>
 template&lt;class U  = T&gt; <br />
 requires (std::is_constructible_v&lt;T&amp;, U&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;T&amp;, U&gt;)</td></tr>

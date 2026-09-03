@@ -101,15 +101,15 @@ $(document).ready(function(){initNavTree('md_docs_human_design_review_guide.html
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><b>Target Audience:</b> Human reviewers, WG21 participants, and anyone deciding whether this code should become standard library wording.</p>
-<h1><a class="anchor" id="autotoc_md149"></a>
+<h1><a class="anchor" id="autotoc_md155"></a>
 What This Is</h1>
 <p>A complete implementation of <code>std::expected</code> (C++26) extended to allow <code>T</code> and/or <code>E</code> to be reference types, proposed for C++29. This is a new <code>expected&lt;T&amp;, E&gt;</code> specialization for a reference value, a relaxation of the primary and <code>void</code> templates to admit a reference error <code>E</code>, and a new <code>unexpected&lt;E&amp;&gt;</code> — three <code>expected</code> class templates in all, each accepting an object or reference error. The reference semantics follow P2988 (<code>optional&lt;T&amp;&gt;</code>): rebind on assignment, shallow const, dangling prevention via deleted constructors.</p>
-<p><b>File count:</b> 3 headers, ~4400 lines of implementation, 15 positive test files (469 tests), 54 negative compile tests.</p>
+<p><b>File count:</b> 3 headers, 3,413 lines in <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code>, 19 positive test files with 688 Catch2 <code>TEST_CASE</code>s, and 59 negative compile tests.</p>
 <p><b>This guide is not a checklist.</b> It's a map of the decisions that shaped this code. Some are obviously correct. Some are defensible but debatable. Some might be wrong. Your job is to decide which is which.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md151"></a>
+<h1><a class="anchor" id="autotoc_md157"></a>
 Decision 1: Three Class Templates, Reference Errors Folded In, Zero Abstraction</h1>
-<h2><a class="anchor" id="autotoc_md152"></a>
+<h2><a class="anchor" id="autotoc_md158"></a>
 What was done</h2>
 <p>The implementation provides three complete, independent <code>expected</code> class templates, plus two <code>unexpected</code> templates. Reference <em>error</em> types are not separate specializations: each <code>expected</code> template permits <code>E</code> to be an object type <em>or</em> an lvalue reference, and stores the error as an <code>unexpected&lt;E&gt;</code> — which is the pointer-holding <code>unexpected&lt;E&amp;&gt;</code> when <code>E</code> is a reference. So a single <code>expected&lt;T&amp;, E&gt;</code> covers both <code>expected&lt;T&amp;, E&gt;</code> and <code>expected&lt;T&amp;, E&amp;&gt;</code>, and the primary covers <code>expected&lt;T, E&gt;</code> and <code>expected&lt;T, E&amp;&gt;</code>.</p>
 <table class="markdownTable">
@@ -127,100 +127,100 @@ What was done</h2>
 <td class="markdownTableBodyNone"><code>unexpected&lt;E&amp;&gt;</code>   </td><td class="markdownTableBodyNone">—   </td><td class="markdownTableBodyNone"><code>E*</code>   </td></tr>
 </table>
 <p>The static assertion that used to read "`E` must not be a reference" now reads "`E` must not be an *rvalue* reference," which is the whole of what admits reference errors. Each template is a self-contained class with its own constructors, assignment operators, observers, swap, equality, and monadic operations. There is no shared base class, no CRTP, no mixin, no macro that generates them.</p>
-<h2><a class="anchor" id="autotoc_md153"></a>
+<h2><a class="anchor" id="autotoc_md159"></a>
 Why this matters</h2>
-<p>The total is ~4300 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this by 40-60%. The monadic operations alone account for 4 operations x 4 ref-qualified overloads across the three templates — dozens of method definitions that share structural similarity.</p>
-<h2><a class="anchor" id="autotoc_md154"></a>
+<p>The total is 3,413 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this substantially. The monadic operations alone account for 4 operations x 4 ref-qualified overloads across the three templates — dozens of method definitions that share structural similarity.</p>
+<h2><a class="anchor" id="autotoc_md160"></a>
 The argument for the current approach</h2>
 <ul>
 <li>Standard library implementations (libstdc++, libc++, MSVC STL) use flat specializations for <code>optional</code> and <code>expected</code>. Inheritance-based factoring produces incomprehensible error messages.</li>
 <li>Each specialization can be read and audited independently against whatever future standard wording emerges.</li>
 <li>When constraints differ subtly between templates (and they do — <code>T&amp;</code> doesn't need <code>is_nothrow_move_constructible</code> checks, and a reference <code>E</code> accepts <code>unexpected&lt;G&gt;</code> construction only when <code>G</code> is itself a reference), a shared base must either disable features via SFINAE or push complexity into the base, which hides it rather than removing it.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md155"></a>
+<h2><a class="anchor" id="autotoc_md161"></a>
 The argument against</h2>
 <ul>
 <li><b>Maintenance burden.</b> A bug in <code>and_then</code> must be fixed in three templates. A new monadic operation (hypothetical <code>or_transform</code>) must be added 12 times (4 overloads x 3 templates).</li>
 <li><b>Consistency risk.</b> Are all three templates actually consistent, across both object and reference <code>E</code>? Small divergences creep in when hand-copying constraint clauses. The only way to verify is exhaustive side-by-side comparison.</li>
-<li><b>Review fatigue.</b> A reviewer looking at 4300 lines of structurally similar code will inevitably skim. The 95th <code>requires</code> clause gets less scrutiny than the 5th.</li>
+<li><b>Review fatigue.</b> A reviewer looking at 3,413 lines of structurally similar code will inevitably skim. The 95th <code>requires</code> clause gets less scrutiny than the 5th.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md156"></a>
+<h2><a class="anchor" id="autotoc_md162"></a>
 What to decide</h2>
 <p>Is the flat structure appropriate for a reference implementation intended to validate proposed wording? Or should this be refactored before being held up as "this is how it should look in a standard library"?</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md158"></a>
+<h1><a class="anchor" id="autotoc_md164"></a>
 Decision 2: Rebind Semantics (Not Assign-Through)</h1>
-<h2><a class="anchor" id="autotoc_md159"></a>
+<h2><a class="anchor" id="autotoc_md165"></a>
 What was done</h2>
 <p>Assignment to <code>expected&lt;T&amp;, E&gt;</code> rebinds the internal pointer to point at a different object. It does not assign through the reference to modify the original referent.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> a = 1, b = 2;</div>
 <div class="line">expected&lt;int&amp;, int&gt; e(a);</div>
 <div class="line">e = expected&lt;int&amp;, int&gt;(b);  <span class="comment">// e now points to b; a is unchanged</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md160"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md166"></a>
 Why this is the only defensible choice</h2>
 <p>P2988 settled this for <code>optional&lt;T&amp;&gt;</code> after years of debate. JeanHeyd Meneide's research demonstrated that assign-through semantics are a persistent source of bugs in practice, and every production optional-with-references implementation that tried assign-through was eventually abandoned or revised. The same logic applies to <code>expected</code>.</p>
-<h2><a class="anchor" id="autotoc_md161"></a>
+<h2><a class="anchor" id="autotoc_md167"></a>
 What to discuss anyway</h2>
 <ul>
-<li><b>User expectation.</b> C++ programmers coming from <code>std::reference_wrapper</code> expect assign-through (that's what <code>reference_wrapper::operator=</code> does). This will surprise some users.</li>
+<li><b>Wrapper precedent.</b> <code>std::reference_wrapper::operator=</code> also rebinds. The remaining wrapper drawbacks are <code>.get()</code> friction, wrapper identity in generic interfaces, and adaptation before monadic callables receive <code>T&amp;</code> directly.</li>
 <li>**<code>emplace</code> also rebinds.** <code>e.emplace(new_ref)</code> rebinds, which is the only sensible behavior, but it differs from <code>expected&lt;T, E&gt;::emplace(args...)</code> which constructs in-place. The name <code>emplace</code> is arguably misleading for reference types since nothing is being "emplaced" — a pointer is being reassigned.</li>
 <li><b>Swap rebinds both sides.</b> Two <code>expected&lt;T&amp;, E&gt;</code> objects swap their pointers, not the values they point to. This is consistent with rebind semantics but will surprise users who think of references as aliases.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md163"></a>
+<h1><a class="anchor" id="autotoc_md169"></a>
 Decision 3: Shallow Const</h1>
-<h2><a class="anchor" id="autotoc_md164"></a>
+<h2><a class="anchor" id="autotoc_md170"></a>
 What was done</h2>
 <p><code>const expected&lt;T&amp;, E&gt;</code> still returns a non-const <code>T&amp;</code> from <code>operator*()</code>. The constness of the <code>expected</code> container does not propagate to the referent.</p>
-<h2><a class="anchor" id="autotoc_md165"></a>
+<h2><a class="anchor" id="autotoc_md171"></a>
 Why</h2>
 <p>This matches <code>T* const</code> (const pointer to non-const T), <code>std::reference_wrapper</code>, and P2988 <code>optional&lt;T&amp;&gt;</code>. A <code>const expected&lt;T&amp;, E&gt;</code> is an expected whose <em>binding</em> cannot change, not an expected whose <em>referent</em> is immutable.</p>
-<h2><a class="anchor" id="autotoc_md166"></a>
+<h2><a class="anchor" id="autotoc_md172"></a>
 What to discuss</h2>
 <ul>
 <li>**<code>const_cast</code> concerns.** If someone passes a <code>const expected&lt;T&amp;, E&gt;&amp;</code> to a function, that function can modify the referent. This is correct behavior, but it may violate the expectations of API designers who use <code>const&amp;</code> parameters to express "I won't modify your data."</li>
 <li>**<code>expected&lt;const T&amp;, E&gt;</code> exists as the alternative.** Users who want deep const must spell it. This is well-established in C++ but not universally known.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md168"></a>
+<h1><a class="anchor" id="autotoc_md174"></a>
 Decision 4: &lt;tt&gt;unexpected&lt;G&gt;&lt;/tt&gt; Construction for &lt;tt&gt;E&amp;&lt;/tt&gt; Specializations — Allowed Only When &lt;tt&gt;G&lt;/tt&gt; Is a Reference</h1>
-<h2><a class="anchor" id="autotoc_md169"></a>
+<h2><a class="anchor" id="autotoc_md175"></a>
 What was done</h2>
 <p>For <code>expected&lt;T, E&amp;&gt;</code>, <code>expected&lt;T&amp;, E&amp;&gt;</code>, and <code>expected&lt;void, E&amp;&gt;</code>, construction from <code>unexpected&lt;G&gt;</code> is allowed <b>only when <code>G</code> is itself a reference</b> (i.e. from <code>unexpected&lt;E&amp;&gt;</code>), and <code>= delete</code>d when <code>G</code> is a value type. Rebinding assignment from <code>unexpected&lt;E&amp;&gt;</code> is now supported alongside construction, following the same reference-<code>G</code>-only rule.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> err = 42;</div>
 <div class="line">expected&lt;int, int&amp;&gt; a(unexpect, err);           <span class="comment">// OK: unexpect_t ctor takes an lvalue</span></div>
 <div class="line">expected&lt;int, int&amp;&gt; b(unexpected&lt;int&amp;&gt;(err));    <span class="comment">// OK: source holds a reference to external err</span></div>
 <div class="line">expected&lt;int, int&amp;&gt; c(unexpected(42));           <span class="comment">// ERROR: deleted — value G would dangle</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md170"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md176"></a>
 Why</h2>
 <p><code>unexpected&lt;E&amp;&gt;</code> stores a <em>pointer</em> to an external object, so binding <code>E&amp;</code> to its <code>error()</code> cannot dangle regardless of the source's value category (even a temporary <code>unexpected&lt;int&amp;&gt;</code> refers to something external). <code>unexpected&lt;G&gt;</code> for a <em>value</em> <code>G</code> owns its <code>G</code>, so binding <code>E&amp;</code> to it dangles the moment the (typically temporary) <code>unexpected</code> is destroyed — that overload stays deleted.</p>
 <p>This supersedes the original blanket deletion ("Option A"): the earlier design deleted <em>all</em> <code>unexpected&lt;G&gt;</code> construction for reference <code>E</code>, which also rejected the safe <code>unexpected&lt;E&amp;&gt;</code> case. The current rule ("Option B") accommodates that safe case, consistent with the WG21 view that reasonably-safe uses should work. The dangling guard is <code>reference_constructs_from_temporary_v</code> (Decision 5), reliable now that GCC 13 — which provides the builtin — is the baseline.</p>
-<h2><a class="anchor" id="autotoc_md171"></a>
+<h2><a class="anchor" id="autotoc_md177"></a>
 What to discuss</h2>
 <ul>
 <li><b>Assignment symmetry.</b> Rebinding <em>assignment</em> from <code>unexpected&lt;E&amp;&gt;</code> (<code>e = unexpected&lt;int&amp;&gt;(g)</code>) is now supported alongside construction, with the same reference-<code>G</code>-only rule (value <code>G</code> and const-drop are rejected). Its body repoints <code>unex_</code> via <code>construct_at</code> rather than <code>unex_.error() = …</code> (which would mutate the old pointee), and copies the pointer with no move — see the move-steal hazard in Decision 11.</li>
 <li><b>The value-<code>G</code> cliff.</b> <code>expected&lt;T,E&amp;&gt;(unexpected&lt;int&amp;&gt;(g))</code> works; <code>expected&lt;T,E&amp;&gt;(unexpected(42))</code> does not. The distinction (reference vs. value <code>G</code>) is principled but still a likely FAQ; the <code>= delete</code> diagnostic should name it.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md173"></a>
+<h1><a class="anchor" id="autotoc_md179"></a>
 Decision 5: Dangling Prevention via &lt;tt&gt;reference_constructs_from_temporary_v&lt;/tt&gt;</h1>
-<h2><a class="anchor" id="autotoc_md174"></a>
+<h2><a class="anchor" id="autotoc_md180"></a>
 What was done</h2>
 <p>A <code>detail::reference_constructs_from_temporary_v</code> concept (lines 88-100 of <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code>) guards every constructor where <code>T&amp;</code> or <code>E&amp;</code> could bind to a temporary. When the concept detects a dangling risk, a deleted overload with a diagnostic message catches the call.</p>
-<h2><a class="anchor" id="autotoc_md175"></a>
+<h2><a class="anchor" id="autotoc_md181"></a>
 The subtlety</h2>
 <p><code>reference_constructs_from_temporary_v&lt;int&amp;, int&gt;</code> is <b>false</b> — a non-const lvalue reference simply cannot bind to a temporary, so the concept says "no, this doesn't construct from a temporary." The construction fails anyway via SFINAE ("no matching function"), but the deleted overload with its nice message doesn't fire.</p>
 <p>The deleted overload with its diagnostic fires for cases like <code>const int&amp;</code> binding to a prvalue <code>int</code>, where <code>reference_constructs_from_temporary_v</code> is <b>true</b>.</p>
-<h2><a class="anchor" id="autotoc_md176"></a>
+<h2><a class="anchor" id="autotoc_md182"></a>
 What to discuss</h2>
 <ul>
 <li><b>Two failure modes, two diagnostics.</b> Binding <code>int&amp;</code> to <code>42</code> gives "no matching function." Binding <code>const int&amp;</code> to <code>42</code> gives the deleted message. Both are correct rejections, but the user experience differs. The negative tests handle this with regex alternation (<code>"binding a temporary|no matching function"</code>). Is this acceptable or should the overload set be restructured so the diagnostic is always the deleted message?</li>
 <li><b>Compiler support.</b> <code>reference_constructs_from_temporary_v</code> is a C++23 feature. The implementation provides a fallback (line 88-100). Is the fallback correct for all edge cases? The trait relies on compiler built-ins (<code>__reference_constructs_from_temporary</code>) when available.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md178"></a>
+<h1><a class="anchor" id="autotoc_md184"></a>
 Decision 6: &lt;tt&gt;= delete("message")&lt;/tt&gt; as a Diagnostic Strategy</h1>
-<h2><a class="anchor" id="autotoc_md179"></a>
+<h2><a class="anchor" id="autotoc_md185"></a>
 What was done</h2>
 <p>Every deleted operation carries a C++26 <code>= delete("message")</code> string explaining <b>what</b> is wrong and <b>what to do instead</b>:</p>
 <ul>
@@ -228,36 +228,36 @@ What was done</h2>
 <li><code>"expected&lt;T,E&amp;&gt;: no constructor from unexpected&lt;G&gt;; use (unexpect, lvalue_ref)"</code></li>
 <li><code>"expected&lt;void,E&amp;&gt;: no value_or for void specialization"</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md180"></a>
+<h2><a class="anchor" id="autotoc_md186"></a>
 What to discuss</h2>
 <ul>
-<li><b>C++26 feature.</b> <code>= delete("message")</code> is not available in C++23 or earlier. The README claims C++17+ support. This feature silently degrades — compilers that don't support it treat it as plain <code>= delete</code> — but the claim of C++17+ compatibility deserves scrutiny against the actual minimum language version needed for the rest of the code (<code>requires</code> clauses, concepts, <code>constexpr</code> union, etc.).</li>
+<li><b>C++26 feature.</b> <code>= delete("message")</code> is not available in C++23 or earlier. The project targets C++20 and uses a macro that emits a diagnostic message only when <code>__cpp_deleted_function</code> advertises support, otherwise spelling a plain deleted function.</li>
 <li><b>Message quality.</b> Are the messages actionable? Do they guide the user to the correct alternative? Review each message for clarity and accuracy.</li>
 <li><b>Is this the right mechanism?</b> An alternative is <code>static_assert(false, "message")</code> inside a constrained-away-but-still-instantiable template. That would work in C++23 but is arguably worse. The <code>= delete("message")</code> approach is cleaner and should be preferred if C++26 is truly the floor.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md182"></a>
+<h1><a class="anchor" id="autotoc_md188"></a>
 Decision 7: &lt;tt&gt;value_or&lt;/tt&gt; Deleted for &lt;tt&gt;expected&lt;void, E&amp;&gt;&lt;/tt&gt;</h1>
-<h2><a class="anchor" id="autotoc_md183"></a>
+<h2><a class="anchor" id="autotoc_md189"></a>
 What was done</h2>
 <p><code>expected&lt;void, E&amp;&gt;::value_or()</code> is <code>= delete("no value_or for void specialization")</code> rather than simply not being declared.</p>
-<h2><a class="anchor" id="autotoc_md184"></a>
+<h2><a class="anchor" id="autotoc_md190"></a>
 What to discuss</h2>
 <ul>
 <li><b>Why not just omit it?</b> The primary <code>expected&lt;void, E&gt;</code> doesn't declare <code>value_or</code> at all (there's no value to return). The <code>void, E&amp;</code> specialization explicitly deletes it. This inconsistency should be intentional — is it? Does the delete give a better error message than "no member named 'value_or'"?</li>
 <li><b>Precedent.</b> Does <code>expected&lt;void, E&gt;</code> (the standard one) have <code>value_or</code>? If not, mimicking that by omission would be more consistent.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md186"></a>
+<h1><a class="anchor" id="autotoc_md192"></a>
 Decision 8: Monadic Operations on Reference Specializations</h1>
-<h2><a class="anchor" id="autotoc_md187"></a>
+<h2><a class="anchor" id="autotoc_md193"></a>
 What was done</h2>
 <p>All four monadic operations (<code>and_then</code>, <code>or_else</code>, <code>transform</code>, <code>transform_error</code>) are provided for all three <code>expected</code> templates, with four ref-qualified overloads each (<code>&amp;</code>, <code>const&amp;</code>, <code>&amp;&amp;</code>, <code>const&amp;&amp;</code>), for both object and reference <code>E</code>.</p>
 <p>For reference specializations, the callable always receives <code>T&amp;</code> (dereferenced pointer), regardless of the expected object's own value category. This means:</p>
 <div class="fragment"><div class="line">expected&lt;int&amp;, int&gt; e(x);</div>
 <div class="line"><span class="keyword">auto</span> f = [](<span class="keywordtype">int</span>&amp; r) { <span class="keywordflow">return</span> expected&lt;int&amp;, int&gt;(r); };</div>
 <div class="line">std::move(e).and_then(f);  <span class="comment">// f still gets int&amp;, not int&amp;&amp;</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md188"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md194"></a>
 What to discuss</h2>
 <ul>
 <li><b>Is four ref-qualified overloads correct for reference types?</b> Since the stored value is a pointer, the expected object's value category doesn't affect how the referent is passed. All four overloads do the same thing for the value path. Should there be only one, or is the four-overload pattern maintained for API consistency?</li>
@@ -265,58 +265,58 @@ What to discuss</h2>
 <li><b>Return type inference.</b> When <code>transform(f)</code> is called on <code>expected&lt;T&amp;, E&gt;</code>, and <code>f</code> returns <code>U&amp;</code>, does the result become <code>expected&lt;U&amp;, E&gt;</code> or <code>expected&lt;U, E&gt;</code>? This depends on how <code>std::invoke_result_t</code> deduces the return type. Verify the tests cover this case.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md190"></a>
+<h1><a class="anchor" id="autotoc_md196"></a>
 Decision 9: Test Architecture</h1>
-<h2><a class="anchor" id="autotoc_md191"></a>
+<h2><a class="anchor" id="autotoc_md197"></a>
 What exists</h2>
 <ul>
-<li>15 positive test files with 469 Catch2 <code>TEST_CASE</code> entries</li>
-<li>54 negative compile tests (<code>_fail.cpp</code>) each with a <code>PASS_REGULAR_EXPRESSION</code> regex</li>
+<li>19 positive test files with 688 Catch2 <code>TEST_CASE</code> entries</li>
+<li>59 negative compile tests (<code>_fail.test.cpp</code>) each with a <code>PASS_REGULAR_EXPRESSION</code> regex</li>
 <li>Separate constraint test files for primary and <code>T&amp;</code> specializations</li>
 <li>Hardened precondition tests under <code>BEMAN_EXPECTED_HARDENED</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md192"></a>
+<h2><a class="anchor" id="autotoc_md198"></a>
 Gaps to discuss</h2>
 <ul>
-<li><b>No constraint test files for <code>expected&lt;T, E&amp;&gt;</code>, <code>expected&lt;T&amp;, E&amp;&gt;</code>, or <code>expected&lt;void, E&amp;&gt;</code>.</b> The primary template has <code>expected_constraints.test.cpp</code> and <code>expected&lt;T&amp;, E&gt;</code> has <code>expected_ref_constraints.test.cpp</code>. The other three reference specializations have no dedicated constraint test file. Their SFINAE behavior is untested under <code>static_assert(!is_constructible_v&lt;...&gt;)</code> patterns.</li>
-<li><b>No monadic constraint tests for reference specializations.</b> <code>expected_monadic_constraints.test.cpp</code> covers only the primary and void specializations with move-only error types. The same constraints apply to reference specializations but are untested.</li>
-<li><b>No triviality tests for reference specializations.</b> <code>expected_trivial.test.cpp</code> covers only primary and void. Reference specializations (especially <code>T&amp;, E&amp;</code> and <code>void, E&amp;</code>, which are pointer-only) should be trivially copyable, movable, and destructible unconditionally. This is not verified.</li>
+<li><b>Reference-error constraints are distributed.</b> <code>expected&lt;T, E&amp;&gt;</code>, <code>expected&lt;T&amp;, E&amp;&gt;</code>, and <code>expected&lt;void, E&amp;&gt;</code> assertions live in their behavioral files and <code>expected_review_corrections.test.cpp</code>, rather than dedicated constraint files. Review both locations together.</li>
+<li><b>Monadic constraints remain concentrated.</b> <code>expected_monadic_constraints.test.cpp</code> is the systematic matrix; the reference behavioral files add specialization-specific checks. Confirm any new monadic constraint is represented in both relevant layers.</li>
+<li><b>Triviality is configuration-dependent.</b> Pointer-only <code>T&amp;</code>/<code>E&amp;</code> combinations have direct trait assertions. <code>expected&lt;T&amp;, E&gt;</code> still inherits object-<code>E</code> properties, so it is not unconditionally trivial.</li>
 <li><b>Monadic tests are embedded in general test files</b> rather than having dedicated <code>_monadic.test.cpp</code> files for reference specializations. This makes it harder to verify completeness.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md193"></a>
+<h2><a class="anchor" id="autotoc_md199"></a>
 What to decide</h2>
 <p>Is the test suite sufficient for standardization review? The positive coverage is good — every operation has basic tests. But the systematic constraint/SFINAE testing that exists for the primary template and <code>expected&lt;T&amp;, E&gt;</code> is absent for the reference-error (<code>E&amp;</code>) configurations of the primary and <code>void</code> templates. This gap should be closed before submitting to WG21.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md195"></a>
+<h1><a class="anchor" id="autotoc_md201"></a>
 Decision 10: Single Header vs Multi-Header</h1>
-<h2><a class="anchor" id="autotoc_md196"></a>
+<h2><a class="anchor" id="autotoc_md202"></a>
 What exists</h2>
 <p>Everything is in <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code>. The <code><a class="el" href="unexpected_8hpp_source.html">unexpected.hpp</a></code> and <code><a class="el" href="bad__expected__access_8hpp_source.html">bad_expected_access.hpp</a></code> are separate (matching the standard's <code>[expected.syn]</code> structure), but all three <code>expected</code> templates live in one file.</p>
-<h2><a class="anchor" id="autotoc_md197"></a>
+<h2><a class="anchor" id="autotoc_md203"></a>
 What to discuss</h2>
 <ul>
-<li><b>4400 lines in one file.</b> This is at the boundary of manageable. A reviewer can <code>grep</code> and navigate, but side-by-side comparison of specializations requires tooling.</li>
+<li><b>3,413 lines in one file.</b> This is at the boundary of manageable. A reviewer can <code>grep</code> and navigate, but side-by-side comparison of class-template forms requires tooling.</li>
 <li><b>The standard doesn't mandate file structure.</b> But for a reference implementation intended to demonstrate proposed wording, would splitting <code>expected_ref.hpp</code> (or similar) improve reviewability?</li>
 <li><b>Compile times.</b> Every translation unit that includes <code><a class="el" href="expected_8hpp_source.html">expected.hpp</a></code> parses all three templates. For users who only need <code>expected&lt;T, E&gt;</code>, this is wasted work. The module build path (<code>expected.cppm</code>) mitigates this but is opt-in and not the default.</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md199"></a>
+<h1><a class="anchor" id="autotoc_md205"></a>
 Decision 11: Shallow Conversions Must Not Steal — the Move-Then-Deref Idiom</h1>
-<h2><a class="anchor" id="autotoc_md200"></a>
+<h2><a class="anchor" id="autotoc_md206"></a>
 What was done</h2>
 <p>Converting from a reference-holding <code>expected</code> (or <code>unexpected</code>) to a value-holding one <b>copies</b> the referent; it never moves out of it, even from an rvalue source. Given <code>std::string s = "bar"; expected&lt;std::string&amp;, int&gt; r{s};</code>, both <code>expected&lt;std::string, int&gt;{std::move(r)}</code> and <code>o = std::move(r)</code> leave <code>s == "bar"</code>. The internal idiom is <b>move the wrapper, then access</b> — <code>*std::move(rhs)</code>, <code>std::move(rhs).error()</code>, <code>std::move(e).error()</code> — never <b>access, then move</b> — <code>std::move(*rhs)</code>, <code>std::move(rhs.error())</code>, <code>std::move(e.error())</code>.</p>
-<h2><a class="anchor" id="autotoc_md201"></a>
+<h2><a class="anchor" id="autotoc_md207"></a>
 Why this matters</h2>
 <p><code>std::move(*rhs)</code> (deref-then-move) forces an rvalue onto whatever the accessor returns. For a reference specialization the accessor is <em>shallow</em>: it yields a reference to an <b>external</b> object the wrapper does not own, so the <code>std::move</code> steals from a caller's object that was only lent by reference. This is the exact <code>boost::optional&lt;T&amp;&gt;</code> pitfall (<code>optional&lt;string&gt; o; optional&lt;string&amp;&gt; r{s}; o = std::move(r);</code> moved <code>s</code> out from under the caller).</p>
 <p><code>*std::move(rhs)</code> (move-then-deref) delegates the value-category decision to the ref-qualified accessor, which is the one place that knows ownership: deep (<code>T&amp;&amp;</code>) for owned values, shallow (<code>T&amp;</code>) for references. So genuine value moves still move; reference conversions copy. This is the same idiom <code>optional&lt;T&amp;&gt;</code> uses (<code>construct(*std::move(rhs))</code>).</p>
-<h2><a class="anchor" id="autotoc_md202"></a>
+<h2><a class="anchor" id="autotoc_md208"></a>
 What to discuss / watch in review</h2>
 <ul>
 <li>**<code>std::move(*x)</code> and <code>std::move(x.value()/error())</code> are the anti-pattern**, and they are <em>not</em> locally distinguishable by eye from the safe form — both compile, and the difference surfaces only as a moved-from referent at runtime. Treat every <code>std::move(&lt;deref-or-accessor&gt;)</code> as suspect; the safe forms wrap the whole object: <code>*std::move(x)</code>, <code>std::move(x).accessor()</code>.</li>
 <li><b>The invariant it rests on:</b> rvalue accessors must stay shallow for reference specializations and deep for value ones. If someone makes <code>operator*() &amp;&amp;</code> / <code>error() &amp;&amp;</code> deep on a reference spec, the idiom silently breaks. Behavioral regression tests in <code>expected_review_corrections.test.cpp</code> cover both directions (referent survives; owned value still moves).</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md204"></a>
+<h1><a class="anchor" id="autotoc_md210"></a>
 How to Approach Your Review</h1>
 <p>When giving feedback, focus on the rationale behind these macro-level decisions rather than just line-by-line nitpicks. Consider the following when leaving comments:</p>
 <ul>
@@ -326,7 +326,7 @@ How to Approach Your Review</h1>
 </ul>
 <p>Please don't review this code as if it were a typical pull request. Review it as proposed standard library wording rendered into C++. The core question is not just "does it compile and pass tests?" — it does. The question is: *"Should this be how `expected&lt;T&amp;, E&gt;` works for every C++ programmer for the next 30 years?"* Your human perspective and architectural judgment are exactly what we need to answer that.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md206"></a>
+<h1><a class="anchor" id="autotoc_md212"></a>
 References &amp; Citations</h1>
 <ul>
 <li>**P2988 (<code>std::optional&lt;T&amp;&gt;</code>)**: <a href="https://wg21.link/p2988">https://wg21.link/p2988</a> — The baseline proposal establishing rebind semantics and shallow const for reference wrappers.</li>
