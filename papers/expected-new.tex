@@ -165,6 +165,7 @@ Direct-non-list-initializes
 \pnum
 \throws
 Any exception thrown by the initialization of \exposid{unex}.
+
 \end{itemdescr}
 
 \rSec3[expected.un.obs]{Observers}
@@ -579,8 +580,10 @@ namespace std {
     constexpr E&& error() && noexcept;
     template<class U = remove_cv_t<T>> constexpr T value_or(U&&) const &;
     template<class U = remove_cv_t<T>> constexpr T value_or(U&&) &&;
-    template<class G = E> constexpr E error_or(G&&) const &;
-    template<class G = E> constexpr E error_or(G&&) &&;
+    template<class G = remove_cv_t<remove_reference_t<E>>>
+      constexpr remove_cv_t<remove_reference_t<E>> error_or(G&&) const &;
+    template<class G = remove_cv_t<remove_reference_t<E>>>
+      constexpr remove_cv_t<remove_reference_t<E>> error_or(G&&) &&;
 
     // \ref{expected.object.monadic}, monadic operations
     template<class F> constexpr auto and_then(F&& f) &;
@@ -985,6 +988,7 @@ template<class U, class... Args>
 \begin{itemdescr}
 \pnum
 \constraints
+\tcode{is_reference_v<E>} is \tcode{false}, and
 \tcode{is_constructible_v<E, initializer_list<U>\&, Args...>} is \tcode{true}.
 
 \pnum
@@ -999,6 +1003,12 @@ Direct-non-list-initializes \exposid{unex} with
 \pnum
 \throws
 Any exception thrown by the initialization of \exposid{unex}.
+
+\pnum
+\remarks
+An overload with the same parameter types is defined as deleted when \tcode{E}
+is an lvalue reference type. An initializer list cannot provide the required
+long-lived error referent.
 \end{itemdescr}
 
 \rSec3[expected.object.dtor]{Destructor}
@@ -1595,14 +1605,17 @@ template<class U = remove_cv_t<T>> constexpr T value_or(U&& v) &&;
 
 \indexlibrarymember{error_or}{expected}%
 \begin{itemdecl}
-template<class G = E> constexpr E error_or(G&& e) const &;
+template<class G = remove_cv_t<remove_reference_t<E>>>
+  constexpr remove_cv_t<remove_reference_t<E>> error_or(G&& e) const &;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \mandates
-\tcode{is_copy_constructible_v<E>} is \tcode{true} and
-\tcode{is_convertible_v<G, E>} is \tcode{true}.
+\tcode{is_copy_constructible_v<remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true} and
+\tcode{is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true}.
 
 \pnum
 \returns
@@ -1612,14 +1625,17 @@ template<class G = E> constexpr E error_or(G&& e) const &;
 
 \indexlibrarymember{error_or}{expected}%
 \begin{itemdecl}
-template<class G = E> constexpr E error_or(G&& e) &&;
+template<class G = remove_cv_t<remove_reference_t<E>>>
+  constexpr remove_cv_t<remove_reference_t<E>> error_or(G&& e) &&;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \mandates
-\tcode{is_move_constructible_v<E>} is \tcode{true} and
-\tcode{is_convertible_v<G, E>} is \tcode{true}.
+\tcode{is_move_constructible_v<remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true} and
+\tcode{is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true}.
 
 \pnum
 \returns
@@ -2020,8 +2036,10 @@ public:
   constexpr E& error() & noexcept;
   constexpr const E&& error() const && noexcept;
   constexpr E&& error() && noexcept;
-  template<class G = E> constexpr E error_or(G&&) const &;
-  template<class G = E> constexpr E error_or(G&&) &&;
+  template<class G = remove_cv_t<remove_reference_t<E>>>
+    constexpr remove_cv_t<remove_reference_t<E>> error_or(G&&) const &;
+  template<class G = remove_cv_t<remove_reference_t<E>>>
+    constexpr remove_cv_t<remove_reference_t<E>> error_or(G&&) &&;
 
   // \ref{expected.void.monadic}, monadic operations
   template<class F> constexpr auto and_then(F&& f) &;
@@ -2280,6 +2298,7 @@ template<class U, class... Args>
 \begin{itemdescr}
 \pnum
 \constraints
+\tcode{is_reference_v<E>} is \tcode{false}, and
 \tcode{is_constructible_v<E, initializer_list<U>\&, Args...>} is \tcode{true}.
 
 \pnum
@@ -2294,6 +2313,12 @@ with \tcode{il, std::forward<Args>(args)...}.
 \pnum
 \throws
 Any exception thrown by the initialization of \exposid{unex}.
+
+\pnum
+\remarks
+An overload with the same parameter types is defined as deleted when \tcode{E}
+is an lvalue reference type. An initializer list cannot provide the required
+long-lived error referent.
 \end{itemdescr}
 
 \rSec3[expected.void.dtor]{Destructor}
@@ -2625,14 +2650,17 @@ constexpr const E&& error() const && noexcept;
 
 \indexlibrarymember{error_or}{expected<void>}%
 \begin{itemdecl}
-template<class G = E> constexpr E error_or(G&& e) const &;
+template<class G = remove_cv_t<remove_reference_t<E>>>
+  constexpr remove_cv_t<remove_reference_t<E>> error_or(G&& e) const &;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \mandates
-\tcode{is_copy_constructible_v<E>} is \tcode{true} and
-\tcode{is_convertible_v<G, E>} is \tcode{true}.
+\tcode{is_copy_constructible_v<remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true} and
+\tcode{is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true}.
 
 \pnum
 \returns
@@ -2642,14 +2670,17 @@ template<class G = E> constexpr E error_or(G&& e) const &;
 
 \indexlibrarymember{error_or}{expected<void>}%
 \begin{itemdecl}
-template<class G = E> constexpr E error_or(G&& e) &&;
+template<class G = remove_cv_t<remove_reference_t<E>>>
+  constexpr remove_cv_t<remove_reference_t<E>> error_or(G&& e) &&;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \mandates
-\tcode{is_move_constructible_v<E>} is \tcode{true} and
-\tcode{is_convertible_v<G, E>} is \tcode{true}.
+\tcode{is_move_constructible_v<remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true} and
+\tcode{is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>} is
+\tcode{true}.
 
 \pnum
 \returns
@@ -3017,7 +3048,10 @@ public:
   constexpr const E&& error() const && noexcept;
   constexpr E&& error() && noexcept;
   template<class U = remove_cv_t<T>> constexpr remove_cv_t<T> value_or(U&&) const;
-  template<class G = E> constexpr E error_or(G&&) const &;
+  template<class G = remove_cv_t<remove_reference_t<E>>>
+    constexpr remove_cv_t<remove_reference_t<E>> error_or(G&&) const &;
+  template<class G = remove_cv_t<remove_reference_t<E>>>
+    constexpr remove_cv_t<remove_reference_t<E>> error_or(G&&) &&;
 
   // \ref{expected.ref.monadic}, monadic operations
   template<class F> constexpr auto and_then(F&& f) &;
@@ -3187,11 +3221,15 @@ template<class G>
 \begin{itemdescr}
 \pnum
 \constraints
-If \tcode{E} is an lvalue reference type, \tcode{G} is an lvalue reference
-type, \tcode{is_convertible_v<G, E>} is \tcode{true}, and
-\tcode{reference_constructs_from_temporary_v<E, G>} is \tcode{false};
-otherwise \tcode{is_constructible_v<E, const G\&>} (for the first overload) or
-\tcode{is_constructible_v<E, G>} (for the second) is \tcode{true}.
+If \tcode{E} is an lvalue reference type, all of the following are true:
+\begin{itemize}
+\item \tcode{G} is an lvalue reference type,
+\item \tcode{is_convertible_v<G, E>} is \tcode{true}, and
+\item \tcode{reference_constructs_from_temporary_v<E, G>} is \tcode{false}.
+\end{itemize}
+Otherwise, \tcode{is_constructible_v<E, const G\&>} is \tcode{true} for the
+first overload, or \tcode{is_constructible_v<E, G>} is \tcode{true} for the
+second overload.
 
 \pnum
 \effects
@@ -3218,6 +3256,7 @@ template<class U, class... Args>
 \pnum
 \constraints
 \tcode{is_constructible_v<E, Args...>} (respectively,
+\tcode{is_reference_v<E>} is \tcode{false} and
 \tcode{is_constructible_v<E, initializer_list<U>\&, Args...>}) is \tcode{true}.
 If \tcode{E} is an lvalue reference type, the initialization shall not bind
 \tcode{E} to a temporary.
@@ -3229,6 +3268,12 @@ Direct-non-list-initializes \exposid{unex} with \tcode{in_place} and
 \tcode{il}, and \tcode{std::forward<Args>(args)...}), so that the error
 \tcode{\exposid{unex}.error()} is constructed from those arguments.
 \tcode{has_value()} is \tcode{false}.
+
+\pnum
+\remarks
+The initializer-list overload is defined as deleted when \tcode{E} is an
+lvalue reference type. An initializer list cannot provide the required
+long-lived error referent.
 \end{itemdescr}
 
 \rSec3[expected.ref.dtor]{Destructor}
@@ -3288,9 +3333,13 @@ template<class U = T>
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{remove_cvref_t<U>} is not \tcode{expected} or a specialization of
-\tcode{unexpected}, \tcode{is_constructible_v<T\&, U>} is \tcode{true}, and
-\tcode{reference_constructs_from_temporary_v<T\&, U>} is \tcode{false}.
+All of the following are true:
+\begin{itemize}
+\item \tcode{remove_cvref_t<U>} is neither \tcode{expected} nor a
+  specialization of \tcode{unexpected},
+\item \tcode{is_constructible_v<T\&, U>} is \tcode{true}, and
+\item \tcode{reference_constructs_from_temporary_v<T\&, U>} is \tcode{false}.
+\end{itemize}
 
 \pnum
 \effects
@@ -3447,8 +3496,10 @@ constexpr T& value() &&;
 
 \pnum
 \throws
-\tcode{bad_expected_access(as_const(error()))} (respectively,
-\tcode{bad_expected_access(std::move(error()))}) if \tcode{has_value()} is
+For the first overload,
+\tcode{bad_expected_access(as_const(error()))} if \tcode{has_value()} is
+\tcode{false}. For the second overload,
+\tcode{bad_expected_access(std::move(error()))} if \tcode{has_value()} is
 \tcode{false}. Both overloads yield \tcode{T\&}; the value category of
 \tcode{*this} does not affect the returned reference.
 \end{itemdescr}
@@ -3480,28 +3531,36 @@ template<class U = remove_cv_t<T>>
 
 \begin{itemdescr}
 \pnum
+Let \tcode{X} be \tcode{remove_cv_t<T>}.
+
+\pnum
 \mandates
-\tcode{is_convertible_v<T\&, remove_cv_t<T>>} and
-\tcode{is_convertible_v<U, remove_cv_t<T>>} are \tcode{true}.
+\tcode{is_convertible_v<T\&, X>} and \tcode{is_convertible_v<U, X>} are
+\tcode{true}.
 
 \pnum
 \returns
-\tcode{has_value() ? static_cast<remove_cv_t<T>>(*\exposid{val}) :
-static_cast<remove_cv_t<T>>(std::forward<U>(v))}. The result is an object,
-never a reference.
+\begin{codeblock}
+has_value()
+  ? static_cast<X>(*@\exposid{val}@)
+  : static_cast<X>(std::forward<U>(v))
+\end{codeblock}
+The result is an object, never a reference.
 \end{itemdescr}
 
 \indexlibrarymember{error_or}{expected}%
 \begin{itemdecl}
-template<class G = E>
-  constexpr E error_or(G&& e) const &;
+template<class G = remove_cv_t<remove_reference_t<E>>>
+  constexpr remove_cv_t<remove_reference_t<E>> error_or(G&& e) const &;
+template<class G = remove_cv_t<remove_reference_t<E>>>
+  constexpr remove_cv_t<remove_reference_t<E>> error_or(G&& e) &&;
 \end{itemdecl}
 
 \begin{itemdescr}
 \pnum
 \returns
-\tcode{has_value() ? std::forward<G>(e) : error()}, as for the primary
-template.
+Each overload behaves as the corresponding overload for the primary template.
+The result is an object, never a reference.
 \end{itemdescr}
 
 \rSec3[expected.ref.monadic]{Monadic operations}

@@ -6,7 +6,7 @@
 
 A complete implementation of `std::expected` (C++26) extended to allow `T` and/or `E` to be reference types, proposed for C++29. This is a new `expected<T&, E>` specialization for a reference value, a relaxation of the primary and `void` templates to admit a reference error `E`, and a new `unexpected<E&>` — three `expected` class templates in all, each accepting an object or reference error. The reference semantics follow P2988 (`optional<T&>`): rebind on assignment, shallow const, dangling prevention via deleted constructors.
 
-**File count:** 3 headers, ~4400 lines of implementation, 15 positive test files (469 tests), 54 negative compile tests.
+**File count:** 3 headers, 3,413 lines in `expected.hpp`, 19 positive test files with 688 Catch2 `TEST_CASE`s, and 59 negative compile tests.
 
 **This guide is not a checklist.** It's a map of the decisions that shaped this code. Some are obviously correct. Some are defensible but debatable. Some might be wrong. Your job is to decide which is which.
 
@@ -41,7 +41,7 @@ generates them.
 
 ### Why this matters
 
-The total is ~4300 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this by 40-60%. The monadic operations alone account for 4 operations x 4 ref-qualified overloads across the three templates — dozens of method definitions that share structural similarity.
+The total is 3,413 lines of template code in a single header. A factored implementation using a common base or policy template could plausibly cut this substantially. The monadic operations alone account for 4 operations x 4 ref-qualified overloads across the three templates — dozens of method definitions that share structural similarity.
 
 ### The argument for the current approach
 
@@ -53,7 +53,7 @@ The total is ~4300 lines of template code in a single header. A factored impleme
 
 - **Maintenance burden.** A bug in `and_then` must be fixed in three templates. A new monadic operation (hypothetical `or_transform`) must be added 12 times (4 overloads x 3 templates).
 - **Consistency risk.** Are all three templates actually consistent, across both object and reference `E`? Small divergences creep in when hand-copying constraint clauses. The only way to verify is exhaustive side-by-side comparison.
-- **Review fatigue.** A reviewer looking at 4300 lines of structurally similar code will inevitably skim. The 95th `requires` clause gets less scrutiny than the 5th.
+- **Review fatigue.** A reviewer looking at 3,413 lines of structurally similar code will inevitably skim. The 95th `requires` clause gets less scrutiny than the 5th.
 
 ### What to decide
 
@@ -79,7 +79,7 @@ P2988 settled this for `optional<T&>` after years of debate. JeanHeyd Meneide's 
 
 ### What to discuss anyway
 
-- **User expectation.** C++ programmers coming from `std::reference_wrapper` expect assign-through (that's what `reference_wrapper::operator=` does). This will surprise some users.
+- **Wrapper precedent.** `std::reference_wrapper::operator=` also rebinds. The remaining wrapper drawbacks are `.get()` friction, wrapper identity in generic interfaces, and adaptation before monadic callables receive `T&` directly.
 - **`emplace` also rebinds.** `e.emplace(new_ref)` rebinds, which is the only sensible behavior, but it differs from `expected<T, E>::emplace(args...)` which constructs in-place. The name `emplace` is arguably misleading for reference types since nothing is being "emplaced" — a pointer is being reassigned.
 - **Swap rebinds both sides.** Two `expected<T&, E>` objects swap their pointers, not the values they point to. This is consistent with rebind semantics but will surprise users who think of references as aliases.
 
@@ -159,7 +159,7 @@ Every deleted operation carries a C++26 `= delete("message")` string explaining 
 
 ### What to discuss
 
-- **C++26 feature.** `= delete("message")` is not available in C++23 or earlier. The README claims C++17+ support. This feature silently degrades — compilers that don't support it treat it as plain `= delete` — but the claim of C++17+ compatibility deserves scrutiny against the actual minimum language version needed for the rest of the code (`requires` clauses, concepts, `constexpr` union, etc.).
+- **C++26 feature.** `= delete("message")` is not available in C++23 or earlier. The project targets C++20 and uses a macro that emits a diagnostic message only when `__cpp_deleted_function` advertises support, otherwise spelling a plain deleted function.
 - **Message quality.** Are the messages actionable? Do they guide the user to the correct alternative? Review each message for clarity and accuracy.
 - **Is this the right mechanism?** An alternative is `static_assert(false, "message")` inside a constrained-away-but-still-instantiable template. That would work in C++23 but is arguably worse. The `= delete("message")` approach is cleaner and should be preferred if C++26 is truly the floor.
 
@@ -204,16 +204,16 @@ std::move(e).and_then(f);  // f still gets int&, not int&&
 
 ### What exists
 
-- 15 positive test files with 469 Catch2 `TEST_CASE` entries
-- 54 negative compile tests (`_fail.cpp`) each with a `PASS_REGULAR_EXPRESSION` regex
+- 19 positive test files with 688 Catch2 `TEST_CASE` entries
+- 59 negative compile tests (`_fail.test.cpp`) each with a `PASS_REGULAR_EXPRESSION` regex
 - Separate constraint test files for primary and `T&` specializations
 - Hardened precondition tests under `BEMAN_EXPECTED_HARDENED`
 
 ### Gaps to discuss
 
-- **No constraint test files for `expected<T, E&>`, `expected<T&, E&>`, or `expected<void, E&>`.** The primary template has `expected_constraints.test.cpp` and `expected<T&, E>` has `expected_ref_constraints.test.cpp`. The other three reference specializations have no dedicated constraint test file. Their SFINAE behavior is untested under `static_assert(!is_constructible_v<...>)` patterns.
-- **No monadic constraint tests for reference specializations.** `expected_monadic_constraints.test.cpp` covers only the primary and void specializations with move-only error types. The same constraints apply to reference specializations but are untested.
-- **No triviality tests for reference specializations.** `expected_trivial.test.cpp` covers only primary and void. Reference specializations (especially `T&, E&` and `void, E&`, which are pointer-only) should be trivially copyable, movable, and destructible unconditionally. This is not verified.
+- **Reference-error constraints are distributed.** `expected<T, E&>`, `expected<T&, E&>`, and `expected<void, E&>` assertions live in their behavioral files and `expected_review_corrections.test.cpp`, rather than dedicated constraint files. Review both locations together.
+- **Monadic constraints remain concentrated.** `expected_monadic_constraints.test.cpp` is the systematic matrix; the reference behavioral files add specialization-specific checks. Confirm any new monadic constraint is represented in both relevant layers.
+- **Triviality is configuration-dependent.** Pointer-only `T&`/`E&` combinations have direct trait assertions. `expected<T&, E>` still inherits object-`E` properties, so it is not unconditionally trivial.
 - **Monadic tests are embedded in general test files** rather than having dedicated `_monadic.test.cpp` files for reference specializations. This makes it harder to verify completeness.
 
 ### What to decide
@@ -230,7 +230,7 @@ Everything is in `expected.hpp`. The `unexpected.hpp` and `bad_expected_access.h
 
 ### What to discuss
 
-- **4400 lines in one file.** This is at the boundary of manageable. A reviewer can `grep` and navigate, but side-by-side comparison of specializations requires tooling.
+- **3,413 lines in one file.** This is at the boundary of manageable. A reviewer can `grep` and navigate, but side-by-side comparison of class-template forms requires tooling.
 - **The standard doesn't mandate file structure.** But for a reference implementation intended to demonstrate proposed wording, would splitting `expected_ref.hpp` (or similar) improve reviewability?
 - **Compile times.** Every translation unit that includes `expected.hpp` parses all three templates. For users who only need `expected<T, E>`, this is wasted work. The module build path (`expected.cppm`) mitigates this but is opt-in and not the default.
 

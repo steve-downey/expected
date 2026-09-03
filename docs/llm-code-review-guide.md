@@ -1,7 +1,7 @@
 # LLM Code Review Guide: `beman::expected`
 
 **Target Audience:** High-context Large Language Models acting as rigorous C++ code reviewers.
-**Scope:** The entire `include/beman/expected/` header set — one 4400-line header (`expected.hpp`) plus two small companions (`unexpected.hpp`, `bad_expected_access.hpp`).
+**Scope:** The entire `include/beman/expected/` header set — one 3,413-line header (`expected.hpp`) plus two small companions (`unexpected.hpp`, `bad_expected_access.hpp`). The suite has 19 positive test files with 688 Catch2 `TEST_CASE`s and 59 negative compile tests.
 
 ## Mission
 
@@ -17,7 +17,7 @@ You are reviewing a proposed **C++29** reference implementation of `std::expecte
 | Standard (org-mode) | `docs/standard/expected.org` | Same content, machine-parseable |
 | Standard (plain text) | `docs/standard/expected.txt` | Same content, grep-friendly |
 | Conformance audit | `docs/conformance-audit.md` | Every clause checked with PASS/EXT/FIXED status |
-| P2988 (optional\<T&\>) | External: open-std.org/P2988 | Rebind semantics design source for reference specializations |
+| P2988R12 (optional\<T&\>) | [wg21.link/P2988R12](https://wg21.link/P2988R12) | Rebind semantics design source for reference specializations |
 | beman/optional reference impl | `~/src/steve-downey/optional/main/` | Pattern source for T& storage and dangling prevention |
 
 ### What You Have No Normative Source For
@@ -38,8 +38,8 @@ This means: for the primary template and void specialization, you can check clau
 
 Before reading line-by-line, establish the shape:
 
-1. **Count specializations.** There should be exactly 6: `<T,E>`, `<void,E>`, `<T&,E>`, `<T,E&>`, `<T&,E&>`, `<void,E&>`. Each should have complete API surface (constructors, assignment, observers, swap, equality, monadic ops).
-2. **Identify the storage model** for each specialization. Primary uses union of T and E. Void uses union of E only. Reference specializations store pointers. Verify no specialization accidentally uses a union member for a reference type.
+1. **Count class-template forms.** There should be exactly 3: primary `<T,E>`, partial specialization `<void,E>`, and partial specialization `<T&,E>`. Allowing `E` to be an lvalue reference yields the six value/error configurations without three additional class definitions.
+2. **Identify the storage model** for each form. Every error arm is `unexpected<E>`; it owns an object for object `E` and stores a pointer for reference `E`. The `T&` form stores its value as a pointer. Verify no union directly contains a reference.
 3. **Map the helper utilities.** `reinit_expected` (lines 65-84) handles destroy-and-reconstruct for value-type transitions. `reference_constructs_from_temporary_v` (lines 88-100) is the dangling-prevention concept. Verify these are used correctly and only where applicable.
 
 ### Phase 2: Clause-by-Clause for Primary and Void
@@ -86,7 +86,7 @@ Each reference specialization should offer the **same user-facing operations** a
 | unexpect_t ctor | yes | yes | yes | yes | yes |
 | in_place_t ctor | yes | **deleted** | yes | **deleted** | N/A (void) |
 | Value assignment | yes | rebind | yes | yes | N/A |
-| unexpected assignment | yes | yes | **deleted** | **deleted** | N/A |
+| unexpected assignment | yes | yes | from `<G&>` only | from `<G&>` only | from `<G&>` only |
 | emplace | yes | rebind | yes | rebind | emplace() (void) |
 | operator* | T& | T& | T& | T& | void |
 | operator-> | T* | T* | T* | T* | N/A |
@@ -99,7 +99,7 @@ Each reference specialization should offer the **same user-facing operations** a
 
 Verify each cell. Pay special attention to the **deleted** entries — each should have a `= delete("message")` with a clear diagnostic and a corresponding negative compile test.
 
-For the `from <G&> only` cells: construction from `unexpected<G>` is permitted for reference `E` **only when `G` is itself a reference** (`unexpected<E&>`, which holds a pointer to an external object). Construction from a value-typed `unexpected<G>` stays `= delete`d (it would dangle), and rebinding *assignment* from `unexpected<G>` is not offered for reference `E`. Verify: `is_constructible_v<expected<int, int&>, unexpected<int&>>` is true, `is_constructible_v<expected<int, int&>, unexpected<int>>` is false, and `unexpected<const int&>` → `int&` is rejected (const drop).
+For the `from <G&> only` cells: construction and rebinding assignment from `unexpected<G>` are permitted for reference `E` **only when `G` is itself a reference** (`unexpected<E&>`, which holds a pointer to an external object). The value-typed form stays deleted because it would dangle. Verify construction and assignment traits for the accepted reference case, rejected value case, and rejected const-dropping case.
 
 #### 2. Dangling Prevention
 
@@ -112,10 +112,10 @@ For every constructor or assignment that accepts a forwarding reference where th
 
 #### 3. Storage Layout
 
-- `expected<T&, E>`: pointer `T*` plus union `{ E unex_; }`  plus `bool has_val_`
-- `expected<T, E&>`: value `T` in union plus `E*` pointer plus `bool has_val_`
-- `expected<T&, E&>`: two pointers `T*`, `E*` plus `bool has_val_`
-- `expected<void, E&>`: pointer `E*` plus `bool has_val_`
+- `expected<T&, E>`: union of `T*` and `unexpected<E>` plus `bool has_val_`
+- `expected<T, E&>`: union of `T` and pointer-holding `unexpected<E&>` plus `bool has_val_`
+- `expected<T&, E&>`: union of `T*` and pointer-holding `unexpected<E&>` plus `bool has_val_`
+- `expected<void, E&>`: pointer-holding `unexpected<E&>` plus `bool has_val_`
 
 Verify:
 - No union contains a reference or pointer where the active member tracking could be wrong
@@ -141,7 +141,7 @@ Every function in this implementation should be `constexpr`. Verify:
 
 #### Trivial Special Member Functions
 
-The primary and void specializations must be trivially copyable/movable/destructible when T and E are. Reference specializations (pointer-based) should be trivially everything unconditionally. Verify:
+The primary and void forms must be trivially copyable/movable/destructible when their stored alternatives permit it. Pointer-only `T&`/`E&` configurations should be trivial, while `expected<T&, E>` still follows object-`E` properties. Verify:
 - `= default` paths exist for trivial cases
 - The conditional dispatch between trivial and non-trivial paths is correct
 - Reference specializations don't accidentally have non-trivial destructors
