@@ -1,6 +1,6 @@
-\rSec3[expected.expected]{Class template expected}
+\rSec2[expected.expected]{Class template expected}
 
-\rSec4[expected.object.general]{General}
+\rSec3[expected.object.general]{General}
 
 \begin{codeblock}
 template<class T, class E>
@@ -445,7 +445,7 @@ A program that instantiates the definition of \tcode{expected<T, E>} with a \tco
 Any object of type \tcode{expected<T, E>} either contains a value of type \tcode{T} or a value of type \tcode{E} nested within it. Member \tcode{has_val} indicates whether the \tcode{expected<T, E>} object contains an object of type \tcode{T}. When \tcode{has_value()} is \tcode{false}, the error is \tcode{unex.error()}. The error is held as an \tcode{unexpected<E>}, and not as an \tcode{E}, so that \tcode{E} may be an lvalue reference type: an \tcode{E&} cannot be a union member, whereas \tcode{unexpected<E&>} holds a pointer to an external object.
 \end{itemdescr}
 
-\rSec4[expected.object.cons]{Constructors}
+\rSec3[expected.object.cons]{Constructors}
 
 \indexlibraryctor{expected}%
 \begin{itemdecl}
@@ -874,7 +874,7 @@ Any exception thrown by the initialization of \tcode{unex}.
 An overload with the same parameter types is defined as deleted when \tcode{E} is an lvalue reference type. An initializer list cannot provide the required long-lived error referent.
 \end{itemdescr}
 
-\rSec4[expected.object.dtor]{Destructor}
+\rSec3[expected.object.dtor]{Destructor}
 
 \indexlibrarydtor{expected}%
 \begin{itemdecl}
@@ -910,7 +910,7 @@ constexpr ~expected();
 If \tcode{has_value()} is \tcode{true}, destroys \tcode{val}, otherwise destroys \tcode{unex}.
 \end{itemdescr}
 
-\rSec4[expected.object.assign]{Assignment}
+\rSec3[expected.object.assign]{Assignment}
 
 \indexlibrarymember{operator=}{expected}%
 \begin{itemdecl}
@@ -1173,7 +1173,7 @@ constexpr T& emplace(initializer_list<U> il, Args&&... args) noexcept;
 Equivalent to: \tcode{if (has_value()) { destroy_at(addressof(val)); } else { destroy_at(addressof(unex)); has_val = true; } return *construct_at(addressof(val), il, std::forward<Args>(args)...);}
 \end{itemdescr}
 
-\rSec4[expected.object.swap]{Swap}
+\rSec3[expected.object.swap]{Swap}
 
 \indexlibraryglobal{swap}%
 \begin{itemdecl}
@@ -1223,7 +1223,7 @@ Any exception thrown by the expressions in the Effects.
 The exception specification is equivalent to \tcode{is_nothrow_move_constructible_v<T> && is_nothrow_swappable_v<T> && is_nothrow_move_constructible_v<E> && (is_reference_v<E> || is_nothrow_swappable_v<E>)}.
 \end{itemdescr}
 
-\rSec4[expected.object.obs]{Observers}
+\rSec3[expected.object.obs]{Observers}
 
 \indexlibrarymember{operator->}{expected}%
 \begin{itemdecl}
@@ -1424,7 +1424,7 @@ constexpr @\exposidnc{error-value-type}@ error_or(G&& def) &&;
 \tcode{std::forward<G>(def)} if \tcode{has_value()} is \tcode{true}, \tcode{std::move(error())} otherwise.
 \end{itemdescr}
 
-\rSec4[expected.object.monadic]{Monadic operations}
+\rSec3[expected.object.monadic]{Monadic operations}
 
 \indexlibrarymember{and_then}{expected}%
 \begin{itemdecl}
@@ -1620,7 +1620,7 @@ constexpr auto transform_error(F&& f) const&&;
 Equivalent to: \tcode{if (has_value()) return G(in_place, std::move(val)); else return expected<T, G2>(unexpect, invoke(std::forward<F>(f), std::move(error())));} where \tcode{G2} is \tcode{remove_cv_t<invoke_result_t<F, decltype(std::move(error()))>>} and \tcode{G} is \tcode{expected<T, G2>}.
 \end{itemdescr}
 
-\rSec4[expected.object.eq]{Equality operators}
+\rSec3[expected.object.eq]{Equality operators}
 
 \indexlibraryglobal{operator==}%
 \begin{itemdecl}

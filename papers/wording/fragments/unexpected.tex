@@ -1,6 +1,6 @@
-\rSec3[expected.unexpected]{Class template unexpected}
+\rSec2[expected.unexpected]{Class template unexpected}
 
-\rSec4[expected.un.general]{General}
+\rSec3[expected.un.general]{General}
 
 \begin{codeblock}
 template<class E>
@@ -59,7 +59,7 @@ A program that instantiates the definition of \tcode{unexpected} for a non-objec
 Subclause \iref{expected.unexpected} describes the class template \tcode{unexpected} that represents unexpected objects stored in \tcode{expected} objects.
 \end{itemdescr}
 
-\rSec4[expected.un.cons]{Constructors}
+\rSec3[expected.un.cons]{Constructors}
 
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
@@ -133,7 +133,7 @@ Direct-non-list-initializes \tcode{unex} with \tcode{il, std::forward<Args>(args
 Any exception thrown by the initialization of \tcode{unex}.
 \end{itemdescr}
 
-\rSec4[expected.un.obs]{Observers}
+\rSec3[expected.un.obs]{Observers}
 
 \indexlibrarymember{error}{unexpected}%
 \begin{itemdecl}
@@ -167,7 +167,7 @@ constexpr const E&& error() const&& noexcept;
 constexpr E&& error() && noexcept;
 \end{itemdecl}
 
-\rSec4[expected.un.swap]{Swap}
+\rSec3[expected.un.swap]{Swap}
 
 \indexlibrarymember{swap}{unexpected}%
 \begin{itemdecl}
@@ -199,7 +199,7 @@ friend constexpr void swap(unexpected& x, unexpected& y) noexcept(noexcept(x.swa
 Equivalent to \tcode{x.swap(y)}.
 \end{itemdescr}
 
-\rSec4[expected.un.eq]{Equality operator}
+\rSec3[expected.un.eq]{Equality operator}
 
 \indexlibraryglobal{operator==}%
 \begin{itemdecl}
@@ -217,7 +217,7 @@ The expression \tcode{x.error() == y.error()} is well-formed and its result is c
 \tcode{x.error() == y.error()}.
 \end{itemdescr}
 
-\rSec4[expected.un.ref]{Partial specialization unexpected<E&>}
+\rSec3[expected.un.ref]{Partial specialization unexpected<E&>}
 
 \begin{codeblock}
 template<class E>

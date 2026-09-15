@@ -11,7 +11,8 @@
 #
 # Produces:
 #   papers/wording/fragments/*.tex  - one fragment per top-level clause, for
-#                                      \input into a paper's own document.
+#                                      \input into a paper's own
+#                                      \rSec1[expected]{Expected objects}.
 #   papers/wording/expected.tex     - all fragments concatenated in real
 #                                      standard clause order. This is the
 #                                      "wording only" file: plain generated
@@ -37,6 +38,7 @@ mkdir -p "$fragments_dir"
 echo "Generating from expected.hpp (gathers unexpected.hpp, bad_expected_access.hpp)..." >&2
 specgen generate "$include_dir/beman/expected/expected.hpp" \
     --backend latex --validate --no-compile-commands \
+    --base-section-depth 2 \
     --split "$work_dir" \
     -- -std=c++2c -I "$include_dir"
 
@@ -66,16 +68,16 @@ out="$here/expected.tex"
     echo '% include/beman/expected/ via specgen. Do not edit by hand: re-run'
     echo '% generate.sh after changing a header'\''s //! docblocks instead.'
     echo '%'
-    echo '% specgen numbers each fragment'\''s \rSec markers one level deeper than'
-    echo '% written in the header ([expected.unexpected] etc. render as \rSec3, their'
-    echo '% subclauses as \rSec4), matching the real standard'\''s absolute numbering'
-    echo '% (22.8.3, 22.8.3.1, ...) directly. This file is therefore everything that'
-    echo '% sits *inside* the existing \rSec2[expected]{Expected objects} in the'
-    echo '% draft'\''s source/utilities.tex, in clause order, ready to replace the'
-    echo '% current [expected.unexpected] through [expected.void] subclauses and add'
-    echo '% the new [expected.ref] one after them -- no \rSec2[expected] wrapper and'
-    echo '% no \input directives. [expected.general] and [expected.syn] are prose,'
-    echo '% not generated from any one declaration; see papers/expected-new.tex.'
+    echo '% --base-section-depth 2 puts each \rSec marker at the level the draft'
+    echo '% writes it at: [expected.unexpected] and its siblings are \rSec2, their'
+    echo '% subclauses \rSec3, numbering 22.8.3, 22.8.3.1, ... just as in'
+    echo '% source/utilities.tex. This file is therefore everything that sits'
+    echo '% *inside* the existing \rSec1[expected]{Expected objects} in the draft'\''s'
+    echo '% source/utilities.tex, in clause order, ready to replace the current'
+    echo '% [expected.unexpected] through [expected.void] subclauses and add the new'
+    echo '% [expected.ref] one after them -- no \rSec1[expected] wrapper and no'
+    echo '% \input directives. [expected.general] and [expected.syn] are prose, not'
+    echo '% generated from any one declaration; see papers/expected-new.tex.'
     echo
     sep=""
     for f in unexpected.tex bad.tex bad-void.tex object.tex void.tex ref.tex; do

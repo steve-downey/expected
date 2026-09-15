@@ -16,12 +16,13 @@ hand-edit the files here; the header comments are the source of truth.
 
 All the generated subclauses concatenated in real standard order —
 `[expected.unexpected]` (including the new `[expected.un.ref]`) through
-`[expected.ref.eq]`. `specgen` numbers a fragment's `\rSec` markers one level
-deeper than written in the header, which lines up with the draft's own
-absolute numbering (`22.8.3`, `22.8.3.1`, ...). This file is everything that
-sits *inside* the existing `\rSec2[expected]{Expected objects}` in
+`[expected.ref.eq]`. `generate.sh` passes `--base-section-depth 2`, so each
+`\rSec` marker comes out at the level the draft writes it at:
+`[expected.unexpected]` and its siblings are `\rSec2`, their subclauses
+`\rSec3`, numbering `22.8.3`, `22.8.3.1`, ... This file is everything that
+sits *inside* the existing `\rSec1[expected]{Expected objects}` in
 [the draft](https://github.com/cplusplus/draft)'s `source/utilities.tex` — no
-wrapper `\rSec2[expected]`, no `\input` directives — so it's the basis for a
+wrapper `\rSec1[expected]`, no `\input` directives — so it's the basis for a
 patch there: replace the current `[expected.unexpected]` through
 `[expected.void]` subclauses with this file's content and the new
 `[expected.ref]` subclause lands after them, in place.
@@ -34,6 +35,6 @@ hand-authored versions of both.
 
 The same content, split one file per top-level clause
 (`unexpected.tex`, `bad.tex`, `bad-void.tex`, `object.tex`, `void.tex`,
-`ref.tex`) — for `\input` into a standalone paper's own document, where the
-enclosing `\rSec1[expected]{Expected objects}` (see `papers/expected-new.tex`)
-supplies the level that `expected.tex` above assumes already exists.
+`ref.tex`) — for `\input` into a standalone paper's own
+`\rSec1[expected]{Expected objects}` (see `papers/expected-new.tex`), which is
+the level `expected.tex` above assumes already exists.

@@ -1,6 +1,6 @@
-\rSec3[expected.ref]{Partial specialization of expected for reference types}
+\rSec2[expected.ref]{Partial specialization of expected for reference types}
 
-\rSec4[expected.ref.general]{General}
+\rSec3[expected.ref.general]{General}
 
 \begin{codeblock}
 template<class T, class E>
@@ -371,7 +371,7 @@ A program that instantiates the definition of \tcode{expected<T&, E>} with an \t
 An object of type \tcode{expected<T&, E>} either represents a reference to an object of type \tcode{T}, or holds an error. Member \tcode{has_val} indicates whether the object represents a reference. When it represents a reference, member \tcode{val} points to the referenced object, which is not owned by the \tcode{expected} object. Otherwise, the error is \tcode{unex.error()}.
 \end{itemdescr}
 
-\rSec4[expected.ref.cons]{Constructors}
+\rSec3[expected.ref.cons]{Constructors}
 
 \indexlibraryctor{expected}%
 \begin{itemdecl}
@@ -683,7 +683,7 @@ Direct-non-list-initializes \tcode{unex} with \tcode{in_place}, \tcode{il}, and 
 An overload with the same parameter types is defined as deleted when \tcode{E} is an lvalue reference type. An initializer list cannot provide the required long-lived error referent.
 \end{itemdescr}
 
-\rSec4[expected.ref.dtor]{Destructor}
+\rSec3[expected.ref.dtor]{Destructor}
 
 \indexlibrarydtor{expected}%
 \begin{itemdecl}
@@ -723,7 +723,7 @@ If \tcode{has_value()} is \tcode{false}, destroys \tcode{unex}. \tcode{T} is not
 This destructor is trivial if \tcode{E} is trivially destructible.
 \end{itemdescr}
 
-\rSec4[expected.ref.assign]{Assignment}
+\rSec3[expected.ref.assign]{Assignment}
 
 \indexlibrarymember{operator=}{expected}%
 \begin{itemdecl}
@@ -913,7 +913,7 @@ Rebinds \tcode{*this} to refer to the object bound by \tcode{T& r = std::forward
 \tcode{*val}.
 \end{itemdescr}
 
-\rSec4[expected.ref.swap]{Swap}
+\rSec3[expected.ref.swap]{Swap}
 
 \indexlibraryglobal{swap}%
 \begin{itemdecl}
@@ -951,7 +951,7 @@ Exchanges the states of \tcode{*this} and \tcode{rhs}. When both hold values, ex
 The exception specification is equivalent to \tcode{is_nothrow_move_constructible_v<E> && (is_reference_v<E> || is_nothrow_swappable_v<E>)}.
 \end{itemdescr}
 
-\rSec4[expected.ref.obs]{Observers}
+\rSec3[expected.ref.obs]{Observers}
 
 \indexlibrarymember{operator->}{expected}%
 \begin{itemdecl}
@@ -1115,7 +1115,7 @@ constexpr @\exposidnc{error-value-type}@ error_or(G&& def) &&;
 \tcode{std::forward<G>(def)} if \tcode{has_value()} is \tcode{true}, \tcode{std::move(error())} otherwise. The result is an object, never a reference.
 \end{itemdescr}
 
-\rSec4[expected.ref.monadic]{Monadic operations}
+\rSec3[expected.ref.monadic]{Monadic operations}
 
 \indexlibrarymember{and_then}{expected}%
 \begin{itemdecl}
@@ -1283,7 +1283,7 @@ template<class F> constexpr auto transform_error(F&& f) const&&;
 Equivalent to: \tcode{if (has_value()) return G(*val); else return expected<T&, G2>(unexpect, invoke(std::forward<F>(f), std::move(error())));} where \tcode{G2} is \tcode{remove_cv_t<invoke_result_t<F, decltype(std::move(error()))>>} and \tcode{G} is \tcode{expected<T&, G2>}.
 \end{itemdescr}
 
-\rSec4[expected.ref.eq]{Equality operators}
+\rSec3[expected.ref.eq]{Equality operators}
 
 \indexlibraryglobal{operator==}%
 \begin{itemdecl}
