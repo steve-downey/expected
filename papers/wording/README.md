@@ -12,6 +12,9 @@ make wording
 (equivalently: `papers/wording/generate.sh`, with `specgen` on `PATH`). Don't
 hand-edit the files here; the header comments are the source of truth.
 
+If embedded Clang cannot locate the C++ standard library, set
+`SPECGEN_GCC_TOOLCHAIN` to the GCC installation prefix before regenerating.
+
 ## `expected.tex`
 
 All the generated subclauses concatenated in real standard order —

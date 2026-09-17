@@ -4,10 +4,8 @@
 #
 # Regenerates the [expected] clause wording from the annotated headers in
 # include/beman/expected/, via specgen (https://github.com/steve-downey/specgen).
-# expected.hpp gathers unexpected.hpp and bad_expected_access.hpp into one
-# document (their #includes sit inside a \rSec2[expected.syn] ... END [expected.syn]
-# region), so a single specgen invocation on expected.hpp covers all three
-# headers' wording in one run.
+# Each header is one specgen document. Their IR is rendered together so
+# validation sees the paper-wide union of documented names.
 #
 # Produces:
 #   papers/wording/fragments/*.tex  - one fragment per top-level clause, for
@@ -33,31 +31,54 @@ fragments_dir="$here/fragments"
 work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 
+clang_args=(-std=c++2c -I "$include_dir")
+if [[ -n "${SPECGEN_GCC_TOOLCHAIN:-}" ]]; then
+    clang_args+=("--gcc-toolchain=$SPECGEN_GCC_TOOLCHAIN")
+fi
+
 mkdir -p "$fragments_dir"
 
-echo "Generating from expected.hpp (gathers unexpected.hpp, bad_expected_access.hpp)..." >&2
-specgen generate "$include_dir/beman/expected/expected.hpp" \
-    --backend latex --validate --no-compile-commands \
+generate_ir() {
+    local header="$1"
+    local ir="$2"
+
+    echo "Generating IR from $header..." >&2
+    specgen generate "$include_dir/beman/expected/$header" \
+        --emit-ir --no-compile-commands \
+        -o "$work_dir/$ir" \
+        -- "${clang_args[@]}"
+}
+
+generate_ir unexpected.hpp unexpected.json
+generate_ir bad_expected_access.hpp bad_expected_access.json
+generate_ir expected.hpp expected.json
+
+render_dir="$work_dir/rendered"
+echo "Rendering and validating the three-header paper..." >&2
+specgen render \
+    --from-ir "$work_dir/unexpected.json" \
+    --from-ir "$work_dir/bad_expected_access.json" \
+    --from-ir "$work_dir/expected.json" \
+    --root expected.unexpected.root \
+    --root expected.bad.root \
+    --root expected.root \
+    --backend latex --validate \
     --base-section-depth 2 \
-    --split "$work_dir" \
-    -- -std=c++2c -I "$include_dir"
+    --split "$render_dir"
 
 # Map specgen's stable-name-derived filenames to the fragment names we keep.
-cp "$work_dir/expected.unexpected.tex" "$fragments_dir/unexpected.tex"
-cp "$work_dir/expected.bad.tex"        "$fragments_dir/bad.tex"
-cp "$work_dir/expected.bad.void.tex"   "$fragments_dir/bad-void.tex"
-cp "$work_dir/expected.expected.tex"   "$fragments_dir/object.tex"
-cp "$work_dir/expected.void.tex"       "$fragments_dir/void.tex"
-cp "$work_dir/expected.ref.tex"        "$fragments_dir/ref.tex"
+cp "$render_dir/expected.unexpected.tex" "$fragments_dir/unexpected.tex"
+cp "$render_dir/expected.bad.tex"        "$fragments_dir/bad.tex"
+cp "$render_dir/expected.bad.void.tex"   "$fragments_dir/bad-void.tex"
+cp "$render_dir/expected.expected.tex"   "$fragments_dir/object.tex"
+cp "$render_dir/expected.void.tex"       "$fragments_dir/void.tex"
+cp "$render_dir/expected.ref.tex"        "$fragments_dir/ref.tex"
 
-# expected.syn.tex (the header synopsis, gathered from the two #includes) and
-# expected.detail.tex (a throwaway \rSec2 fencing off the exposition-only
-# helpers -- is_expected_specialization, reinit_expected, unexpect_dangles_v,
-# converts_from_any_cvref -- declared above [expected.expected] so they don't
-# bleed into [expected.bad]) are not part of the standard's own wording (the
-# real draft states an equivalent helper, reinit-expected, inline in
-# [expected.object.assign]'s own intro instead) and are intentionally omitted
-# from the assembled clause below.
+# Any root fragments contain declarations outside generated clauses, including
+# exposition-only implementation helpers. They are not part of the standard's
+# own wording (the real draft states an equivalent helper, reinit-expected,
+# inline in [expected.object.assign]'s own intro instead) and are intentionally
+# omitted from the assembled clause below.
 
 out="$here/expected.tex"
 {
