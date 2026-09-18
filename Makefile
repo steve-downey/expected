@@ -229,9 +229,11 @@ wording: $(WORDING_DIR)/expected.tex ## Regenerate papers/wording/ from the anno
 
 # What specgen read to produce the fragments -- including headers reached only
 # through an #include, which is the edge a hand-written prerequisite list
-# forgets. Written by --depfile above; absent until the first run, which is why
-# this is -include and not include.
--include papers/.deps/*.d
+# forgets. Written by --depfile above; absent until the first run, hence
+# $(wildcard): a bare glob that matches nothing stays a literal target name,
+# and .DEFAULT below would hand it to cmake. Named, not globbed: papers/.deps/
+# is also latexmk's -deps-out directory, and its paths are relative to papers/.
+-include $(wildcard papers/.deps/wording.d)
 
 .DEFAULT: $(_build_path)/CMakeCache.txt ## Other targets passed through to cmake
 	$(CMAKE) --build $(_build_path)  --config $(CONFIG) --target $@ -- -k 0

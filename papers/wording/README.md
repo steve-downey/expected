@@ -16,6 +16,10 @@ has real prerequisites, so it does nothing when nothing changed, and `make
 papers` regenerates the wording before building the PDF — a paper can no longer
 be built from stale clauses.
 
+GNU Make 4.3 or newer. One specgen invocation writes all six fragments, which
+the makefile states as a grouped target (`&:`) — a rule 4.2 parses as something
+else entirely, and would then run specgen once per fragment.
+
 specgen writes what it read to `papers/.deps/wording.d`, which the makefile
 `-include`s. That is how the dependencies stay honest: it lists every header
 each parse touched, including `include/beman/expected/config.hpp`, which none
