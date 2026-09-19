@@ -1187,7 +1187,13 @@ constexpr void swap(expected& rhs) noexcept(is_nothrow_move_constructible_v<T> &
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_swappable_v<T>} is \tcode{true} and (\tcode{is_reference_v<E>} or \tcode{is_swappable_v<E>}) is \tcode{true}, and \tcode{is_move_constructible_v<T> && is_move_constructible_v<E>} is \tcode{true}, and \tcode{is_nothrow_move_constructible_v<T> || is_nothrow_move_constructible_v<E>} is \tcode{true}.
+\begin{itemize}
+\item \tcode{is_swappable_v<T>} is \tcode{true},
+\item \tcode{is_reference_v<E> || is_swappable_v<E>} is \tcode{true},
+\item \tcode{is_move_constructible_v<T>} is \tcode{true},
+\item \tcode{is_move_constructible_v<E>} is \tcode{true},
+\item \tcode{is_nothrow_move_constructible_v<T> || is_nothrow_move_constructible_v<E>} is \tcode{true}.
+\end{itemize}
 
 \pnum
 \effects
