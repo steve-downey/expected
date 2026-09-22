@@ -405,20 +405,8 @@ This constructor is trivial if \tcode{is_trivially_move_constructible_v<E>} is \
 \indexlibraryctor{expected}%
 \begin{itemdecl}
 template<class U, class G>
-  requires(is_void_v<U> && !is_reference_v<E> && !is_same_v<G, E> &&
-           is_constructible_v<E, const G&> &&
-           !is_constructible_v<unexpected<E>, expected<U, G>&> &&
-           !is_constructible_v<unexpected<E>, expected<U, G>&&> &&
-           !is_constructible_v<unexpected<E>, const expected<U, G>&> &&
-           !is_constructible_v<unexpected<E>, const expected<U, G>&&>)
 constexpr explicit(!is_convertible_v<const G&, E>) expected(const expected<U, G>& rhs);
 template<class U, class G>
-  requires(is_void_v<U> && !is_reference_v<E> && !is_same_v<G, E> &&
-           is_constructible_v<E, G> &&
-           !is_constructible_v<unexpected<E>, expected<U, G>&> &&
-           !is_constructible_v<unexpected<E>, expected<U, G>&&> &&
-           !is_constructible_v<unexpected<E>, const expected<U, G>&> &&
-           !is_constructible_v<unexpected<E>, const expected<U, G>&&>)
 constexpr explicit(!is_convertible_v<G, E>) expected(expected<U, G>&& rhs);
 \end{itemdecl}
 
@@ -443,10 +431,8 @@ Any exception thrown by the initialization of \tcode{unex}.
 \indexlibraryctor{expected}%
 \begin{itemdecl}
 template<class G>
-  requires(!is_reference_v<E> && is_constructible_v<E, const G&>)
 constexpr explicit(!is_convertible_v<const G&, E>) expected(const unexpected<G>& e);
 template<class G>
-  requires(!is_reference_v<E> && is_constructible_v<E, G>)
 constexpr explicit(!is_convertible_v<G, E>) expected(unexpected<G>&& e);
 \end{itemdecl}
 
@@ -471,12 +457,8 @@ Any exception thrown by the initialization of \tcode{unex}.
 \indexlibraryctor{expected}%
 \begin{itemdecl}
 template<class G>
-  requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-           !reference_constructs_from_temporary_v<E, G>)
 constexpr explicit(!is_convertible_v<G, E>) expected(const unexpected<G>& e) noexcept;
 template<class G>
-  requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-           !reference_constructs_from_temporary_v<E, G>)
 constexpr explicit(!is_convertible_v<G, E>) expected(unexpected<G>&& e) noexcept;
 \end{itemdecl}
 
@@ -500,12 +482,14 @@ This constructor never throws: the referent is bound, not copied.
 
 \indexlibraryctor{expected}%
 \begin{itemdecl}
-template<class G>
-  requires(is_reference_v<E> && !is_reference_v<G>)
-constexpr expected(const unexpected<G>&);
+template<class G> constexpr expected(const unexpected<G>&);
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{is_reference_v<E>} is \tcode{true} and \tcode{is_reference_v<G>} is \tcode{false}.
+
 \pnum
 \remarks
 When \tcode{E} is a reference type, an overload taking \tcode{unexpected<G>} for a non-reference \tcode{G} is defined as deleted: the referent would live inside the (possibly temporary) source \tcode{unexpected<G>} object, and binding \tcode{E&} to it would dangle. Use an \tcode{unexpected<E&>} holding an external object instead.
@@ -524,9 +508,7 @@ constexpr explicit expected(in_place_t) noexcept;
 
 \indexlibraryctor{expected}%
 \begin{itemdecl}
-template<class... Args>
-  requires(is_constructible_v<E, Args...> && !@\exposidnc{unexpect-dangles-v}@<E, Args...>)
-constexpr explicit expected(unexpect_t, Args&&... args);
+template<class... Args> constexpr explicit expected(unexpect_t, Args&&... args);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -549,12 +531,14 @@ Any exception thrown by the initialization of \tcode{unex}.
 
 \indexlibraryctor{expected}%
 \begin{itemdecl}
-template<class... Args>
-  requires(@\exposidnc{unexpect-dangles-v}@<E, Args...>)
-constexpr expected(unexpect_t, Args&&...);
+template<class... Args> constexpr expected(unexpect_t, Args&&...);
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{\exposid{unexpect-dangles-v}<E, Args...>} is \tcode{true}.
+
 \pnum
 \remarks
 When \tcode{E} is a reference type, an overload with the same parameter types is defined as deleted if the single argument would bind \tcode{E&} to a temporary, or if it is otherwise not usable to construct \tcode{E}.
@@ -563,7 +547,6 @@ When \tcode{E} is a reference type, an overload with the same parameter types is
 \indexlibraryctor{expected}%
 \begin{itemdecl}
 template<class U, class... Args>
-  requires(!is_reference_v<E> && is_constructible_v<E, initializer_list<U>&, Args...>)
 constexpr explicit expected(unexpect_t, initializer_list<U> il, Args&&... args);
 \end{itemdecl}
 
@@ -592,11 +575,14 @@ An overload with the same parameter types is defined as deleted when \tcode{E} i
 \indexlibraryctor{expected}%
 \begin{itemdecl}
 template<class U, class... Args>
-  requires is_reference_v<E>
 constexpr expected(unexpect_t, initializer_list<U>, Args&&...);
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{is_reference_v<E>} is \tcode{true}.
+
 \pnum
 \remarks
 An overload with the same parameter types is defined as deleted when \tcode{E} is an lvalue reference type. An initializer list cannot provide the required long-lived error referent.
@@ -605,12 +591,8 @@ An overload with the same parameter types is defined as deleted when \tcode{E} i
 \indexlibraryctor{expected}%
 \begin{itemdecl}
 template<class G>
-  requires(is_reference_v<E> && is_convertible_v<G&, E> &&
-           !reference_constructs_from_temporary_v<E, G&>)
 constexpr explicit(!is_convertible_v<G&, E>) expected(const expected<void, G&>& rhs);
 template<class G>
-  requires(is_reference_v<E> && is_convertible_v<G&, E> &&
-           !reference_constructs_from_temporary_v<E, G&>)
 constexpr explicit(!is_convertible_v<G&, E>) expected(expected<void, G&>&& rhs);
 \end{itemdecl}
 
@@ -664,8 +646,7 @@ constexpr expected& operator=(const expected& rhs) noexcept(
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_reference_v<E> || (is_copy_constructible_v<E> && is_copy_assignable_v<E>)} is \tcode{true} and \tcode{(is_trivially_copy_constructible_v<E> && is_trivially_copy_assignable_v<E> &&
-                           is_trivially_destructible_v<E>)} is \tcode{false}.
+\tcode{is_reference_v<E> || (is_copy_constructible_v<E> && is_copy_assignable_v<E>)} is \tcode{true} and \tcode{(is_trivially_copy_constructible_v<E> && is_trivially_copy_assignable_v<E> && is_trivially_destructible_v<E>)} is \tcode{false}.
 
 \pnum
 \effects
@@ -689,8 +670,7 @@ constexpr expected& operator=(expected&& rhs) noexcept(
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_reference_v<E> || (is_move_constructible_v<E> && is_move_assignable_v<E>)} is \tcode{true} and \tcode{(is_trivially_move_constructible_v<E> && is_trivially_move_assignable_v<E> &&
-                           is_trivially_destructible_v<E>)} is \tcode{false}.
+\tcode{is_reference_v<E> || (is_move_constructible_v<E> && is_move_assignable_v<E>)} is \tcode{true} and \tcode{(is_trivially_move_constructible_v<E> && is_trivially_move_assignable_v<E> && is_trivially_destructible_v<E>)} is \tcode{false}.
 
 \pnum
 \effects
@@ -707,13 +687,8 @@ The exception specification is equivalent to \tcode{is_nothrow_move_constructibl
 
 \indexlibrarymember{operator=}{expected}%
 \begin{itemdecl}
-template<class G>
-  requires(!is_reference_v<E> && is_constructible_v<E, const G&> &&
-           is_assignable_v<E&, const G&>)
-constexpr expected& operator=(const unexpected<G>& e);
-template<class G>
-  requires(!is_reference_v<E> && is_constructible_v<E, G> && is_assignable_v<E&, G>)
-constexpr expected& operator=(unexpected<G>&& e);
+template<class G> constexpr expected& operator=(const unexpected<G>& e);
+template<class G> constexpr expected& operator=(unexpected<G>&& e);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -732,14 +707,8 @@ If \tcode{has_value()} is \tcode{true}, equivalent to: \tcode{construct_at(addre
 
 \indexlibrarymember{operator=}{expected}%
 \begin{itemdecl}
-template<class G>
-  requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-           !reference_constructs_from_temporary_v<E, G>)
-constexpr expected& operator=(const unexpected<G>& e);
-template<class G>
-  requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-           !reference_constructs_from_temporary_v<E, G>)
-constexpr expected& operator=(unexpected<G>&& e);
+template<class G> constexpr expected& operator=(const unexpected<G>& e);
+template<class G> constexpr expected& operator=(unexpected<G>&& e);
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -766,12 +735,14 @@ This operator never throws: the referent is bound, not copied.
 
 \indexlibrarymember{operator=}{expected}%
 \begin{itemdecl}
-template<class G>
-  requires(is_reference_v<E> && !is_reference_v<G>)
-constexpr expected& operator=(const unexpected<G>&);
+template<class G> constexpr expected& operator=(const unexpected<G>&);
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{is_reference_v<E>} is \tcode{true} and \tcode{is_reference_v<G>} is \tcode{false}.
+
 \pnum
 \remarks
 When \tcode{E} is a reference type, an overload taking \tcode{unexpected<G>} for a non-reference \tcode{G} is defined as deleted: it would rebind \tcode{unex} to \tcode{unexpected<G>}'s temporary storage.
@@ -921,12 +892,14 @@ constexpr E&& error() && noexcept;
 \indexlibrarymember{error_or}{expected}%
 \begin{itemdecl}
 template<class G = @\exposidnc{error-value-type}@>
-  requires(is_copy_constructible_v<remove_cv_t<remove_reference_t<E>>> &&
-           is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>)
 constexpr @\exposidnc{error-value-type}@ error_or(G&& def) const&;
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{is_copy_constructible_v<remove_cv_t<remove_reference_t<E>>>} is \tcode{true} and \tcode{is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>} is \tcode{true}.
+
 \pnum
 \mandates
 \tcode{is_copy_constructible_v<error_value_type>} is \tcode{true} and \tcode{is_convertible_v<G, error_value_type>} is \tcode{true}.
@@ -938,13 +911,14 @@ constexpr @\exposidnc{error-value-type}@ error_or(G&& def) const&;
 
 \indexlibrarymember{error_or}{expected}%
 \begin{itemdecl}
-template<class G = @\exposidnc{error-value-type}@>
-  requires(is_move_constructible_v<remove_cv_t<remove_reference_t<E>>> &&
-           is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>)
-constexpr @\exposidnc{error-value-type}@ error_or(G&& def) &&;
+template<class G = @\exposidnc{error-value-type}@> constexpr @\exposidnc{error-value-type}@ error_or(G&& def) &&;
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{is_move_constructible_v<remove_cv_t<remove_reference_t<E>>>} is \tcode{true} and \tcode{is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>} is \tcode{true}.
+
 \pnum
 \mandates
 \tcode{is_move_constructible_v<error_value_type>} is \tcode{true} and \tcode{is_convertible_v<G, error_value_type>} is \tcode{true}.
@@ -956,12 +930,14 @@ constexpr @\exposidnc{error-value-type}@ error_or(G&& def) &&;
 
 \indexlibrarymember{value_or}{expected}%
 \begin{itemdecl}
-template<class U>
-  requires is_reference_v<E>
-constexpr void value_or(U&&) const;
+template<class U> constexpr void value_or(U&&) const;
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{is_reference_v<E>} is \tcode{true}.
+
 \pnum
 \remarks
 \tcode{expected<void, E>} has no \tcode{value_or} member: there is no value to fall back from. This overload exists only to give a clear diagnostic when \tcode{E} is a reference type, and is defined as deleted.
@@ -971,12 +947,8 @@ constexpr void value_or(U&&) const;
 
 \indexlibrarymember{and_then}{expected}%
 \begin{itemdecl}
-template<class F>
-  requires is_constructible_v<E, E&>
-constexpr auto and_then(F&& f) &;
-template<class F>
-  requires is_constructible_v<E, const E&>
-constexpr auto and_then(F&& f) const&;
+template<class F> constexpr auto and_then(F&& f) &;
+template<class F> constexpr auto and_then(F&& f) const&;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -995,12 +967,8 @@ Equivalent to: \tcode{if (has_value()) return invoke(std::forward<F>(f)); else r
 
 \indexlibrarymember{and_then}{expected}%
 \begin{itemdecl}
-template<class F>
-  requires is_constructible_v<E, E&&>
-constexpr auto and_then(F&& f) &&;
-template<class F>
-  requires is_constructible_v<E, const E&&>
-constexpr auto and_then(F&& f) const&&;
+template<class F> constexpr auto and_then(F&& f) &&;
+template<class F> constexpr auto and_then(F&& f) const&&;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1051,12 +1019,8 @@ Equivalent to: \tcode{if (has_value()) return G(); else return invoke(std::forwa
 
 \indexlibrarymember{transform}{expected}%
 \begin{itemdecl}
-template<class F>
-  requires is_constructible_v<E, E&>
-constexpr auto transform(F&& f) &;
-template<class F>
-  requires is_constructible_v<E, const E&>
-constexpr auto transform(F&& f) const&;
+template<class F> constexpr auto transform(F&& f) &;
+template<class F> constexpr auto transform(F&& f) const&;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1075,12 +1039,8 @@ If \tcode{has_value()} is \tcode{false}, returns \tcode{expected<U, E>(unexpect,
 
 \indexlibrarymember{transform}{expected}%
 \begin{itemdecl}
-template<class F>
-  requires is_constructible_v<E, E&&>
-constexpr auto transform(F&& f) &&;
-template<class F>
-  requires is_constructible_v<E, const E&&>
-constexpr auto transform(F&& f) const&&;
+template<class F> constexpr auto transform(F&& f) &&;
+template<class F> constexpr auto transform(F&& f) const&&;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -1134,11 +1094,14 @@ If \tcode{has_value()} is \tcode{true}, \tcode{expected<T, G>()}; otherwise, an 
 \indexlibraryglobal{operator==}%
 \begin{itemdecl}
 template<class T2, class E2>
-  requires is_void_v<T2>
 friend constexpr bool operator==(const expected& x, const expected<T2, E2>& y);
 \end{itemdecl}
 
 \begin{itemdescr}
+\pnum
+\constraints
+\tcode{is_void_v<T2>} is \tcode{true}.
+
 \pnum
 \mandates
 \tcode{is_void_v<T2>} is \tcode{true}. The expression \tcode{x.error() == y.error()} is well-formed and its result is convertible to \tcode{bool}.

@@ -64,8 +64,6 @@ Subclause \iref{expected.unexpected} describes the class template \tcode{unexpec
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
 template<class Err = E>
-  requires(!is_same_v<remove_cvref_t<Err>, unexpected> &&
-           !is_same_v<remove_cvref_t<Err>, in_place_t> && is_constructible_v<E, Err>)
 constexpr explicit unexpected(Err&& e) noexcept(is_nothrow_constructible_v<E, Err>);
 \end{itemdecl}
 
@@ -90,7 +88,6 @@ Any exception thrown by the initialization of \tcode{unex}.
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
 template<class... Args>
-  requires is_constructible_v<E, Args...>
 constexpr explicit unexpected(in_place_t, Args&&... args) noexcept(
     is_nothrow_constructible_v<E, Args...>);
 \end{itemdecl}
@@ -112,7 +109,6 @@ Any exception thrown by the initialization of \tcode{unex}.
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
 template<class U, class... Args>
-  requires is_constructible_v<E, initializer_list<U>&, Args...>
 constexpr explicit unexpected(
     in_place_t, initializer_list<U> il,
     Args&&... args) noexcept(is_nothrow_constructible_v<E, initializer_list<U>&,
@@ -259,11 +255,7 @@ An object of type \tcode{unexpected<E&>} holds a pointer to an object of type \t
 
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
-template<class G = E>
-  requires(!is_same_v<remove_cvref_t<G>, unexpected> &&
-           !is_same_v<remove_cvref_t<G>, in_place_t> && is_constructible_v<E&, G&&> &&
-           !reference_constructs_from_temporary_v<E&, G>)
-constexpr explicit unexpected(G&& e) noexcept;
+template<class G = E> constexpr explicit unexpected(G&& e) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
@@ -287,9 +279,7 @@ A constructor for which \tcode{reference_constructs_from_temporary_v<E&, G>} is 
 
 \indexlibraryctor{unexpected}%
 \begin{itemdecl}
-template<class G = E>
-  requires(is_constructible_v<E&, G&&> && !reference_constructs_from_temporary_v<E&, G>)
-constexpr explicit unexpected(in_place_t, G&& e) noexcept;
+template<class G = E> constexpr explicit unexpected(in_place_t, G&& e) noexcept;
 \end{itemdecl}
 
 \begin{itemdescr}
