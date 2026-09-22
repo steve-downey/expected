@@ -532,6 +532,10 @@ constexpr explicit(!is_convertible_v<U&, T&> || !is_convertible_v<G, E>)
 \pnum
 \effects
 If \tcode{rhs.has_value()} is \tcode{true}, initializes \tcode{val} with \tcode{addressof(*rhs)}, so that \tcode{*this} refers to the object referred to by \tcode{rhs}; otherwise, initializes \tcode{unex} with the error of \tcode{rhs}. No object referred to by \tcode{rhs} is moved from.
+
+\pnum
+\remarks
+Unlike the value-\tcode{E} overload above, this overload participates in overload resolution only when \tcode{E} and \tcode{G} are both reference types, so the referenced error object is never copied.
 \end{itemdescr}
 
 \indexlibraryctor{expected}%
