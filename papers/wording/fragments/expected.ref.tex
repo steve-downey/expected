@@ -365,7 +365,7 @@ private:
 \begin{itemdescr}
 \pnum
 \mandates
-A program that instantiates the definition of \tcode{expected<T&, E>} with an \tcode{E} that is not a valid template argument for \tcode{unexpected} is ill-formed. \tcode{T} shall be an object type that is not an array type.
+A program that instantiates the definition of \tcode{expected<T&, E>} with an \tcode{E} that is not a valid template argument for \tcode{unexpected} is ill-formed. \tcode{T} shall be an object type that is not an array type, \tcode{in_place_t}, \tcode{unexpect_t}, or a specialization of \tcode{unexpected}.
 
 \pnum
 \remarks
