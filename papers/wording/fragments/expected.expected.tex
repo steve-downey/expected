@@ -605,7 +605,7 @@ constexpr explicit(!is_convertible_v<U&&, T> || !is_convertible_v<G, E>)
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_reference_v<G>} is \tcode{true} and \tcode{is_convertible_v<G, E>} is \tcode{true}.
+\tcode{is_constructible_v<T, const U&>} is \tcode{true}; and \tcode{is_reference_v<G>} is \tcode{true}; and \tcode{is_convertible_v<G, E>} is \tcode{true}.
 
 \pnum
 \effects
