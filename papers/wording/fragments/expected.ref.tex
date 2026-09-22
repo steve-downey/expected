@@ -567,7 +567,7 @@ constexpr explicit(!is_convertible_v<G, E>) expected(unexpected<G>&& e) noexcept
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_reference_v<G>} is \tcode{true}; \tcode{is_convertible_v<G, E>} is \tcode{true}; and \tcode{reference_constructs_from_temporary_v<E, G>} is \tcode{false}.
+\tcode{is_reference_v<G>} is \tcode{true}; \tcode{is_constructible_v<E, G>} is \tcode{true}; and \tcode{reference_constructs_from_temporary_v<E, G>} is \tcode{false}.
 
 \pnum
 \effects
@@ -833,7 +833,7 @@ template<class G> constexpr expected& operator=(unexpected<G>&& e);
 \begin{itemdescr}
 \pnum
 \constraints
-\tcode{is_reference_v<G>} is \tcode{true}; \tcode{is_convertible_v<G, E>} is \tcode{true}; and \tcode{reference_constructs_from_temporary_v<E, G>} is \tcode{false}.
+\tcode{is_reference_v<G>} is \tcode{true}; \tcode{is_constructible_v<E, G>} is \tcode{true}; and \tcode{reference_constructs_from_temporary_v<E, G>} is \tcode{false}.
 
 \pnum
 \effects
