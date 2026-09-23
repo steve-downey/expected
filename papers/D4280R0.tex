@@ -774,20 +774,4 @@ thanks to JeanHeyd Meneide for the foundational reference research
 \bibliographystyle{abstract}
 \bibliography{wg21,mybiblio}
 
-\backmatter
-\chapter{Implementation}
-\label{chap:impl}
-
-The three \tcode{expected} class templates --- the primary, \tcode{expected<void,
-E>}, and \tcode{expected<T\&, E>} --- and the two \tcode{unexpected} templates
-are written as flat, independent definitions: no shared base, no CRTP, no mixin,
-matching how libstdc++, libc++, and the MSVC STL write \tcode{optional} and
-\tcode{expected}. Each admits a reference error type by permitting \tcode{E} to
-be an lvalue reference, stored through \tcode{unexpected<E\&>}. Inheritance-based
-factoring would cut the line count, at the cost of the diagnostics; a reader
-auditing proposed wording wants each template legible on its own. The full
-source, with its positive and negative-compile test suites, is below.
-
-\inputminted{c++}{../include/beman/expected/expected.hpp}
-
 \end{document}
