@@ -154,8 +154,86 @@ env:
 	$(foreach v, $(.VARIABLES), $(info $(v) = $($(v))))
 
 .PHONY: papers
-papers:
+papers: wording
 	$(MAKE) -C papers papers
+
+# ---- Generated [expected] wording ------------------------------------------
+#
+# The three annotated headers are one specgen document each and one paper: a
+# single invocation renders them together, so --validate sees the paper-wide
+# union of documented names and a name specified by a sibling header is not
+# foreign.
+#
+# specgen writes the fragments; this makefile assembles expected.tex from them,
+# because the paper's clause order is not the headers' declaration order and
+# cannot be. bad_expected_access<void> is the base class of
+# bad_expected_access<E>, so the header has to define it first, while the draft
+# states the primary template first. $(WORDING_CLAUSES) is where that one
+# divergence is written down.
+
+SPECGEN ?= specgen
+
+WORDING_HEADERS := $(addprefix include/beman/expected/, \
+    unexpected.hpp bad_expected_access.hpp expected.hpp)
+
+# In the draft's clause order, by stable name. These are the fragments that
+# become expected.tex; specgen also writes one *.root.tex per document, holding
+# the exposition-only helpers that sit outside every clause. The draft states
+# those inline in the clause that uses them -- reinit-expected inside
+# [expected.object.assign]'s own intro -- so they are deliberately not part of
+# the assembled wording.
+WORDING_CLAUSES := \
+    expected.unexpected \
+    expected.bad \
+    expected.bad.void \
+    expected.expected \
+    expected.void \
+    expected.ref
+
+WORDING_DIR := papers/wording
+WORDING_FRAGMENTS := \
+    $(addprefix $(WORDING_DIR)/fragments/,$(addsuffix .tex,$(WORDING_CLAUSES)))
+
+SPECGEN_CLANG_ARGS := -std=c++2c -Iinclude
+ifneq ($(SPECGEN_GCC_TOOLCHAIN),)
+SPECGEN_CLANG_ARGS += --gcc-toolchain=$(SPECGEN_GCC_TOOLCHAIN)
+endif
+
+# A grouped target (GNU Make 4.3+): one invocation writes all of these, and
+# make must not run it once per fragment.
+$(WORDING_FRAGMENTS) &: $(WORDING_HEADERS)
+	@mkdir -p papers/.deps
+	$(SPECGEN) generate $(WORDING_HEADERS) \
+	    --backend latex --validate --base-section-depth 2 \
+	    --split $(WORDING_DIR)/fragments \
+	    --root expected.unexpected.root \
+	    --root expected.bad.root \
+	    --root expected.root \
+	    --depfile papers/.deps/wording.d \
+	    $(addprefix --dep-target ,$(WORDING_FRAGMENTS)) \
+	    --no-compile-commands -- $(SPECGEN_CLANG_ARGS)
+
+# Assembled into a temporary first: a half-written expected.tex that make
+# believes is finished is worse than no expected.tex at all.
+$(WORDING_DIR)/expected.tex: $(WORDING_DIR)/preamble.tex $(WORDING_FRAGMENTS)
+	@cat $(WORDING_DIR)/preamble.tex > $@.tmp
+	@for clause in $(WORDING_CLAUSES); do \
+	    printf '\n' >> $@.tmp; \
+	    cat $(WORDING_DIR)/fragments/$$clause.tex >> $@.tmp; \
+	done
+	@mv $@.tmp $@
+	@echo "Wrote $@"
+
+.PHONY: wording
+wording: $(WORDING_DIR)/expected.tex ## Regenerate papers/wording/ from the annotated headers via specgen
+
+# What specgen read to produce the fragments -- including headers reached only
+# through an #include, which is the edge a hand-written prerequisite list
+# forgets. Written by --depfile above; absent until the first run, hence
+# $(wildcard): a bare glob that matches nothing stays a literal target name,
+# and .DEFAULT below would hand it to cmake. Named, not globbed: papers/.deps/
+# is also latexmk's -deps-out directory, and its paths are relative to papers/.
+-include $(wildcard papers/.deps/wording.d)
 
 .DEFAULT: $(_build_path)/CMakeCache.txt ## Other targets passed through to cmake
 	$(CMAKE) --build $(_build_path)  --config $(CONFIG) --target $@ -- -k 0
