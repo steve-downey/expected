@@ -106,6 +106,8 @@ $(document).ready(function(){initNavTree('classbeman_1_1expected_1_1expected_3_0
   <div class="headertitle"><div class="title">beman::expected::expected&lt; void, E &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="expected_8hpp_source.html">expected.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -125,14 +127,16 @@ template&lt;class U &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad629f811d4c4c37edd7fe676d556cad1"><td class="memItemLeft" align="right" valign="top"><a id="ad629f811d4c4c37edd7fe676d556cad1" name="ad629f811d4c4c37edd7fe676d556cad1"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;)=default</td></tr>
+<tr class="memitem:abcd6e052b4f3b5c95c1f3f404fbc15e0"><td class="memItemLeft" align="right" valign="top"><a id="abcd6e052b4f3b5c95c1f3f404fbc15e0" name="abcd6e052b4f3b5c95c1f3f404fbc15e0"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> () noexcept</td></tr>
+<tr class="memdesc:abcd6e052b4f3b5c95c1f3f404fbc15e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">\ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>. <br /></td></tr>
+<tr class="separator:abcd6e052b4f3b5c95c1f3f404fbc15e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad629f811d4c4c37edd7fe676d556cad1"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ad629f811d4c4c37edd7fe676d556cad1">expected</a> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;)=default</td></tr>
 <tr class="separator:ad629f811d4c4c37edd7fe676d556cad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b84d78863b0c88c5b62760fe2741c21"><td class="memItemLeft" align="right" valign="top"><a id="a7b84d78863b0c88c5b62760fe2741c21" name="a7b84d78863b0c88c5b62760fe2741c21"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;rhs) noexcept(std::is_nothrow_copy_constructible_v&lt; E &gt;)</td></tr>
 <tr class="separator:a7b84d78863b0c88c5b62760fe2741c21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac556444db5d03d08c91eb446cf46001e"><td class="memItemLeft" align="right" valign="top"><a id="ac556444db5d03d08c91eb446cf46001e" name="ac556444db5d03d08c91eb446cf46001e"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;)=default</td></tr>
+<tr class="memitem:ac556444db5d03d08c91eb446cf46001e"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ac556444db5d03d08c91eb446cf46001e">expected</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:ac556444db5d03d08c91eb446cf46001e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f73d5d8cfc2d6d1bebc852f6d7cb4e7"><td class="memItemLeft" align="right" valign="top"><a id="a2f73d5d8cfc2d6d1bebc852f6d7cb4e7" name="a2f73d5d8cfc2d6d1bebc852f6d7cb4e7"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt;)</td></tr>
@@ -167,43 +171,38 @@ template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_reference_v&lt;G&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&gt;)</td></tr>
 <tr class="memitem:a5192d16960662abb038c8905a705425c"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>explicit</b> (!std::is_convertible_v&lt; G, E &gt;) <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>(<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e) noexcept</td></tr>
 <tr class="separator:a5192d16960662abb038c8905a705425c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1042c115f5c8d3150c88b4b7c845192"><td class="memTemplParams" colspan="2"><a id="ae1042c115f5c8d3150c88b4b7c845192" name="ae1042c115f5c8d3150c88b4b7c845192"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:ae1042c115f5c8d3150c88b4b7c845192"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:ae1042c115f5c8d3150c88b4b7c845192"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)</td></tr>
+<tr class="memitem:ae1042c115f5c8d3150c88b4b7c845192"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ae1042c115f5c8d3150c88b4b7c845192">expected</a> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)</td></tr>
 <tr class="separator:ae1042c115f5c8d3150c88b4b7c845192"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2861662e0ab52cc130f9b6639de274c"><td class="memTemplParams" colspan="2"><a id="ad2861662e0ab52cc130f9b6639de274c" name="ad2861662e0ab52cc130f9b6639de274c"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:ad2861662e0ab52cc130f9b6639de274c"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:ad2861662e0ab52cc130f9b6639de274c"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
+<tr class="memitem:ad2861662e0ab52cc130f9b6639de274c"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ad2861662e0ab52cc130f9b6639de274c">expected</a> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
+<tr class="memdesc:ad2861662e0ab52cc130f9b6639de274c"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-cvt-unexpected-ctor  <br /></td></tr>
 <tr class="separator:ad2861662e0ab52cc130f9b6639de274c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e3332ace5ed7042958c70470e129acf"><td class="memItemLeft" align="right" valign="top"><a id="a1e3332ace5ed7042958c70470e129acf" name="a1e3332ace5ed7042958c70470e129acf"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (std::in_place_t) noexcept</td></tr>
+<tr class="memdesc:a1e3332ace5ed7042958c70470e129acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">\ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>. <br /></td></tr>
 <tr class="separator:a1e3332ace5ed7042958c70470e129acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8867747a61417fc9f258716c4b17601f"><td class="memTemplParams" colspan="2"><a id="a8867747a61417fc9f258716c4b17601f" name="a8867747a61417fc9f258716c4b17601f"></a>
-template&lt;class... Args&gt; <br />
+<tr class="memitem:a8867747a61417fc9f258716c4b17601f"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; <br />
 requires (std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
-<tr class="memitem:a8867747a61417fc9f258716c4b17601f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a8867747a61417fc9f258716c4b17601f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8867747a61417fc9f258716c4b17601f">expected</a> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a8867747a61417fc9f258716c4b17601f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88d13dbb24f220557f0bc476f93b3386"><td class="memTemplParams" colspan="2"><a id="a88d13dbb24f220557f0bc476f93b3386" name="a88d13dbb24f220557f0bc476f93b3386"></a>
-template&lt;class... Args&gt; <br />
+<tr class="memitem:a88d13dbb24f220557f0bc476f93b3386"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; <br />
 requires (detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
-<tr class="memitem:a88d13dbb24f220557f0bc476f93b3386"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)</td></tr>
+<tr class="memitem:a88d13dbb24f220557f0bc476f93b3386"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a88d13dbb24f220557f0bc476f93b3386">expected</a> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)</td></tr>
 <tr class="separator:a88d13dbb24f220557f0bc476f93b3386"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61ffdcdbd2adb1984b5ab61626692348"><td class="memTemplParams" colspan="2"><a id="a61ffdcdbd2adb1984b5ab61626692348" name="a61ffdcdbd2adb1984b5ab61626692348"></a>
-template&lt;class... Args&gt; <br />
+<tr class="memitem:a61ffdcdbd2adb1984b5ab61626692348"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
-<tr class="memitem:a61ffdcdbd2adb1984b5ab61626692348"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)</td></tr>
+<tr class="memitem:a61ffdcdbd2adb1984b5ab61626692348"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a61ffdcdbd2adb1984b5ab61626692348">expected</a> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)</td></tr>
 <tr class="separator:a61ffdcdbd2adb1984b5ab61626692348"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b25f48ccc6074bf64e33533b0e9d4a2"><td class="memTemplParams" colspan="2"><a id="a5b25f48ccc6074bf64e33533b0e9d4a2" name="a5b25f48ccc6074bf64e33533b0e9d4a2"></a>
-template&lt;class U , class... Args&gt; <br />
+<tr class="memitem:a5b25f48ccc6074bf64e33533b0e9d4a2"><td class="memTemplParams" colspan="2">template&lt;class U , class... Args&gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, std::initializer_list&lt;U&gt;&amp;, Args...&gt;)</td></tr>
-<tr class="memitem:a5b25f48ccc6074bf64e33533b0e9d4a2"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, std::initializer_list&lt; U &gt; il, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a5b25f48ccc6074bf64e33533b0e9d4a2"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a5b25f48ccc6074bf64e33533b0e9d4a2">expected</a> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, std::initializer_list&lt; U &gt; il, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a5b25f48ccc6074bf64e33533b0e9d4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae43ed02bcb892bb2e15698c127f8c5af"><td class="memTemplParams" colspan="2"><a id="ae43ed02bcb892bb2e15698c127f8c5af" name="ae43ed02bcb892bb2e15698c127f8c5af"></a>
-template&lt;class U , class... Args&gt; <br />
+<tr class="memitem:ae43ed02bcb892bb2e15698c127f8c5af"><td class="memTemplParams" colspan="2">template&lt;class U , class... Args&gt; <br />
 requires std::is_reference_v&lt;E&gt;</td></tr>
-<tr class="memitem:ae43ed02bcb892bb2e15698c127f8c5af"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, std::initializer_list&lt; U &gt;, Args &amp;&amp;...)</td></tr>
+<tr class="memitem:ae43ed02bcb892bb2e15698c127f8c5af"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ae43ed02bcb892bb2e15698c127f8c5af">expected</a> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, std::initializer_list&lt; U &gt;, Args &amp;&amp;...)</td></tr>
 <tr class="separator:ae43ed02bcb892bb2e15698c127f8c5af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a790c037a8e6d650f9caab729018a968d"><td class="memTemplParams" colspan="2"><a id="a790c037a8e6d650f9caab729018a968d" name="a790c037a8e6d650f9caab729018a968d"></a>
 template&lt;class G &gt; <br />
@@ -215,14 +214,14 @@ template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_convertible_v&lt;G&amp;, E&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&amp;&gt;)</td></tr>
 <tr class="memitem:ae5022132d5ebfc2419ecb52a1c2439a3"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>explicit</b> (!std::is_convertible_v&lt; G &amp;, E &gt;) <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>(<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void</td></tr>
 <tr class="separator:ae5022132d5ebfc2419ecb52a1c2439a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3f6cf2768022c5f1fd5f06133a57a0f"><td class="memItemLeft" align="right" valign="top"><a id="af3f6cf2768022c5f1fd5f06133a57a0f" name="af3f6cf2768022c5f1fd5f06133a57a0f"></a>
-constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;)=default</td></tr>
+<tr class="memitem:a79164c0602a0fa1a0c5889add724273c"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a79164c0602a0fa1a0c5889add724273c">~expected</a> ()=default</td></tr>
+<tr class="separator:a79164c0602a0fa1a0c5889add724273c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3f6cf2768022c5f1fd5f06133a57a0f"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#af3f6cf2768022c5f1fd5f06133a57a0f">operator=</a> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;)=default</td></tr>
 <tr class="separator:af3f6cf2768022c5f1fd5f06133a57a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc5994bfcca80788be3bff1d9b1ba6a9"><td class="memItemLeft" align="right" valign="top"><a id="afc5994bfcca80788be3bff1d9b1ba6a9" name="afc5994bfcca80788be3bff1d9b1ba6a9"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;rhs) noexcept(std::is_nothrow_copy_constructible_v&lt; E &gt; &amp;&amp;std::is_nothrow_copy_assignable_v&lt; E &gt;)</td></tr>
 <tr class="separator:afc5994bfcca80788be3bff1d9b1ba6a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a9105dbc4e82678671fd92f3d1c5758"><td class="memItemLeft" align="right" valign="top"><a id="a8a9105dbc4e82678671fd92f3d1c5758" name="a8a9105dbc4e82678671fd92f3d1c5758"></a>
-constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="memitem:a8a9105dbc4e82678671fd92f3d1c5758"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8a9105dbc4e82678671fd92f3d1c5758">operator=</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a8a9105dbc4e82678671fd92f3d1c5758"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1e7d88b43fe2dbcc671c630b28d4c46"><td class="memItemLeft" align="right" valign="top"><a id="ab1e7d88b43fe2dbcc671c630b28d4c46" name="ab1e7d88b43fe2dbcc671c630b28d4c46"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt; &amp;&amp;std::is_nothrow_move_assignable_v&lt; E &gt;)</td></tr>
@@ -247,48 +246,43 @@ template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_reference_v&lt;G&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&gt;)</td></tr>
 <tr class="memitem:a1bf8c3bb34866d90b1b5dc2aba67fe3d"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e)</td></tr>
 <tr class="separator:a1bf8c3bb34866d90b1b5dc2aba67fe3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a534acd988ecba129740e8765cc1a270e"><td class="memTemplParams" colspan="2"><a id="a534acd988ecba129740e8765cc1a270e" name="a534acd988ecba129740e8765cc1a270e"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:a534acd988ecba129740e8765cc1a270e"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:a534acd988ecba129740e8765cc1a270e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)</td></tr>
+<tr class="memitem:a534acd988ecba129740e8765cc1a270e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a534acd988ecba129740e8765cc1a270e">operator=</a> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;)</td></tr>
 <tr class="separator:a534acd988ecba129740e8765cc1a270e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41ba80fd3f76d3236f91830851e35984"><td class="memTemplParams" colspan="2"><a id="a41ba80fd3f76d3236f91830851e35984" name="a41ba80fd3f76d3236f91830851e35984"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:a41ba80fd3f76d3236f91830851e35984"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
-<tr class="memitem:a41ba80fd3f76d3236f91830851e35984"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
+<tr class="memitem:a41ba80fd3f76d3236f91830851e35984"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a41ba80fd3f76d3236f91830851e35984">operator=</a> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
 <tr class="separator:a41ba80fd3f76d3236f91830851e35984"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7635c4450ff61d78cca1d73564dc6762"><td class="memItemLeft" align="right" valign="top"><a id="a7635c4450ff61d78cca1d73564dc6762" name="a7635c4450ff61d78cca1d73564dc6762"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>emplace</b> () noexcept</td></tr>
+<tr class="memitem:a7635c4450ff61d78cca1d73564dc6762"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a7635c4450ff61d78cca1d73564dc6762">emplace</a> () noexcept</td></tr>
 <tr class="separator:a7635c4450ff61d78cca1d73564dc6762"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cf3fbdb806b5404e9ef51fda6093384"><td class="memItemLeft" align="right" valign="top"><a id="a6cf3fbdb806b5404e9ef51fda6093384" name="a6cf3fbdb806b5404e9ef51fda6093384"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt; &amp;&amp;(std::is_reference_v&lt; E &gt;||std::is_nothrow_swappable_v&lt; E &gt;))</td></tr>
+<tr class="memitem:a6cf3fbdb806b5404e9ef51fda6093384"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a6cf3fbdb806b5404e9ef51fda6093384">swap</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt; &amp;&amp;(std::is_reference_v&lt; E &gt;||std::is_nothrow_swappable_v&lt; E &gt;))</td></tr>
 <tr class="separator:a6cf3fbdb806b5404e9ef51fda6093384"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45fcfe59598aecb7c220828f335c2c4c"><td class="memItemLeft" align="right" valign="top"><a id="a45fcfe59598aecb7c220828f335c2c4c" name="a45fcfe59598aecb7c220828f335c2c4c"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const noexcept</td></tr>
+<tr class="memitem:a45fcfe59598aecb7c220828f335c2c4c"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a45fcfe59598aecb7c220828f335c2c4c">operator bool</a> () const noexcept</td></tr>
 <tr class="separator:a45fcfe59598aecb7c220828f335c2c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9527325f6bc22cb1345f0f7b07c00304"><td class="memItemLeft" align="right" valign="top"><a id="a9527325f6bc22cb1345f0f7b07c00304" name="a9527325f6bc22cb1345f0f7b07c00304"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_value</b> () const noexcept</td></tr>
+<tr class="memdesc:a9527325f6bc22cb1345f0f7b07c00304"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-obs-bool <br /></td></tr>
 <tr class="separator:a9527325f6bc22cb1345f0f7b07c00304"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab382ecd7beb077d214f3162d8eda3621"><td class="memItemLeft" align="right" valign="top"><a id="ab382ecd7beb077d214f3162d8eda3621" name="ab382ecd7beb077d214f3162d8eda3621"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const noexcept</td></tr>
+<tr class="memdesc:ab382ecd7beb077d214f3162d8eda3621"><td class="mdescLeft">&#160;</td><td class="mdescRight">\hardexpects <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>. <br /></td></tr>
 <tr class="separator:ab382ecd7beb077d214f3162d8eda3621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6756d4690802b093899a5630cbe64dbe"><td class="memItemLeft" align="right" valign="top"><a id="a6756d4690802b093899a5630cbe64dbe" name="a6756d4690802b093899a5630cbe64dbe"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> () const &amp;</td></tr>
+<tr class="memitem:a6756d4690802b093899a5630cbe64dbe"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a6756d4690802b093899a5630cbe64dbe">value</a> () const &amp;</td></tr>
 <tr class="separator:a6756d4690802b093899a5630cbe64dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abef590f3a7a0c0e10598bbc9bc9cbcb3"><td class="memItemLeft" align="right" valign="top"><a id="abef590f3a7a0c0e10598bbc9bc9cbcb3" name="abef590f3a7a0c0e10598bbc9bc9cbcb3"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>value</b> () &amp;&amp;</td></tr>
+<tr class="memitem:abef590f3a7a0c0e10598bbc9bc9cbcb3"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#abef590f3a7a0c0e10598bbc9bc9cbcb3">value</a> () &amp;&amp;</td></tr>
 <tr class="separator:abef590f3a7a0c0e10598bbc9bc9cbcb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f9567299ca594bd0a7592870179db1a"><td class="memItemLeft" align="right" valign="top"><a id="a8f9567299ca594bd0a7592870179db1a" name="a8f9567299ca594bd0a7592870179db1a"></a>
-constexpr const E &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () const &amp;noexcept</td></tr>
+<tr class="memitem:a8f9567299ca594bd0a7592870179db1a"><td class="memItemLeft" align="right" valign="top">constexpr const E &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8f9567299ca594bd0a7592870179db1a">error</a> () const &amp;noexcept</td></tr>
 <tr class="separator:a8f9567299ca594bd0a7592870179db1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a397873f5ab02fb1615f23e1934683927"><td class="memItemLeft" align="right" valign="top"><a id="a397873f5ab02fb1615f23e1934683927" name="a397873f5ab02fb1615f23e1934683927"></a>
 constexpr E &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () &amp;noexcept</td></tr>
+<tr class="memdesc:a397873f5ab02fb1615f23e1934683927"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-obs-error-lval <br /></td></tr>
 <tr class="separator:a397873f5ab02fb1615f23e1934683927"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e674b3c4c719f2d9ac6007a0320c41a"><td class="memItemLeft" align="right" valign="top"><a id="a6e674b3c4c719f2d9ac6007a0320c41a" name="a6e674b3c4c719f2d9ac6007a0320c41a"></a>
-constexpr const E &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () const &amp;&amp;noexcept</td></tr>
+<tr class="memitem:a6e674b3c4c719f2d9ac6007a0320c41a"><td class="memItemLeft" align="right" valign="top">constexpr const E &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a6e674b3c4c719f2d9ac6007a0320c41a">error</a> () const &amp;&amp;noexcept</td></tr>
 <tr class="separator:a6e674b3c4c719f2d9ac6007a0320c41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd372bc56c833d017898aaaacdb573e7"><td class="memItemLeft" align="right" valign="top"><a id="acd372bc56c833d017898aaaacdb573e7" name="acd372bc56c833d017898aaaacdb573e7"></a>
 constexpr E &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () &amp;&amp;noexcept</td></tr>
+<tr class="memdesc:acd372bc56c833d017898aaaacdb573e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-obs-error-rval <br /></td></tr>
 <tr class="separator:acd372bc56c833d017898aaaacdb573e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af15ff7c56c7ba11acd5d15d575f8d647"><td class="memTemplParams" colspan="2"><a id="af15ff7c56c7ba11acd5d15d575f8d647" name="af15ff7c56c7ba11acd5d15d575f8d647"></a>
 template&lt;class G  = error_value_type&gt; <br />
@@ -300,10 +294,9 @@ template&lt;class G  = error_value_type&gt; <br />
 requires (std::is_move_constructible_v&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt; &amp;&amp; std::is_convertible_v&lt;G, std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt;)</td></tr>
 <tr class="memitem:a68cb3380bb991cb3c1234e6a86b23f68"><td class="memTemplItemLeft" align="right" valign="top">constexpr error_value_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>error_or</b> (G &amp;&amp;def) &amp;&amp;</td></tr>
 <tr class="separator:a68cb3380bb991cb3c1234e6a86b23f68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a045b083b58fb54f8ed210342e65c245b"><td class="memTemplParams" colspan="2"><a id="a045b083b58fb54f8ed210342e65c245b" name="a045b083b58fb54f8ed210342e65c245b"></a>
-template&lt;class U &gt; <br />
+<tr class="memitem:a045b083b58fb54f8ed210342e65c245b"><td class="memTemplParams" colspan="2">template&lt;class U &gt; <br />
 requires std::is_reference_v&lt;E&gt;</td></tr>
-<tr class="memitem:a045b083b58fb54f8ed210342e65c245b"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value_or</b> (U &amp;&amp;) const</td></tr>
+<tr class="memitem:a045b083b58fb54f8ed210342e65c245b"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a045b083b58fb54f8ed210342e65c245b">value_or</a> (U &amp;&amp;) const</td></tr>
 <tr class="separator:a045b083b58fb54f8ed210342e65c245b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ea2cded1bbc47fbbebab78b97ed2688"><td class="memTemplParams" colspan="2"><a id="a8ea2cded1bbc47fbbebab78b97ed2688" name="a8ea2cded1bbc47fbbebab78b97ed2688"></a>
 template&lt;class F &gt; <br />
@@ -377,117 +370,114 @@ template&lt;class F &gt; </td></tr>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:a0bf8c65265929bec898ff8be7f764439"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_error</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
 <tr class="separator:a0bf8c65265929bec898ff8be7f764439"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9abacff412d6557e9c5eced63cb797d9"><td class="memTemplParams" colspan="2"><a id="a9abacff412d6557e9c5eced63cb797d9" name="a9abacff412d6557e9c5eced63cb797d9"></a>
-template&lt;class U , class G &gt; <br />
+<tr class="memitem:a9abacff412d6557e9c5eced63cb797d9"><td class="memTemplParams" colspan="2">template&lt;class U , class G &gt; <br />
 requires (std::is_void_v&lt;U&gt; &amp;&amp; !std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_same_v&lt;G, E&gt; &amp;&amp; std::is_constructible_v&lt;E, const G&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt; &amp;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt; &amp;&amp;&gt;)</td></tr>
-<tr class="memitem:a9abacff412d6557e9c5eced63cb797d9"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; U, G &gt; &amp;rhs)</td></tr>
+<tr class="memitem:a9abacff412d6557e9c5eced63cb797d9"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9abacff412d6557e9c5eced63cb797d9">expected</a> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; U, G &gt; &amp;rhs)</td></tr>
 <tr class="separator:a9abacff412d6557e9c5eced63cb797d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93200c77764eb1204e7d52455a2cdb48"><td class="memTemplParams" colspan="2"><a id="a93200c77764eb1204e7d52455a2cdb48" name="a93200c77764eb1204e7d52455a2cdb48"></a>
 template&lt;class U , class G &gt; <br />
 requires (std::is_void_v&lt;U&gt; &amp;&amp; !std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_same_v&lt;G, E&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt; &amp;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt; &amp;&amp;&gt;)</td></tr>
 <tr class="memitem:a93200c77764eb1204e7d52455a2cdb48"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; U, G &gt; &amp;&amp;rhs)</td></tr>
+<tr class="memdesc:a93200c77764eb1204e7d52455a2cdb48"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-cvt-copy-ctor <br /></td></tr>
 <tr class="separator:a93200c77764eb1204e7d52455a2cdb48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9723629e095668f12aa416d50d6a22e5"><td class="memTemplParams" colspan="2"><a id="a9723629e095668f12aa416d50d6a22e5" name="a9723629e095668f12aa416d50d6a22e5"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:a9723629e095668f12aa416d50d6a22e5"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_convertible_v&lt;G&amp;, E&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&amp;&gt;)</td></tr>
-<tr class="memitem:a9723629e095668f12aa416d50d6a22e5"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, G &amp; &gt; &amp;rhs)</td></tr>
+<tr class="memitem:a9723629e095668f12aa416d50d6a22e5"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9723629e095668f12aa416d50d6a22e5">expected</a> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, G &amp; &gt; &amp;rhs)</td></tr>
 <tr class="separator:a9723629e095668f12aa416d50d6a22e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac1c14b631f3e692cf798cf0b22c4063"><td class="memTemplParams" colspan="2"><a id="aac1c14b631f3e692cf798cf0b22c4063" name="aac1c14b631f3e692cf798cf0b22c4063"></a>
 template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_convertible_v&lt;G&amp;, E&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&amp;&gt;)</td></tr>
 <tr class="memitem:aac1c14b631f3e692cf798cf0b22c4063"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, G &amp; &gt; &amp;&amp;rhs)</td></tr>
+<tr class="memdesc:aac1c14b631f3e692cf798cf0b22c4063"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-cvt-copy-ctor-ref <br /></td></tr>
 <tr class="separator:aac1c14b631f3e692cf798cf0b22c4063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8611a6aab6df0899efefcbb4954760d4"><td class="memTemplParams" colspan="2"><a id="a8611a6aab6df0899efefcbb4954760d4" name="a8611a6aab6df0899efefcbb4954760d4"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:a8611a6aab6df0899efefcbb4954760d4"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, const G&amp;&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, const G&amp;&gt;)</td></tr>
-<tr class="memitem:a8611a6aab6df0899efefcbb4954760d4"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;e)</td></tr>
+<tr class="memitem:a8611a6aab6df0899efefcbb4954760d4"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8611a6aab6df0899efefcbb4954760d4">operator=</a> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;e)</td></tr>
 <tr class="separator:a8611a6aab6df0899efefcbb4954760d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3982f7b6ba1b88f0731b8d795cfb31c"><td class="memTemplParams" colspan="2"><a id="ac3982f7b6ba1b88f0731b8d795cfb31c" name="ac3982f7b6ba1b88f0731b8d795cfb31c"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:ac3982f7b6ba1b88f0731b8d795cfb31c"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, G&gt;)</td></tr>
-<tr class="memitem:ac3982f7b6ba1b88f0731b8d795cfb31c"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e)</td></tr>
+<tr class="memitem:ac3982f7b6ba1b88f0731b8d795cfb31c"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ac3982f7b6ba1b88f0731b8d795cfb31c">operator=</a> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e)</td></tr>
+<tr class="memdesc:ac3982f7b6ba1b88f0731b8d795cfb31c"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-cvt-unexpected-assign  <br /></td></tr>
 <tr class="separator:ac3982f7b6ba1b88f0731b8d795cfb31c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad25c5cd3f7f6052efa9e5c84367bff35"><td class="memTemplParams" colspan="2"><a id="ad25c5cd3f7f6052efa9e5c84367bff35" name="ad25c5cd3f7f6052efa9e5c84367bff35"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:ad25c5cd3f7f6052efa9e5c84367bff35"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_copy_constructible_v&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt; &amp;&amp; std::is_convertible_v&lt;G, std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt;)</td></tr>
-<tr class="memitem:ad25c5cd3f7f6052efa9e5c84367bff35"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt;::error_value_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>error_or</b> (G &amp;&amp;def) const &amp;</td></tr>
+<tr class="memitem:ad25c5cd3f7f6052efa9e5c84367bff35"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt;::error_value_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ad25c5cd3f7f6052efa9e5c84367bff35">error_or</a> (G &amp;&amp;def) const &amp;</td></tr>
 <tr class="separator:ad25c5cd3f7f6052efa9e5c84367bff35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45c447a3f5ad9bf3a8a9c4ff6f15a3c3"><td class="memTemplParams" colspan="2"><a id="a45c447a3f5ad9bf3a8a9c4ff6f15a3c3" name="a45c447a3f5ad9bf3a8a9c4ff6f15a3c3"></a>
-template&lt;class G &gt; <br />
+<tr class="memitem:a45c447a3f5ad9bf3a8a9c4ff6f15a3c3"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_move_constructible_v&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt; &amp;&amp; std::is_convertible_v&lt;G, std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt;)</td></tr>
-<tr class="memitem:a45c447a3f5ad9bf3a8a9c4ff6f15a3c3"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt;::error_value_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>error_or</b> (G &amp;&amp;def) &amp;&amp;</td></tr>
+<tr class="memitem:a45c447a3f5ad9bf3a8a9c4ff6f15a3c3"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt;::error_value_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a45c447a3f5ad9bf3a8a9c4ff6f15a3c3">error_or</a> (G &amp;&amp;def) &amp;&amp;</td></tr>
 <tr class="separator:a45c447a3f5ad9bf3a8a9c4ff6f15a3c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ea2cded1bbc47fbbebab78b97ed2688"><td class="memTemplParams" colspan="2"><a id="a8ea2cded1bbc47fbbebab78b97ed2688" name="a8ea2cded1bbc47fbbebab78b97ed2688"></a>
-template&lt;class F &gt; <br />
+<tr class="memitem:a8ea2cded1bbc47fbbebab78b97ed2688"><td class="memTemplParams" colspan="2">template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, E&amp;&gt;</td></tr>
-<tr class="memitem:a8ea2cded1bbc47fbbebab78b97ed2688"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>and_then</b> (F &amp;&amp;f) &amp;</td></tr>
+<tr class="memitem:a8ea2cded1bbc47fbbebab78b97ed2688"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8ea2cded1bbc47fbbebab78b97ed2688">and_then</a> (F &amp;&amp;f) &amp;</td></tr>
 <tr class="separator:a8ea2cded1bbc47fbbebab78b97ed2688"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96fc20769d379143f965559df2d94050"><td class="memTemplParams" colspan="2"><a id="a96fc20769d379143f965559df2d94050" name="a96fc20769d379143f965559df2d94050"></a>
-template&lt;class F &gt; <br />
+<tr class="memitem:a96fc20769d379143f965559df2d94050"><td class="memTemplParams" colspan="2">template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</td></tr>
-<tr class="memitem:a96fc20769d379143f965559df2d94050"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>and_then</b> (F &amp;&amp;f) &amp;&amp;</td></tr>
+<tr class="memitem:a96fc20769d379143f965559df2d94050"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a96fc20769d379143f965559df2d94050">and_then</a> (F &amp;&amp;f) &amp;&amp;</td></tr>
 <tr class="separator:a96fc20769d379143f965559df2d94050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bd5f61e26e8e842c19063e0e28d5fde"><td class="memTemplParams" colspan="2"><a id="a8bd5f61e26e8e842c19063e0e28d5fde" name="a8bd5f61e26e8e842c19063e0e28d5fde"></a>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&gt;</td></tr>
 <tr class="memitem:a8bd5f61e26e8e842c19063e0e28d5fde"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>and_then</b> (F &amp;&amp;f) const &amp;</td></tr>
+<tr class="memdesc:a8bd5f61e26e8e842c19063e0e28d5fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-and-then-lval <br /></td></tr>
 <tr class="separator:a8bd5f61e26e8e842c19063e0e28d5fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c0bc4e2bd2bf856e3562e3fc9af3218"><td class="memTemplParams" colspan="2"><a id="a8c0bc4e2bd2bf856e3562e3fc9af3218" name="a8c0bc4e2bd2bf856e3562e3fc9af3218"></a>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&amp;&gt;</td></tr>
 <tr class="memitem:a8c0bc4e2bd2bf856e3562e3fc9af3218"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>and_then</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
+<tr class="memdesc:a8c0bc4e2bd2bf856e3562e3fc9af3218"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-and-then-rval <br /></td></tr>
 <tr class="separator:a8c0bc4e2bd2bf856e3562e3fc9af3218"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90f6b6d08bf85a961753493ed4569084"><td class="memTemplParams" colspan="2"><a id="a90f6b6d08bf85a961753493ed4569084" name="a90f6b6d08bf85a961753493ed4569084"></a>
-template&lt;class F &gt; </td></tr>
-<tr class="memitem:a90f6b6d08bf85a961753493ed4569084"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>or_else</b> (F &amp;&amp;f) &amp;</td></tr>
+<tr class="memitem:a90f6b6d08bf85a961753493ed4569084"><td class="memTemplParams" colspan="2">template&lt;class F &gt; </td></tr>
+<tr class="memitem:a90f6b6d08bf85a961753493ed4569084"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a90f6b6d08bf85a961753493ed4569084">or_else</a> (F &amp;&amp;f) &amp;</td></tr>
 <tr class="separator:a90f6b6d08bf85a961753493ed4569084"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad129c4f40ee26e813a3b5f0796b95000"><td class="memTemplParams" colspan="2"><a id="ad129c4f40ee26e813a3b5f0796b95000" name="ad129c4f40ee26e813a3b5f0796b95000"></a>
-template&lt;class F &gt; </td></tr>
-<tr class="memitem:ad129c4f40ee26e813a3b5f0796b95000"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>or_else</b> (F &amp;&amp;f) &amp;&amp;</td></tr>
+<tr class="memitem:ad129c4f40ee26e813a3b5f0796b95000"><td class="memTemplParams" colspan="2">template&lt;class F &gt; </td></tr>
+<tr class="memitem:ad129c4f40ee26e813a3b5f0796b95000"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ad129c4f40ee26e813a3b5f0796b95000">or_else</a> (F &amp;&amp;f) &amp;&amp;</td></tr>
 <tr class="separator:ad129c4f40ee26e813a3b5f0796b95000"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7eba6d8003a79d3058f949f6fe97de80"><td class="memTemplParams" colspan="2"><a id="a7eba6d8003a79d3058f949f6fe97de80" name="a7eba6d8003a79d3058f949f6fe97de80"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:a7eba6d8003a79d3058f949f6fe97de80"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>or_else</b> (F &amp;&amp;f) const &amp;</td></tr>
+<tr class="memdesc:a7eba6d8003a79d3058f949f6fe97de80"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-or-else-lval <br /></td></tr>
 <tr class="separator:a7eba6d8003a79d3058f949f6fe97de80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96d3d5fe6219f3bcac09c98e2d6d51ae"><td class="memTemplParams" colspan="2"><a id="a96d3d5fe6219f3bcac09c98e2d6d51ae" name="a96d3d5fe6219f3bcac09c98e2d6d51ae"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:a96d3d5fe6219f3bcac09c98e2d6d51ae"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>or_else</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
+<tr class="memdesc:a96d3d5fe6219f3bcac09c98e2d6d51ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-or-else-rval <br /></td></tr>
 <tr class="separator:a96d3d5fe6219f3bcac09c98e2d6d51ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08ae7a46c60fa54d5fd216ff8edc3123"><td class="memTemplParams" colspan="2"><a id="a08ae7a46c60fa54d5fd216ff8edc3123" name="a08ae7a46c60fa54d5fd216ff8edc3123"></a>
-template&lt;class F &gt; <br />
+<tr class="memitem:a08ae7a46c60fa54d5fd216ff8edc3123"><td class="memTemplParams" colspan="2">template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, E&amp;&gt;</td></tr>
-<tr class="memitem:a08ae7a46c60fa54d5fd216ff8edc3123"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform</b> (F &amp;&amp;f) &amp;</td></tr>
+<tr class="memitem:a08ae7a46c60fa54d5fd216ff8edc3123"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a08ae7a46c60fa54d5fd216ff8edc3123">transform</a> (F &amp;&amp;f) &amp;</td></tr>
 <tr class="separator:a08ae7a46c60fa54d5fd216ff8edc3123"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0e08cd92b0a4c5732af9f53b8efcf57"><td class="memTemplParams" colspan="2"><a id="aa0e08cd92b0a4c5732af9f53b8efcf57" name="aa0e08cd92b0a4c5732af9f53b8efcf57"></a>
-template&lt;class F &gt; <br />
+<tr class="memitem:aa0e08cd92b0a4c5732af9f53b8efcf57"><td class="memTemplParams" colspan="2">template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</td></tr>
-<tr class="memitem:aa0e08cd92b0a4c5732af9f53b8efcf57"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform</b> (F &amp;&amp;f) &amp;&amp;</td></tr>
+<tr class="memitem:aa0e08cd92b0a4c5732af9f53b8efcf57"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#aa0e08cd92b0a4c5732af9f53b8efcf57">transform</a> (F &amp;&amp;f) &amp;&amp;</td></tr>
 <tr class="separator:aa0e08cd92b0a4c5732af9f53b8efcf57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac95a7f2b85b73841bf1c41f47c793581"><td class="memTemplParams" colspan="2"><a id="ac95a7f2b85b73841bf1c41f47c793581" name="ac95a7f2b85b73841bf1c41f47c793581"></a>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&gt;</td></tr>
 <tr class="memitem:ac95a7f2b85b73841bf1c41f47c793581"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform</b> (F &amp;&amp;f) const &amp;</td></tr>
+<tr class="memdesc:ac95a7f2b85b73841bf1c41f47c793581"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-transform-lval <br /></td></tr>
 <tr class="separator:ac95a7f2b85b73841bf1c41f47c793581"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a206b4bf43099ebe03cda36707406d06f"><td class="memTemplParams" colspan="2"><a id="a206b4bf43099ebe03cda36707406d06f" name="a206b4bf43099ebe03cda36707406d06f"></a>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&amp;&gt;</td></tr>
 <tr class="memitem:a206b4bf43099ebe03cda36707406d06f"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
+<tr class="memdesc:a206b4bf43099ebe03cda36707406d06f"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-transform-rval <br /></td></tr>
 <tr class="separator:a206b4bf43099ebe03cda36707406d06f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9806268fa4d6719126d79f914ed388e"><td class="memTemplParams" colspan="2"><a id="af9806268fa4d6719126d79f914ed388e" name="af9806268fa4d6719126d79f914ed388e"></a>
-template&lt;class F &gt; </td></tr>
-<tr class="memitem:af9806268fa4d6719126d79f914ed388e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_error</b> (F &amp;&amp;f) &amp;</td></tr>
+<tr class="memitem:af9806268fa4d6719126d79f914ed388e"><td class="memTemplParams" colspan="2">template&lt;class F &gt; </td></tr>
+<tr class="memitem:af9806268fa4d6719126d79f914ed388e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#af9806268fa4d6719126d79f914ed388e">transform_error</a> (F &amp;&amp;f) &amp;</td></tr>
 <tr class="separator:af9806268fa4d6719126d79f914ed388e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac76ef05a20352ed2498a28bbc3d0b22f"><td class="memTemplParams" colspan="2"><a id="ac76ef05a20352ed2498a28bbc3d0b22f" name="ac76ef05a20352ed2498a28bbc3d0b22f"></a>
-template&lt;class F &gt; </td></tr>
-<tr class="memitem:ac76ef05a20352ed2498a28bbc3d0b22f"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_error</b> (F &amp;&amp;f) &amp;&amp;</td></tr>
+<tr class="memitem:ac76ef05a20352ed2498a28bbc3d0b22f"><td class="memTemplParams" colspan="2">template&lt;class F &gt; </td></tr>
+<tr class="memitem:ac76ef05a20352ed2498a28bbc3d0b22f"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ac76ef05a20352ed2498a28bbc3d0b22f">transform_error</a> (F &amp;&amp;f) &amp;&amp;</td></tr>
 <tr class="separator:ac76ef05a20352ed2498a28bbc3d0b22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf23915ca354e0853c9a901e06f115af"><td class="memTemplParams" colspan="2"><a id="acf23915ca354e0853c9a901e06f115af" name="acf23915ca354e0853c9a901e06f115af"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:acf23915ca354e0853c9a901e06f115af"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_error</b> (F &amp;&amp;f) const &amp;</td></tr>
+<tr class="memdesc:acf23915ca354e0853c9a901e06f115af"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-transform-error-lval <br /></td></tr>
 <tr class="separator:acf23915ca354e0853c9a901e06f115af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bf8c65265929bec898ff8be7f764439"><td class="memTemplParams" colspan="2"><a id="a0bf8c65265929bec898ff8be7f764439" name="a0bf8c65265929bec898ff8be7f764439"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:a0bf8c65265929bec898ff8be7f764439"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_error</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
+<tr class="memdesc:a0bf8c65265929bec898ff8be7f764439"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also void-monadic-transform-error-rval <br /></td></tr>
 <tr class="separator:a0bf8c65265929bec898ff8be7f764439"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -503,23 +493,1384 @@ constexpr G &amp;&amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="separator:abac4ff0897b9db61f69b8e2a87d8ace4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9e52cb487a3de00596c0859554320bc"><td class="memItemLeft" align="right" valign="top"><a id="ab9e52cb487a3de00596c0859554320bc" name="ab9e52cb487a3de00596c0859554320bc"></a>
 <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; E &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>unex_</b></td></tr>
+<tr class="memdesc:ab9e52cb487a3de00596c0859554320bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">\expos <br /></td></tr>
 <tr class="separator:ab9e52cb487a3de00596c0859554320bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a019c691367cd10f473e81488e9a46c7d"><td class="memItemLeft" align="right" valign="top"><a id="a019c691367cd10f473e81488e9a46c7d" name="a019c691367cd10f473e81488e9a46c7d"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;y) noexcept(noexcept(x.swap(y)))</td></tr>
+<tr class="memitem:a019c691367cd10f473e81488e9a46c7d"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a019c691367cd10f473e81488e9a46c7d">swap</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;y) noexcept(noexcept(x.swap(y)))</td></tr>
 <tr class="separator:a019c691367cd10f473e81488e9a46c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a394df3fdadc4f2ee3c621ca115f4850f"><td class="memTemplParams" colspan="2"><a id="a394df3fdadc4f2ee3c621ca115f4850f" name="a394df3fdadc4f2ee3c621ca115f4850f"></a>
-template&lt;class T2 , class E2 &gt; <br />
+<tr class="memitem:a394df3fdadc4f2ee3c621ca115f4850f"><td class="memTemplParams" colspan="2">template&lt;class T2 , class E2 &gt; <br />
 requires std::is_void_v&lt;T2&gt;</td></tr>
-<tr class="memitem:a394df3fdadc4f2ee3c621ca115f4850f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T2, E2 &gt; &amp;y)</td></tr>
+<tr class="memitem:a394df3fdadc4f2ee3c621ca115f4850f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a394df3fdadc4f2ee3c621ca115f4850f">operator==</a> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T2, E2 &gt; &amp;y)</td></tr>
 <tr class="separator:a394df3fdadc4f2ee3c621ca115f4850f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3607c2a681da911818087a166eba1a7"><td class="memTemplParams" colspan="2"><a id="ad3607c2a681da911818087a166eba1a7" name="ad3607c2a681da911818087a166eba1a7"></a>
-template&lt;class E2 &gt; </td></tr>
-<tr class="memitem:ad3607c2a681da911818087a166eba1a7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; E2 &gt; &amp;e)</td></tr>
+<tr class="memitem:ad3607c2a681da911818087a166eba1a7"><td class="memTemplParams" colspan="2">template&lt;class E2 &gt; </td></tr>
+<tr class="memitem:ad3607c2a681da911818087a166eba1a7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#ad3607c2a681da911818087a166eba1a7">operator==</a> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; E2 &gt; &amp;e)</td></tr>
 <tr class="separator:ad3607c2a681da911818087a166eba1a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class E&gt;<br />
+class beman::expected::expected&lt; void, E &gt;</div><p>\at expected.void.general \mandates A program that instantiates the definition of <code>expected&lt;T, E&gt;</code> with an <code>E</code> that is not a valid template argument for <code>unexpected</code> is ill-formed. </p><dl class="section remark"><dt>Remarks</dt><dd>Any object of type <code>expected&lt;T, E&gt;</code> either represents a value of type <code>T</code>, or contains a value of type <code>E</code> nested within it. Member <code>has_val</code> indicates whether the <code>expected&lt;T, E&gt;</code> object represents a value of type <code>T</code>. When <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>, the error is <code>unex.error()</code>. </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ad629f811d4c4c37edd7fe676d556cad1" name="ad629f811d4c4c37edd7fe676d556cad1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad629f811d4c4c37edd7fe676d556cad1">&#9670;&#160;</a></span>expected() <span class="overload">[1/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (std::is_copy_constructible_v&lt;E&gt; &amp;&amp; !std::is_trivially_copy_constructible_v&lt;E&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">default</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.cons \merge</p>
+<p>\effects If <code>rhs.has_value()</code> is <code>false</code>, direct-non-list-initializes <code>unex</code> with <code>rhs.error()</code>. \ensures <code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Any</td><td>exception thrown by the initialization of <code>unex</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This constructor is defined as deleted unless <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code> or <code>is_reference_v&lt;E&gt;</code> is <code>true</code>. This constructor is trivial if <code>is_trivially_copy_constructible_v&lt;E&gt;</code> is <code>true</code>. </dd></dl>
+
+</div>
+</div>
+<a id="ac556444db5d03d08c91eb446cf46001e" name="ac556444db5d03d08c91eb446cf46001e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac556444db5d03d08c91eb446cf46001e">&#9670;&#160;</a></span>expected() <span class="overload">[2/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (std::is_move_constructible_v&lt;E&gt; &amp;&amp; !std::is_trivially_move_constructible_v&lt;E&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">default</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.cons \merge</p>
+<p>\effects If <code>rhs.has_value()</code> is <code>false</code>, direct-non-list-initializes <code>unex</code> with <code>std::move(rhs.error())</code>. \ensures <code>rhs.has_value()</code> is unchanged; <code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Any</td><td>exception thrown by the initialization of <code>unex</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This constructor is trivial if <code>is_trivially_move_constructible_v&lt;E&gt;</code> is <code>true</code>. </dd></dl>
+
+</div>
+</div>
+<a id="ae1042c115f5c8d3150c88b4b7c845192" name="ae1042c115f5c8d3150c88b4b7c845192"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1042c115f5c8d3150c88b4b7c845192">&#9670;&#160;</a></span>expected() <span class="overload">[3/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.cons \group void-cvt-unexpected-ctor-deleted </p><dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload taking <code>unexpected&lt;G&gt;</code> for a non-reference <code>G</code> is defined as deleted: the referent would live inside the (possibly temporary) source <code>unexpected&lt;G&gt;</code> object, and binding <code>E&amp;</code> to it would dangle. Use an <code>unexpected&lt;E&amp;&gt;</code> holding an external object instead.</dd></dl>
+<p>\group void-cvt-unexpected-ctor \constraints <code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code>. \effects Direct-non-list-initializes <code>unex</code> with <code>e.error()</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Any</td><td>exception thrown by the initialization of <code>unex</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>\group void-cvt-unexpected-ctor-ref \constraints <code>is_reference_v&lt;G&gt;</code> is <code>true</code>; and <code>is_constructible_v&lt;E, G&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;E, G&gt;</code> is <code>false</code>. \effects Initializes <code>unex</code> with <code>e.error()</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>This constructor never throws: the referent is bound, not copied. </dd></dl>
+
+</div>
+</div>
+<a id="ad2861662e0ab52cc130f9b6639de274c" name="ad2861662e0ab52cc130f9b6639de274c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2861662e0ab52cc130f9b6639de274c">&#9670;&#160;</a></span>expected() <span class="overload">[4/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>\also void-cvt-unexpected-ctor </p>
+<p>\also void-cvt-unexpected-ctor-ref</p>
+<p>\at expected.void.cons \also void-cvt-unexpected-ctor-deleted </p>
+
+</div>
+</div>
+<a id="a8867747a61417fc9f258716c4b17601f" name="a8867747a61417fc9f258716c4b17601f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8867747a61417fc9f258716c4b17601f">&#9670;&#160;</a></span>expected() <span class="overload">[5/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</div>
+<div class="memtemplate">
+template&lt;class... Args&gt; <br />
+requires (std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\constraints <code>is_constructible_v&lt;E, Args...&gt;</code> is <code>true</code>. \effects Direct-non-list-initializes <code>unex</code> with <code>std::forward&lt;Args&gt;(args)...</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Any</td><td>exception thrown by the initialization of <code>unex</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a88d13dbb24f220557f0bc476f93b3386" name="a88d13dbb24f220557f0bc476f93b3386"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88d13dbb24f220557f0bc476f93b3386">&#9670;&#160;</a></span>expected() <span class="overload">[6/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class... Args&gt; <br />
+requires (detail::unexpect_dangles_v&lt;E, Args...&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.cons \group void-unexpect-ctor-deleted </p><dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload with the same parameter types is defined as deleted if the single argument would bind <code>E&amp;</code> to a temporary, or if it is otherwise not usable to construct <code>E</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a61ffdcdbd2adb1984b5ab61626692348" name="a61ffdcdbd2adb1984b5ab61626692348"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61ffdcdbd2adb1984b5ab61626692348">&#9670;&#160;</a></span>expected() <span class="overload">[7/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class... Args&gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.cons \also void-unexpect-ctor-deleted </p>
+
+</div>
+</div>
+<a id="a5b25f48ccc6074bf64e33533b0e9d4a2" name="a5b25f48ccc6074bf64e33533b0e9d4a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b25f48ccc6074bf64e33533b0e9d4a2">&#9670;&#160;</a></span>expected() <span class="overload">[8/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, std::initializer_list&lt;U&gt;&amp;, Args...&gt;)</div>
+<div class="memtemplate">
+template&lt;class U , class... Args&gt; <br />
+requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, std::initializer_list&lt;U&gt;&amp;, Args...&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::initializer_list&lt; U &gt;&#160;</td>
+          <td class="paramname"><em>il</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\constraints <code>is_reference_v&lt;E&gt;</code> is <code>false</code>, and <code>is_constructible_v&lt;E, initializer_list&lt;U&gt;&amp;, Args...&gt;</code> is <code>true</code>. \effects Direct-non-list-initializes <code>unex</code> with <code>il, std::forward&lt;Args&gt;(args)...</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Any</td><td>exception thrown by the initialization of <code>unex</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section remark"><dt>Remarks</dt><dd>An overload with the same parameter types is defined as deleted when <code>E</code> is an lvalue reference type. An initializer list cannot provide the required long-lived error referent. </dd></dl>
+
+</div>
+</div>
+<a id="ae43ed02bcb892bb2e15698c127f8c5af" name="ae43ed02bcb892bb2e15698c127f8c5af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae43ed02bcb892bb2e15698c127f8c5af">&#9670;&#160;</a></span>expected() <span class="overload">[9/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class U , class... Args&gt; <br />
+requires std::is_reference_v&lt;E&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::initializer_list&lt; U &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.cons </p><dl class="section remark"><dt>Remarks</dt><dd>An overload with the same parameter types is defined as deleted when <code>E</code> is an lvalue reference type. An initializer list cannot provide the required long-lived error referent. </dd></dl>
+
+</div>
+</div>
+<a id="a79164c0602a0fa1a0c5889add724273c" name="a79164c0602a0fa1a0c5889add724273c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79164c0602a0fa1a0c5889add724273c">&#9670;&#160;</a></span>~expected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires std::is_trivially_destructible_v&lt;E&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::~<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.dtor \merge</p>
+<p>\effects If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>, destroys <code>unex</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>If <code>is_trivially_destructible_v&lt;E&gt;</code> is <code>true</code>, then this destructor is a trivial destructor. </dd></dl>
+
+</div>
+</div>
+<a id="a9abacff412d6557e9c5eced63cb797d9" name="a9abacff412d6557e9c5eced63cb797d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9abacff412d6557e9c5eced63cb797d9">&#9670;&#160;</a></span>expected() <span class="overload">[10/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class U , class G &gt; <br />
+requires (std::is_void_v&lt;U&gt; &amp;&amp; !std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_same_v&lt;G, E&gt; &amp;&amp; std::is_constructible_v&lt;E, const G&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt; &amp;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt;&amp;&gt; &amp;&amp; !std::is_constructible_v&lt;<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt;E&gt;, const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt;U, G&gt; &amp;&amp;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; U, G &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-cvt-copy-ctor \constraints <code>is_void_v&lt;U&gt;</code> is <code>true</code>; and <code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code>; and <code>is_constructible_v&lt;unexpected&lt;E&gt;, expected&lt;U, G&gt;&amp;&gt;</code> is <code>false</code>; and <code>is_constructible_v&lt;unexpected&lt;E&gt;, expected&lt;U, G&gt;&gt;</code> is <code>false</code>; and <code>is_constructible_v&lt;unexpected&lt;E&gt;, const expected&lt;U, G&gt;&amp;&gt;</code> is <code>false</code>; and <code>is_constructible_v&lt;unexpected&lt;E&gt;, const expected&lt;U, G&gt;&gt;</code> is <code>false</code>. \effects If <code>rhs.has_value()</code> is <code>false</code>, direct-non-list-initializes <code>unex</code> with <code>rhs.error()</code>. \ensures <code>rhs.has_value()</code> is unchanged; <code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Any</td><td>exception thrown by the initialization of <code>unex</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9723629e095668f12aa416d50d6a22e5" name="a9723629e095668f12aa416d50d6a22e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9723629e095668f12aa416d50d6a22e5">&#9670;&#160;</a></span>expected() <span class="overload">[11/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; std::is_convertible_v&lt;G&amp;, E&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E, G&amp;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::expected </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, G &amp; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-cvt-copy-ctor-ref \constraints <code>is_convertible_v&lt;G&amp;, E&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;E, G&amp;&gt;</code> is <code>false</code>. \effects If <code>rhs.has_value()</code> is <code>false</code>, direct-non-list-initializes <code>unex</code> with <code>rhs.error()</code>. \ensures <code>rhs.has_value()</code> is unchanged; <code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>This constructor never throws: the referent is bound, not copied. It participates in overload resolution only when <code>E</code> is a reference type, mirroring the <code>unexpected&lt;G&gt;</code> reference-<code>E</code> path above. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8ea2cded1bbc47fbbebab78b97ed2688" name="a8ea2cded1bbc47fbbebab78b97ed2688"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ea2cded1bbc47fbbebab78b97ed2688">&#9670;&#160;</a></span>and_then() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; <br />
+requires std::is_constructible_v&lt;E, E&amp;&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::and_then </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-and-then-lval \constraints <code>is_constructible_v&lt;E, decltype(error())&gt;</code> is <code>true</code>. \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>error_type</code> is the same type as <code>E</code>. \effects Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a>) return invoke(std::forward&lt;F&gt;(f)); else return U(unexpect, error());</code> where <code>U</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F&gt;&gt;</code>. </p>
+
+</div>
+</div>
+<a id="a96fc20769d379143f965559df2d94050" name="a96fc20769d379143f965559df2d94050"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96fc20769d379143f965559df2d94050">&#9670;&#160;</a></span>and_then() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; <br />
+requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::and_then </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-and-then-rval \constraints <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code> is <code>true</code>. \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>error_type</code> is the same type as <code>E</code>. \effects Equivalent to: `if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a>) return invoke(std::forward&lt;F&gt;(f)); else return U(unexpect, std::move(error()));<code>where</code>U<code>is</code>remove_cvref_t&lt;invoke_result_t&lt;F&gt;&gt;`. </p>
+
+</div>
+</div>
+<a id="a7635c4450ff61d78cca1d73564dc6762" name="a7635c4450ff61d78cca1d73564dc6762"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7635c4450ff61d78cca1d73564dc6762">&#9670;&#160;</a></span>emplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::emplace</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\effects If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>, destroys <code>unex</code> and sets <code>has_val</code> to <code>true</code>. </p>
+
+</div>
+</div>
+<a id="a6e674b3c4c719f2d9ac6007a0320c41a" name="a6e674b3c4c719f2d9ac6007a0320c41a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e674b3c4c719f2d9ac6007a0320c41a">&#9670;&#160;</a></span>error() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const E &amp;&amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::error </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-obs-error-rval \hardexpects <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>std::move(unex).<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8f9567299ca594bd0a7592870179db1a">error()</a></code>. </dd></dl>
+
+</div>
+</div>
+<a id="a8f9567299ca594bd0a7592870179db1a" name="a8f9567299ca594bd0a7592870179db1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f9567299ca594bd0a7592870179db1a">&#9670;&#160;</a></span>error() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const E &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::error </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-obs-error-lval \hardexpects <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>unex.error()</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a45c447a3f5ad9bf3a8a9c4ff6f15a3c3" name="a45c447a3f5ad9bf3a8a9c4ff6f15a3c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45c447a3f5ad9bf3a8a9c4ff6f15a3c3">&#9670;&#160;</a></span>error_or() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (std::is_move_constructible_v&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt; &amp;&amp; std::is_convertible_v&lt;G, std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt;::error_value_type <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::error_or </td>
+          <td>(</td>
+          <td class="paramtype">G &amp;&amp;&#160;</td>
+          <td class="paramname"><em>def</em></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\mandates <code>is_move_constructible_v&lt;error_value_type&gt;</code> is <code>true</code> and <code>is_convertible_v&lt;G, error_value_type&gt;</code> is <code>true</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>std::forward&lt;G&gt;(def)</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>, <code>std::move(error())</code> otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="ad25c5cd3f7f6052efa9e5c84367bff35" name="ad25c5cd3f7f6052efa9e5c84367bff35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad25c5cd3f7f6052efa9e5c84367bff35">&#9670;&#160;</a></span>error_or() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (std::is_copy_constructible_v&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt; &amp;&amp; std::is_convertible_v&lt;G, std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt;::error_value_type <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::error_or </td>
+          <td>(</td>
+          <td class="paramtype">G &amp;&amp;&#160;</td>
+          <td class="paramname"><em>def</em></td><td>)</td>
+          <td> const &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\mandates <code>is_copy_constructible_v&lt;error_value_type&gt;</code> is <code>true</code> and <code>is_convertible_v&lt;G, error_value_type&gt;</code> is <code>true</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>std::forward&lt;G&gt;(def)</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>, <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8f9567299ca594bd0a7592870179db1a">error()</a></code> otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a45fcfe59598aecb7c220828f335c2c4c" name="a45fcfe59598aecb7c220828f335c2c4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45fcfe59598aecb7c220828f335c2c4c">&#9670;&#160;</a></span>operator bool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::operator bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-obs-bool </p><dl class="section return"><dt>Returns</dt><dd><code>has_val</code>. </dd></dl>
+
+</div>
+</div>
+<a id="af3f6cf2768022c5f1fd5f06133a57a0f" name="af3f6cf2768022c5f1fd5f06133a57a0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3f6cf2768022c5f1fd5f06133a57a0f">&#9670;&#160;</a></span>operator=() <span class="overload">[1/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (std::is_trivially_copy_constructible_v&lt;E&gt; &amp;&amp; std::is_trivially_copy_assignable_v&lt;E&gt; &amp;&amp; std::is_trivially_destructible_v&lt;E&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">default</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.assign \merge</p>
+<p>\effects If <code>this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a> &amp;&amp; rhs.has_value()</code>, no effects. Otherwise, if <code>this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code>, equivalent to: <code>construct_at(addressof(unex), rhs.unex); has_val = false;</code> Otherwise, if <code>rhs.has_value()</code>, destroys <code>unex</code> and sets <code>has_val</code> to <code>true</code>. Otherwise, equivalent to <code>unex = rhs.unex</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This operator is defined as deleted unless <code>is_copy_assignable_v&lt;E&gt;</code> is <code>true</code> or <code>is_reference_v&lt;E&gt;</code> is <code>true</code> and <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code> or <code>is_reference_v&lt;E&gt;</code> is <code>true</code>. This operator is trivial if <code>is_trivially_copy_constructible_v&lt;E&gt;</code>, <code>is_trivially_copy_assignable_v&lt;E&gt;</code>, and <code>is_trivially_destructible_v&lt;E&gt;</code> are all <code>true</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a534acd988ecba129740e8765cc1a270e" name="a534acd988ecba129740e8765cc1a270e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a534acd988ecba129740e8765cc1a270e">&#9670;&#160;</a></span>operator=() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.assign \group void-cvt-unexpected-assign-deleted </p><dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload taking <code>unexpected&lt;G&gt;</code> for a non-reference <code>G</code> is defined as deleted: it would rebind <code>unex</code> to <code>unexpected&lt;G&gt;</code>'s temporary storage. </dd></dl>
+
+</div>
+</div>
+<a id="a8611a6aab6df0899efefcbb4954760d4" name="a8611a6aab6df0899efefcbb4954760d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8611a6aab6df0899efefcbb4954760d4">&#9670;&#160;</a></span>operator=() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, const G&amp;&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, const G&amp;&gt;)</div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, const G&amp;&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, const G&amp;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-cvt-unexpected-assign \constraints <code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code> and <code>is_assignable_v&lt;E&amp;, const G&amp;&gt;</code> is <code>true</code>. \effects If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>, equivalent to: <code>construct_at(addressof(unex), e.error()); has_val = false;</code> Otherwise, equivalent to: <code>unex = unexpected&lt;E&gt;(e.error());</code> </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>.</dd></dl>
+<p>\group void-cvt-unexpected-assign-ref \constraints <code>is_reference_v&lt;G&gt;</code> is <code>true</code>; and <code>is_constructible_v&lt;E, G&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;E, G&gt;</code> is <code>false</code>. \effects Rebinds <code>unex</code> to refer to the same object as <code>e.error()</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This operator never throws: the referent is bound, not copied. </dd></dl>
+
+</div>
+</div>
+<a id="a8a9105dbc4e82678671fd92f3d1c5758" name="a8a9105dbc4e82678671fd92f3d1c5758"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a9105dbc4e82678671fd92f3d1c5758">&#9670;&#160;</a></span>operator=() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (std::is_trivially_move_constructible_v&lt;E&gt; &amp;&amp; std::is_trivially_move_assignable_v&lt;E&gt; &amp;&amp; std::is_trivially_destructible_v&lt;E&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">default</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.assign \merge</p>
+<p>\effects If <code>this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a> &amp;&amp; rhs.has_value()</code>, no effects. Otherwise, if <code>this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code>, equivalent to: <code>construct_at(addressof(unex), std::move(rhs.unex)); has_val = false;</code> Otherwise, if <code>rhs.has_value()</code>, destroys <code>unex</code> and sets <code>has_val</code> to <code>true</code>. Otherwise, equivalent to <code>unex = std::move(rhs.unex)</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The exception specification is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt; &amp;&amp; is_nothrow_move_assignable_v&lt;E&gt;</code>. This operator is trivial if <code>is_trivially_move_constructible_v&lt;E&gt;</code>, <code>is_trivially_move_assignable_v&lt;E&gt;</code>, and <code>is_trivially_destructible_v&lt;E&gt;</code> are all <code>true</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a41ba80fd3f76d3236f91830851e35984" name="a41ba80fd3f76d3236f91830851e35984"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41ba80fd3f76d3236f91830851e35984">&#9670;&#160;</a></span>operator=() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.assign \also void-cvt-unexpected-assign-deleted </p>
+
+</div>
+</div>
+<a id="ac3982f7b6ba1b88f0731b8d795cfb31c" name="ac3982f7b6ba1b88f0731b8d795cfb31c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3982f7b6ba1b88f0731b8d795cfb31c">&#9670;&#160;</a></span>operator=() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, G&gt;)</div>
+<div class="memtemplate">
+template&lt;class G &gt; <br />
+requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, G&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>\also void-cvt-unexpected-assign </p>
+<p>\also void-cvt-unexpected-assign-ref </p>
+
+</div>
+</div>
+<a id="a90f6b6d08bf85a961753493ed4569084" name="a90f6b6d08bf85a961753493ed4569084"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90f6b6d08bf85a961753493ed4569084">&#9670;&#160;</a></span>or_else() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::or_else </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-or-else-lval \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>value_type</code> is the same type as <code>T</code>. \effects Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a>) return G(); else return invoke(std::forward&lt;F&gt;(f), <a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8f9567299ca594bd0a7592870179db1a">error()</a>);</code> where <code>G</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code>. </p>
+
+</div>
+</div>
+<a id="ad129c4f40ee26e813a3b5f0796b95000" name="ad129c4f40ee26e813a3b5f0796b95000"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad129c4f40ee26e813a3b5f0796b95000">&#9670;&#160;</a></span>or_else() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::or_else </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-or-else-rval \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>value_type</code> is the same type as <code>T</code>. \effects Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a>) return G(); else return invoke(std::forward&lt;F&gt;(f), std::move(error()));</code> where <code>G</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;</code>. </p>
+
+</div>
+</div>
+<a id="a6cf3fbdb806b5404e9ef51fda6093384" name="a6cf3fbdb806b5404e9ef51fda6093384"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cf3fbdb806b5404e9ef51fda6093384">&#9670;&#160;</a></span>swap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; <br />
+requires ((std::is_reference_v&lt;E&gt; || std::is_swappable_v&lt;E&gt;) &amp;&amp; std::is_move_constructible_v&lt;E&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::swap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>rhs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\effects If <code>this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> and <code>rhs.has_value()</code>, no effects. If neither <code>*this</code> nor <code>rhs</code> contains a value, equivalent to <code>using std::swap; swap(unex, rhs.unex);</code>. If <code>rhs.has_value()</code> is <code>false</code> and <code>this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>, initializes <code>rhs.unex</code> from <code>std::move(unex)</code>, destroys <code>unex</code>, and leaves <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> <code>false</code> and <code>rhs.has_value()</code> <code>true</code>. If <code>rhs.has_value()</code> is <code>true</code> and <code>this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>, equivalent to <code>rhs.swap(*this)</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Any</td><td>exception thrown by the expressions in the Effects. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The exception specification is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt; &amp;&amp; (is_reference_v&lt;E&gt; || is_nothrow_swappable_v&lt;E&gt;)</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a08ae7a46c60fa54d5fd216ff8edc3123" name="a08ae7a46c60fa54d5fd216ff8edc3123"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08ae7a46c60fa54d5fd216ff8edc3123">&#9670;&#160;</a></span>transform() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; <br />
+requires std::is_constructible_v&lt;E, E&amp;&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::transform </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-transform-lval \constraints <code>is_constructible_v&lt;E, decltype(error())&gt;</code> is <code>true</code>. \mandates <code>U</code> is a valid value type for <code>expected</code>, where <code>U</code> is <code>remove_cv_t&lt;invoke_result_t&lt;F&gt;&gt;</code>. \effects If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>, returns <code>expected&lt;U, E&gt;(unexpect, <a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8f9567299ca594bd0a7592870179db1a">error()</a>)</code>. Otherwise, if <code>is_void_v&lt;U&gt;</code> is <code>false</code>, returns an <code>expected&lt;U, E&gt;</code> object whose <code>has_val</code> member is <code>true</code> and <code>val</code> member is direct-non-list-initialized with <code>invoke(std::forward&lt;F&gt;(f))</code>. Otherwise, evaluates <code>invoke(std::forward&lt;F&gt;(f))</code> and then returns <code>expected&lt;U, E&gt;()</code>. </p>
+
+</div>
+</div>
+<a id="aa0e08cd92b0a4c5732af9f53b8efcf57" name="aa0e08cd92b0a4c5732af9f53b8efcf57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0e08cd92b0a4c5732af9f53b8efcf57">&#9670;&#160;</a></span>transform() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; <br />
+requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::transform </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-transform-rval \constraints <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code> is <code>true</code>. \mandates <code>U</code> is a valid value type for <code>expected</code>, where <code>U</code> is <code>remove_cv_t&lt;invoke_result_t&lt;F&gt;&gt;</code>. \effects If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>, returns <code>expected&lt;U, E&gt;(unexpect, std::move(error()))</code>. Otherwise, if <code>is_void_v&lt;U&gt;</code> is <code>false</code>, returns an <code>expected&lt;U, E&gt;</code> object whose <code>has_val</code> member is <code>true</code> and <code>val</code> member is direct-non-list-initialized with <code>invoke(std::forward&lt;F&gt;(f))</code>. Otherwise, evaluates <code>invoke(std::forward&lt;F&gt;(f))</code> and then returns <code>expected&lt;U, E&gt;()</code>. </p>
+
+</div>
+</div>
+<a id="af9806268fa4d6719126d79f914ed388e" name="af9806268fa4d6719126d79f914ed388e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9806268fa4d6719126d79f914ed388e">&#9670;&#160;</a></span>transform_error() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::transform_error </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-transform-error-lval \mandates <code>G</code> is a valid template argument for <code>unexpected</code> and the declaration <code>G g(invoke(std::forward&lt;F&gt;(f), <a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8f9567299ca594bd0a7592870179db1a">error()</a>));</code> is well-formed, where <code>G</code> is <code>remove_cv_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code>. </p><dl class="section return"><dt>Returns</dt><dd>If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>, <code>expected&lt;T, G&gt;()</code>; otherwise, an <code>expected&lt;T, G&gt;</code> object whose <code>has_val</code> member is <code>false</code> and <code>unex</code> member is direct-non-list-initialized with <code>invoke(std::forward&lt;F&gt;(f), <a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a8f9567299ca594bd0a7592870179db1a">error()</a>)</code>. </dd></dl>
+
+</div>
+</div>
+<a id="ac76ef05a20352ed2498a28bbc3d0b22f" name="ac76ef05a20352ed2498a28bbc3d0b22f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac76ef05a20352ed2498a28bbc3d0b22f">&#9670;&#160;</a></span>transform_error() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::transform_error </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\group void-monadic-transform-error-rval \mandates <code>G</code> is a valid template argument for <code>unexpected</code> and the declaration <code>G g(invoke(std::forward&lt;F&gt;(f), std::move(error())));</code> is well-formed, where <code>G</code> is <code>remove_cv_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;</code>. </p><dl class="section return"><dt>Returns</dt><dd>If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>true</code>, <code>expected&lt;T, G&gt;()</code>; otherwise, an <code>expected&lt;T, G&gt;</code> object whose <code>has_val</code> member is <code>false</code> and <code>unex</code> member is direct-non-list-initialized with <code>invoke(std::forward&lt;F&gt;(f), std::move(error()))</code>. </dd></dl>
+
+</div>
+</div>
+<a id="abef590f3a7a0c0e10598bbc9bc9cbcb3" name="abef590f3a7a0c0e10598bbc9bc9cbcb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef590f3a7a0c0e10598bbc9bc9cbcb3">&#9670;&#160;</a></span>value() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::value </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\mandates <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code> and <code>is_move_constructible_v&lt;E&gt;</code> is <code>true</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">`bad_expected_access(std::move(error()))`</td><td>if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6756d4690802b093899a5630cbe64dbe" name="a6756d4690802b093899a5630cbe64dbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6756d4690802b093899a5630cbe64dbe">&#9670;&#160;</a></span>value() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::value </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\mandates <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code>. </p><dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">`bad_expected_access(error())`</td><td>if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a></code> is <code>false</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a045b083b58fb54f8ed210342e65c245b" name="a045b083b58fb54f8ed210342e65c245b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a045b083b58fb54f8ed210342e65c245b">&#9670;&#160;</a></span>value_or()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class U &gt; <br />
+requires std::is_reference_v&lt;E&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; void, E &gt;::value_or </td>
+          <td>(</td>
+          <td class="paramtype">U &amp;&amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.obs </p><dl class="section remark"><dt>Remarks</dt><dd><code>expected&lt;void, E&gt;</code> has no <code>value_or</code> member: there is no value to fall back from. This overload exists only to give a clear diagnostic when <code>E</code> is a reference type, and is defined as deleted. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="a394df3fdadc4f2ee3c621ca115f4850f" name="a394df3fdadc4f2ee3c621ca115f4850f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a394df3fdadc4f2ee3c621ca115f4850f">&#9670;&#160;</a></span>operator== <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class T2 , class E2 &gt; <br />
+requires std::is_void_v&lt;T2&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T2, E2 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.eq \mandates <code>is_void_v&lt;T2&gt;</code> is <code>true</code>. The expression <code>x.error() == y.error()</code> is well-formed and its result is convertible to <code>bool</code>. </p><dl class="section return"><dt>Returns</dt><dd>If <code>x.has_value() != y.has_value()</code>, <code>false</code>; otherwise, if <code>x.has_value()</code> is <code>true</code>, <code>true</code>; otherwise <code>x.error() == y.error()</code>. </dd></dl>
+
+</div>
+</div>
+<a id="ad3607c2a681da911818087a166eba1a7" name="ad3607c2a681da911818087a166eba1a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3607c2a681da911818087a166eba1a7">&#9670;&#160;</a></span>operator== <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<div class="memtemplate">
+template&lt;class E2 &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; E2 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.eq \mandates The expression <code>x.error() == e.error()</code> is well-formed and its result is convertible to <code>bool</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>!x.<a class="el" href="classbeman_1_1expected_1_1expected_3_01void_00_01E_01_4.html#a9527325f6bc22cb1345f0f7b07c00304" title="\also void-obs-bool">has_value()</a> &amp;&amp; static_cast&lt;bool&gt;(x.error() == e.error())</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a019c691367cd10f473e81488e9a46c7d" name="a019c691367cd10f473e81488e9a46c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a019c691367cd10f473e81488e9a46c7d">&#9670;&#160;</a></span>swap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void swap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; void, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>\at expected.void.swap \effects Equivalent to <code>x.swap(y)</code>. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/beman/expected/<a class="el" href="expected_8hpp_source.html">expected.hpp</a></li>
 </ul>

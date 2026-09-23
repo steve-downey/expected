@@ -550,7 +550,7 @@ value() — throws bad_expected_access when empty</h2>
 <div class="line">        e.value();</div>
 <div class="line">        FAIL(<span class="stringliteral">&quot;should have thrown&quot;</span>);</div>
 <div class="line">    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code hl_class" href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access&lt;int&gt;</a>&amp; ex) {</div>
-<div class="line">        CHECK(ex.error() == 99);</div>
+<div class="line">        CHECK(ex.<a class="code hl_function" href="classbeman_1_1expected_1_1bad__expected__access.html#a4cd6a0aa9b172b8b0159ca5597de0538">error</a>() == 99);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -565,7 +565,8 @@ value() — throws bad_expected_access when empty</h2>
 <div class="line"><span class="keyword">struct </span>NoCopyE { NoCopyE(<span class="keyword">const</span> NoCopyE&amp;) = <span class="keyword">delete</span>; };</div>
 <div class="line"><span class="comment">// value() should not be callable when E is not copy-constructible</span></div>
 <div class="line"><span class="comment">// (This is a mandate, not a constraint — test with static_assert or fail-file)</span></div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:78</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html">beman::expected::bad_expected_access</a></div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:84</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1bad__expected__access_html_a4cd6a0aa9b172b8b0159ca5597de0538"><div class="ttname"><a href="classbeman_1_1expected_1_1bad__expected__access.html#a4cd6a0aa9b172b8b0159ca5597de0538">beman::expected::bad_expected_access::error</a></div><div class="ttdeci">constexpr E &amp; error() &amp;noexcept</div><div class="ttdef"><b>Definition:</b> bad_expected_access.hpp:121</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md512"></a>
 error() — Hardened precondition: !has_value()</h2>
 <div class="fragment"><div class="line">TEST_CASE(<span class="stringliteral">&quot;expected: error() returns error&quot;</span>, <span class="stringliteral">&quot;[expected]&quot;</span>) {</div>
@@ -667,7 +668,7 @@ Negative Compile Tests</h1>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: T is a reference type — ill-formed</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/expected.hpp&gt;</span></div>
 <div class="line"><a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int&amp;, int&gt;</a> e;</div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:121</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:140</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md523"></a>
 &lt;tt&gt;expected_e_ref_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: E is a reference type — ill-formed</span></div>
@@ -690,8 +691,9 @@ Negative Compile Tests</h1>
 <div class="line">};</div>
 <div class="line"><span class="keywordtype">void</span> test() {</div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int, NoCopyE&gt;</a> e(42);</div>
-<div class="line">    (void)e.value();  <span class="comment">// ill-formed: E not copy-constructible</span></div>
+<div class="line">    (void)e.<a class="code hl_function" href="classbeman_1_1expected_1_1expected.html#a19413b22771e091cef8290312dd24f73">value</a>();  <span class="comment">// ill-formed: E not copy-constructible</span></div>
 <div class="line">}</div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html_a19413b22771e091cef8290312dd24f73"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html#a19413b22771e091cef8290312dd24f73">beman::expected::expected::value</a></div><div class="ttdeci">constexpr const T &amp; value() const &amp;</div><div class="ttdef"><b>Definition:</b> expected.hpp:1321</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md526"></a>
 &lt;tt&gt;expected_emplace_throwing_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE: emplace requires nothrow_constructible&lt;T, Args...&gt;</span></div>
@@ -699,8 +701,9 @@ Negative Compile Tests</h1>
 <div class="line"><span class="keyword">struct </span>ThrowingCtor { ThrowingCtor(<span class="keywordtype">int</span>) <span class="keyword">noexcept</span>(<span class="keyword">false</span>); };</div>
 <div class="line"><span class="keywordtype">void</span> test() {</div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;ThrowingCtor, int&gt;</a> e(std::in_place, 0);</div>
-<div class="line">    e.emplace(1);  <span class="comment">// ill-formed: not nothrow-constructible</span></div>
+<div class="line">    e.<a class="code hl_function" href="classbeman_1_1expected_1_1expected.html#a14cd4ba65367dae6851667959de4aeee">emplace</a>(1);  <span class="comment">// ill-formed: not nothrow-constructible</span></div>
 <div class="line">}</div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html_a14cd4ba65367dae6851667959de4aeee"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html#a14cd4ba65367dae6851667959de4aeee">beman::expected::expected::emplace</a></div><div class="ttdeci">constexpr T &amp; emplace(Args &amp;&amp;... args) noexcept</div><div class="ttdef"><b>Definition:</b> expected.hpp:1134</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

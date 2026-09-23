@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['handoff_3a_20after_20step_207_20_28expected_3ct_26_2c_20e_3e_20complete_29_0',['Handoff: After Step 7 (expected&lt;T&amp;, E&gt; Complete)',['../md_docs_plan_handoff_next.html',1,'']]],
-  ['handoff_3a_20current_20state_1',['Handoff: Current State',['../md_docs_plan_handoff.html',1,'']]],
-  ['human_20design_20review_20guide_3a_20_3ctt_3ebeman_3a_3aexpected_3c_2ftt_3e_2',['Human Design Review Guide: &lt;tt&gt;beman::expected&lt;/tt&gt;',['../md_docs_human_design_review_guide.html',1,'']]]
+  ['fix_201_3a_20constructor_2c_20assignment_2c_20and_20equality_20constraints_0',['Fix 1: Constructor, Assignment, and Equality Constraints',['../md_docs_conformance_fixes_fix1_constraints.html',1,'']]],
+  ['fix_202_3a_20trivial_20special_20member_20functions_1',['Fix 2: Trivial Special Member Functions',['../md_docs_conformance_fixes_fix2_trivial_smfs.html',1,'']]],
+  ['fix_203_3a_20monadic_20operation_20constraints_2',['Fix 3: Monadic Operation Constraints',['../md_docs_conformance_fixes_fix3_monadic_constraints.html',1,'']]],
+  ['fix_204_3a_20mandates_20static_5fasserts_3',['Fix 4: Mandates static_asserts',['../md_docs_conformance_fixes_fix4_mandates.html',1,'']]],
+  ['fix_205_3a_20hardened_20preconditions_20and_20minor_20fixes_4',['Fix 5: Hardened Preconditions and Minor Fixes',['../md_docs_conformance_fixes_fix5_preconditions_and_minor.html',1,'']]],
+  ['fix_3a_20pr_20_2357_20review_20corrections_5',['Fix: PR #57 Review Corrections',['../md_docs_plan_fix_review_corrections.html',1,'']]]
 ];

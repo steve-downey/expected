@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['conformance_20audit_3a_20beman_3a_3aexpected_20vs_20std_3a_3aexpected_20_28c_2b_2b26_29_0',['Conformance Audit: beman::expected vs std::expected (C++26)',['../md_docs_conformance_audit.html',1,'']]]
+  ['bad_5fexpected_5faccess_0',['bad_expected_access',['../classbeman_1_1expected_1_1bad__expected__access.html#ab33728a313e76fe1fc6768768ba84658',1,'beman::expected::bad_expected_access::bad_expected_access()'],['../classbeman_1_1expected_1_1bad__expected__access.html',1,'beman::expected::bad_expected_access&lt; E &gt;']]],
+  ['bad_5fexpected_5faccess_3c_20void_20_3e_1',['bad_expected_access&lt; void &gt;',['../classbeman_1_1expected_1_1bad__expected__access_3_01void_01_4.html',1,'beman::expected']]],
+  ['blog_20transclusion_20pins_2',['Blog transclusion pins',['../md_docs_blog_pins.html',1,'']]]
 ];

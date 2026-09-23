@@ -318,7 +318,7 @@ Negative Compile Tests</h1>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE COMPILE TEST: unexpected&lt;int[]&gt; is ill-formed [expected.un.general] para 2</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/unexpected.hpp&gt;</span></div>
 <div class="line"><a class="code hl_class" href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected&lt;int[]&gt;</a> u(std::in_place);</div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:58</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected</a></div><div class="ttdef"><b>Definition:</b> unexpected.hpp:70</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md448"></a>
 &lt;tt&gt;unexpected_cvref_fail.cpp&lt;/tt&gt;</h2>
 <div class="fragment"><div class="line"><span class="comment">// NEGATIVE COMPILE TEST: unexpected&lt;const int&gt; is ill-formed [expected.un.general] para 2</span></div>
@@ -342,8 +342,9 @@ Negative Compile Tests</h1>
 <div class="line"><span class="keyword">namespace </span>std { <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span>is_swappable&lt;no_swap&gt; : std::false_type {}; }</div>
 <div class="line"><span class="keywordtype">void</span> test() {</div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1unexpected.html">beman::expected::unexpected&lt;no_swap&gt;</a> a, b;</div>
-<div class="line">    a.swap(b);  <span class="comment">// must fail: Mandates is_swappable_v&lt;E&gt;</span></div>
+<div class="line">    a.<a class="code hl_function" href="classbeman_1_1expected_1_1unexpected.html#a7b6cc1235f5fae7ee3ee4cda8998c3f7">swap</a>(b);  <span class="comment">// must fail: Mandates is_swappable_v&lt;E&gt;</span></div>
 <div class="line">}</div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1unexpected_html_a7b6cc1235f5fae7ee3ee4cda8998c3f7"><div class="ttname"><a href="classbeman_1_1expected_1_1unexpected.html#a7b6cc1235f5fae7ee3ee4cda8998c3f7">beman::expected::unexpected::swap</a></div><div class="ttdeci">constexpr void swap(unexpected &amp;other) noexcept(std::is_nothrow_swappable_v&lt; E &gt;)</div><div class="ttdef"><b>Definition:</b> unexpected.hpp:140</div></div>
 </div><!-- fragment --><hr  />
 <h1><a class="anchor" id="autotoc_md452"></a>
 CMakeLists additions</h1>
