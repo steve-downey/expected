@@ -60,12 +60,31 @@ D4280R0.pdf : D4280R0.tex expected-new.tex wg21.bib
 	latexmk -f -shell-escape -pdflua -use-make -deps -deps-out=$(DEPS_DIR)/$@.d -MP $<
 
 .PHONY: strip-wording
-strip-wording: expected-clean.tex ## Strip change markup to clean [expected] wording
+strip-wording: expected-clean.tex ## Assemble clean [expected] wording for a working-draft pull request
 
-# expected-clean.tex is the marked-up wording copy with \added/\removed markup
-# removed: the text to submit as a pull request against the C++ working draft.
-expected-clean.tex: expected-new.tex strip-wording.py
-	python3 strip-wording.py expected-new.tex -o $@
+# expected-clean.tex is the clean [expected] wording to submit as a pull request
+# against the C++ working draft. Its subclause bodies are the specgen-generated
+# fragments -- the source of truth -- assembled by the repository-root makefile
+# into wording/expected.tex, so this file cannot lag the annotated headers. Only
+# [expected.general] and [expected.syn] are hand-authored prose specgen does not
+# emit; they are taken from expected-new.tex, everything above the first
+# generated clause, with its \added/addedblock change markup stripped.
+expected-clean.tex: expected-new.tex strip-wording.py wording/expected.tex
+	{ sed '/\\rSec2\[expected\.unexpected\]/,$$d' expected-new.tex \
+	    | python3 strip-wording.py; \
+	  cat wording/expected.tex; } > $@.tmp
+	mv $@.tmp $@
+
+# wording/expected.tex is generated from the annotated headers by the
+# repository-root makefile. Delegate to it unconditionally, so a build started
+# here rather than by `make papers` from the root still regenerates any clause a
+# header edit staled; the root rule rewrites the file only when something
+# changed, so this stays a no-op -- and expected-clean.tex only rebuilds -- when
+# nothing did.
+.PHONY: FORCE
+wording/expected.tex: FORCE
+	$(MAKE) -C .. wording
+FORCE:
 
 define curl_cmd =
 	curl https://wg21.link/index.bib > wg21.bib
