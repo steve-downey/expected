@@ -31,8 +31,17 @@ set(CMAKE_CXX_FLAGS_TSAN
     "C++ TSAN Flags"
     FORCE
 )
+# -Wno-maybe-uninitialized: under -fsanitize=address the use-after-scope
+# markers keep gcc from forwarding a just-stored `has_val_` to the load that
+# guards the read of the other union member, and gcc then reports that read
+# as maybe-uninitialized (seen on gcc 14 through 16). Every instance is a
+# false positive: the guard is exact. expected<void, E> avoids it at the
+# source; expected<T&, E> cannot, because its value constructor stores a
+# runtime address, so the flag stays. It lives here rather than in the
+# per-version toolchains because it is not version-gated, and in the Asan
+# flags only because the warning is worth having everywhere else.
 set(CMAKE_CXX_FLAGS_ASAN
-    "-O3 -g -fsanitize=address,undefined,leak"
+    "-O3 -g -fsanitize=address,undefined,leak -Wno-maybe-uninitialized"
     CACHE STRING
     "C++ ASAN Flags"
     FORCE
