@@ -29,3 +29,9 @@
 /.emacs.d/elpa/
 /.emacs.d/custom.el
 *.deps
+
+# specgen writes one *.root.tex per document, holding the exposition-only
+# helpers that sit outside every clause. The draft states those inline in the
+# clause that uses them, so they are not part of this paper's wording and are
+# not committed -- see papers/wording/README.md.
+papers/wording/fragments/*.root.tex
