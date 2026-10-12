@@ -154,7 +154,7 @@ env:
 	$(foreach v, $(.VARIABLES), $(info $(v) = $($(v))))
 
 .PHONY: papers
-papers: wording
+papers: wording ## Regenerate the wording if needed, then rebuild the paper(s)
 	$(MAKE) -C papers papers
 
 # ---- Generated [expected] wording ------------------------------------------
@@ -199,33 +199,67 @@ ifneq ($(SPECGEN_GCC_TOOLCHAIN),)
 SPECGEN_CLANG_ARGS += --gcc-toolchain=$(SPECGEN_GCC_TOOLCHAIN)
 endif
 
-# A grouped target (GNU Make 4.3+): one invocation writes all of these, and
-# make must not run it once per fragment.
-$(WORDING_FRAGMENTS) &: $(WORDING_HEADERS)
-	@mkdir -p papers/.deps
-	$(SPECGEN) generate $(WORDING_HEADERS) \
-	    --backend latex --validate --base-section-depth 2 \
-	    --split $(WORDING_DIR)/fragments \
-	    --root expected.unexpected.root \
-	    --root expected.bad.root \
-	    --root expected.root \
-	    --depfile papers/.deps/wording.d \
-	    $(addprefix --dep-target ,$(WORDING_FRAGMENTS)) \
-	    --no-compile-commands -- $(SPECGEN_CLANG_ARGS)
+# One specgen run over the three headers, splitting into $(1). Any further
+# options, $(2), follow the fixed ones; the grouped rule below passes the
+# depfile through them, and wording-check passes none.
+define specgen_wording
+$(SPECGEN) generate $(WORDING_HEADERS) \
+    --backend latex --validate --base-section-depth 2 \
+    --split $(1) \
+    --root expected.unexpected.root \
+    --root expected.bad.root \
+    --root expected.root \
+    $(2) \
+    --no-compile-commands -- $(SPECGEN_CLANG_ARGS)
+endef
 
-# Assembled into a temporary first: a half-written expected.tex that make
-# believes is finished is worse than no expected.tex at all.
+# The fragments of $(1)/fragments assembled, in clause order, into
+# $(1)/expected.tex. Written to a temporary first: a half-written
+# expected.tex that make believes is finished is worse than no expected.tex
+# at all.
+define assemble_wording
+cat $(WORDING_DIR)/preamble.tex > $(1)/expected.tex.tmp
+for clause in $(WORDING_CLAUSES); do \
+    printf '\n' >> $(1)/expected.tex.tmp; \
+    cat $(1)/fragments/$$clause.tex >> $(1)/expected.tex.tmp; \
+done
+mv $(1)/expected.tex.tmp $(1)/expected.tex
+endef
+
+# A grouped target (GNU Make 4.3+): one invocation writes all of these, and
+# make must not run it once per fragment. Without specgen the checked-in
+# fragments are used as they are, with a warning, so the paper still builds;
+# they are not touched, so the warning repeats until specgen regenerates them.
+$(WORDING_FRAGMENTS) &: $(WORDING_HEADERS)
+	@if command -v $(SPECGEN) > /dev/null 2>&1; then \
+	    mkdir -p papers/.deps && \
+	    $(call specgen_wording,$(WORDING_DIR)/fragments, \
+	        --depfile papers/.deps/wording.d \
+	        $(addprefix --dep-target ,$(WORDING_FRAGMENTS))); \
+	else \
+	    echo "warning: '$(SPECGEN)' not found; using the checked-in wording" >&2; \
+	fi
+
 $(WORDING_DIR)/expected.tex: $(WORDING_DIR)/preamble.tex $(WORDING_FRAGMENTS)
-	@cat $(WORDING_DIR)/preamble.tex > $@.tmp
-	@for clause in $(WORDING_CLAUSES); do \
-	    printf '\n' >> $@.tmp; \
-	    cat $(WORDING_DIR)/fragments/$$clause.tex >> $@.tmp; \
-	done
-	@mv $@.tmp $@
+	@$(call assemble_wording,$(WORDING_DIR))
 	@echo "Wrote $@"
 
 .PHONY: wording
 wording: $(WORDING_DIR)/expected.tex ## Regenerate papers/wording/ from the annotated headers via specgen
+
+# Regenerates into a scratch directory and compares, so the checked-in
+# wording is never touched. Only what is checked in is compared: specgen also
+# writes the *.root.tex fragments, which are not.
+.PHONY: wording-check
+wording-check: ## Check the checked-in wording matches what the headers generate
+	rm -rf $(BUILD_DIR)/wording-check
+	mkdir -p $(BUILD_DIR)/wording-check/fragments
+	$(call specgen_wording,$(BUILD_DIR)/wording-check/fragments) > /dev/null
+	@$(call assemble_wording,$(BUILD_DIR)/wording-check)
+	diff $(WORDING_DIR)/expected.tex $(BUILD_DIR)/wording-check/expected.tex
+	for fragment in $(notdir $(WORDING_FRAGMENTS)); do \
+	    diff $(WORDING_DIR)/fragments/$$fragment $(BUILD_DIR)/wording-check/fragments/$$fragment || exit 1; \
+	done
 
 # What specgen read to produce the fragments -- including headers reached only
 # through an #include, which is the edge a hand-written prerequisite list

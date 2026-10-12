@@ -52,7 +52,7 @@ $(DEPS_DIR):
 	mkdir -p $(DEPS_DIR)
 
 .PHONY: papers
-papers: D4280R0.pdf ## Compile papers
+papers: D4280R0.pdf expected-clean.tex ## Compile papers and assemble the clean wording
 
 D4280R0.pdf : D4280R0.tex expected-new.tex wg21.bib
 
