@@ -35,6 +35,7 @@ var classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4 =
     [ "operator*", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#aa0ca2362c9aa076a3a2d35ca8d9b5a1a", null ],
     [ "operator->", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ad868ca8a3b9ceee85493fdae6b153458", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ae34317132f841912178d6a9dc0bffdc3", null ],
+    [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3d585f09ed88a3105963eb216684669a", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a4b977003f7640de3886c63ae14bd1843", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#acbfcdff762642dadabe28bb00181d5fd", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a184f07d62f107d2fb122180a5736be89", null ],

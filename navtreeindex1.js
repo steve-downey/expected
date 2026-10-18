@@ -1,5 +1,8 @@
 var NAVTREEINDEX1 =
 {
+"index.html":[],
+"md_docs_blog_pins.html":[0],
+"md_docs_blog_pins.html#autotoc_md1":[0,0],
 "md_docs_blog_pins.html#autotoc_md2":[0,1],
 "md_docs_blog_scrap_your_static_assert.html":[1],
 "md_docs_blog_scrap_your_static_assert.html#autotoc_md3":[1,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX1 =
 "md_docs_plan_index.html#autotoc_md274":[15,4],
 "md_docs_plan_index.html#autotoc_md275":[15,5],
 "md_docs_plan_review_remediation_2026_09_02.html":[16],
-"md_docs_plan_review_remediation_2026_09_02.html#autotoc_md277":[16,0],
-"md_docs_plan_review_remediation_2026_09_02.html#autotoc_md278":[16,1],
-"md_docs_plan_review_remediation_2026_09_02.html#autotoc_md279":[16,2],
-"md_docs_plan_review_remediation_2026_09_02.html#autotoc_md280":[16,3]
+"md_docs_plan_review_remediation_2026_09_02.html#autotoc_md277":[16,0]
 };
