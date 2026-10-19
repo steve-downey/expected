@@ -46,7 +46,8 @@ jobs:
                       "tests": [
                         "Debug.Default", "Release.Default", "Release.TSan",
                         "Release.MaxSan", "Debug.Werror",
-                        "Debug.Coverage", "Debug.-DBEMAN_EXPECTED_USE_MODULES=On"
+                        "Debug.Coverage", "Debug.-DBEMAN_EXPECTED_USE_MODULES=On",
+                        "Debug.-DCMAKE_CXX_FLAGS=-freflection"
                       ]
                     }
                   ]
