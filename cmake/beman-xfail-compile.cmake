@@ -48,17 +48,27 @@ include_guard(GLOBAL)
 #   so beman.<lib> gets beman.<lib>.tests.<name>.
 #
 # LABELS (optional)
-#   CTest labels to attach to the test.
+#   CTest labels to attach to the test, in addition to "xfail-compile",
+#   which every test gets so `ctest -L xfail-compile` runs just the
+#   negative suite and `ctest -LE xfail-compile` skips it.
 #
 # Brief
 # -----
 #
 # The source becomes an OBJECT library that is excluded from the default
 # build, so an ordinary build never compiles it and nothing links it. The
-# test itself is a nested build of just that target, which compiles the
-# source with exactly the toolchain, flags, launcher, and usage
-# requirements the rest of the project gets. CTest then requires the
-# build output to match EXPECT.
+# test runs beman-xfail-compile-driver.cmake, which performs a nested build
+# of just that target, so the source is compiled with exactly the
+# toolchain, flags, launcher, and usage requirements the rest of the
+# project gets. The driver passes only when that build fails and its
+# output matches EXPECT, and it reports the two ways of failing
+# separately: the source compiled, or it failed for some other reason.
+#
+# Every test holds the RESOURCE_LOCK "beman-xfail-compile-build-tree", so
+# under `ctest -j` the nested builds never run concurrently in one build
+# tree. Other tests still run alongside them.
+#
+# EXPECT is a CMake regular expression and must not contain ";".
 
 function(beman_add_xfail_compile_test name)
     set(oneValueArgs SOURCE EXPECT TARGET_PREFIX)
@@ -89,6 +99,13 @@ function(beman_add_xfail_compile_test name)
             "beman_add_xfail_compile_test(${name}): EXPECT must be specified"
         )
     endif()
+    string(FIND "${BEMAN_XFAIL_EXPECT}" ";" _semicolon)
+    if(NOT _semicolon EQUAL -1)
+        message(
+            FATAL_ERROR
+            "beman_add_xfail_compile_test(${name}): EXPECT must not contain ';'"
+        )
+    endif()
     if(NOT DEFINED BEMAN_XFAIL_TARGET_PREFIX)
         set(BEMAN_XFAIL_TARGET_PREFIX "${PROJECT_NAME}.tests.")
     endif()
@@ -114,14 +131,15 @@ function(beman_add_xfail_compile_test name)
     add_test(
         NAME ${name}
         COMMAND
-            ${CMAKE_COMMAND} --build "${CMAKE_BINARY_DIR}" --target ${_target}
-            --config $<CONFIGURATION>
+            ${CMAKE_COMMAND} -DBEMAN_XFAIL_BUILD_DIR=${CMAKE_BINARY_DIR}
+            -DBEMAN_XFAIL_TARGET=${_target} -DBEMAN_XFAIL_CONFIG=$<CONFIG>
+            -DBEMAN_XFAIL_EXPECT=${BEMAN_XFAIL_EXPECT} -P
+            ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/beman-xfail-compile-driver.cmake
     )
     set_tests_properties(
         ${name}
-        PROPERTIES PASS_REGULAR_EXPRESSION "${BEMAN_XFAIL_EXPECT}"
+        PROPERTIES
+            LABELS "xfail-compile;${BEMAN_XFAIL_LABELS}"
+            RESOURCE_LOCK beman-xfail-compile-build-tree
     )
-    if(BEMAN_XFAIL_LABELS)
-        set_tests_properties(${name} PROPERTIES LABELS "${BEMAN_XFAIL_LABELS}")
-    endif()
 endfunction()
