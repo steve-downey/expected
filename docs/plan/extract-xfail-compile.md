@@ -224,7 +224,10 @@ Worktree `~/src/beman-infra/xfail-compile` on branch `xfail-compile` from
 `upstream/main` (749c558) holds the module, driver, and README section as
 one commit; infra's pre-commit (gersemi 0.27.2) passes. Fork `main`,
 `upstream/main`, and the copy vendored here were all at 749c558, so there
-was no drift to fix. Not yet pushed; the PR is the next step.
+was no drift to fix.
+2026-10-19: opened as draft
+[bemanproject/infra#67](https://github.com/bemanproject/infra/pull/67),
+asking reviewers about the name, a self-test, and MSVC coverage.
 
 ### Stage 5 — [adopt-pin](#adopt-pin)
 
