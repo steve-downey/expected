@@ -3,326 +3,327 @@
 \rSec3[expected.void.general]{General}
 
 \begin{codeblock}
-template<class E>
-class @\libglobal{expected}@<void, E> {
-private:
-  using @\exposidnc{error-value-type}@ = remove_cv_t<remove_reference_t<E>>; // exposition only
+namespace std {
+  template<class E>
+  class @\libglobal{expected}@<void, E> {
+  private:
+    using @\exposidnc{error-value-type}@ = remove_cv_t<remove_reference_t<E>>; // exposition only
 
-public:
-  using @\libmember{value_type}{expected}@ = void;
-  using @\libmember{error_type}{expected}@ = E;
-  using @\libmember{unexpected_type}{expected}@ = unexpected<E>;
+  public:
+    using @\libmember{value_type}{expected}@ = void;
+    using @\libmember{error_type}{expected}@ = E;
+    using @\libmember{unexpected_type}{expected}@ = unexpected<E>;
 
-  template<class U> using rebind = expected<U, error_type>;
+    template<class U> using rebind = expected<U, error_type>;
 
-  // -------------------------------------------------------------------------
-  // [expected.void.cons] Constructors
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // [expected.void.cons] Constructors
+    // -------------------------------------------------------------------------
 
-  constexpr expected() noexcept;
+    constexpr expected() noexcept;
 
-  // Unconstrained trivial-path candidate: see the primary template's copy
-  // constructor for why (the sole declaration when E is not copy
-  // constructible at all; subsumed by the non-trivial path otherwise).
+    // Unconstrained trivial-path candidate: see the primary template's copy
+    // constructor for why (the sole declaration when E is not copy
+    // constructible at all; subsumed by the non-trivial path otherwise).
 
-  constexpr expected(const expected& rhs) noexcept(is_nothrow_copy_constructible_v<E>)
-    requires(is_copy_constructible_v<E> && !is_trivially_copy_constructible_v<E>);
+    constexpr expected(const expected& rhs) noexcept(is_nothrow_copy_constructible_v<E>)
+      requires(is_copy_constructible_v<E> && !is_trivially_copy_constructible_v<E>);
 
-  // Unconstrained; no explicit noexcept — see the primary template's move
-  // constructor for why.
+    // Unconstrained; no explicit noexcept — see the primary template's move
+    // constructor for why.
 
-  constexpr expected(expected&& rhs) noexcept(is_nothrow_move_constructible_v<E>)
-    requires(is_move_constructible_v<E> && !is_trivially_move_constructible_v<E>);
+    constexpr expected(expected&& rhs) noexcept(is_nothrow_move_constructible_v<E>)
+      requires(is_move_constructible_v<E> && !is_trivially_move_constructible_v<E>);
 
-  // Converting constructor from expected<U, G> where is_void_v<U>. Excludes U,G exactly
-  // matching this class's own void,E (the real copy/move constructors already handle
-  // that case) — instantiating this template for the self-referential case would
-  // otherwise probe unexpected<E>'s constructibility from this very class, which some
-  // standard library implementations of reference_constructs_from_temporary_v resolve
-  // as a circular constraint.
-  template<class U, class G>
-    requires(is_void_v<U> && !is_reference_v<E> && !is_same_v<G, E> &&
-             is_constructible_v<E, const G&> &&
-             !is_constructible_v<unexpected<E>, expected<U, G>&> &&
-             !is_constructible_v<unexpected<E>, expected<U, G>&&> &&
-             !is_constructible_v<unexpected<E>, const expected<U, G>&> &&
-             !is_constructible_v<unexpected<E>, const expected<U, G>&&>)
-  constexpr explicit(!is_convertible_v<const G&, E>)
-      expected(const expected<U, G>& rhs);
+    // Converting constructor from expected<U, G> where is_void_v<U>. Excludes U,G exactly
+    // matching this class's own void,E (the real copy/move constructors already handle
+    // that case) — instantiating this template for the self-referential case would
+    // otherwise probe unexpected<E>'s constructibility from this very class, which some
+    // standard library implementations of reference_constructs_from_temporary_v resolve
+    // as a circular constraint.
+    template<class U, class G>
+      requires(is_void_v<U> && !is_reference_v<E> && !is_same_v<G, E> &&
+               is_constructible_v<E, const G&> &&
+               !is_constructible_v<unexpected<E>, expected<U, G>&> &&
+               !is_constructible_v<unexpected<E>, expected<U, G>&&> &&
+               !is_constructible_v<unexpected<E>, const expected<U, G>&> &&
+               !is_constructible_v<unexpected<E>, const expected<U, G>&&>)
+    constexpr explicit(!is_convertible_v<const G&, E>)
+        expected(const expected<U, G>& rhs);
 
-  template<class U, class G>
-    requires(is_void_v<U> && !is_reference_v<E> && !is_same_v<G, E> &&
-             is_constructible_v<E, G> &&
-             !is_constructible_v<unexpected<E>, expected<U, G>&> &&
-             !is_constructible_v<unexpected<E>, expected<U, G>&&> &&
-             !is_constructible_v<unexpected<E>, const expected<U, G>&> &&
-             !is_constructible_v<unexpected<E>, const expected<U, G>&&>)
-  constexpr explicit(!is_convertible_v<G, E>) expected(expected<U, G>&& rhs);
+    template<class U, class G>
+      requires(is_void_v<U> && !is_reference_v<E> && !is_same_v<G, E> &&
+               is_constructible_v<E, G> &&
+               !is_constructible_v<unexpected<E>, expected<U, G>&> &&
+               !is_constructible_v<unexpected<E>, expected<U, G>&&> &&
+               !is_constructible_v<unexpected<E>, const expected<U, G>&> &&
+               !is_constructible_v<unexpected<E>, const expected<U, G>&&>)
+    constexpr explicit(!is_convertible_v<G, E>) expected(expected<U, G>&& rhs);
 
-  // Constructor from unexpected<G> const& / && — value-E path
-  template<class G>
-    requires(!is_reference_v<E> && is_constructible_v<E, const G&>)
-  constexpr explicit(!is_convertible_v<const G&, E>) expected(const unexpected<G>& e);
+    // Constructor from unexpected<G> const& / && — value-E path
+    template<class G>
+      requires(!is_reference_v<E> && is_constructible_v<E, const G&>)
+    constexpr explicit(!is_convertible_v<const G&, E>) expected(const unexpected<G>& e);
 
-  template<class G>
-    requires(!is_reference_v<E> && is_constructible_v<E, G>)
-  constexpr explicit(!is_convertible_v<G, E>) expected(unexpected<G>&& e);
+    template<class G>
+      requires(!is_reference_v<E> && is_constructible_v<E, G>)
+    constexpr explicit(!is_convertible_v<G, E>) expected(unexpected<G>&& e);
 
-  // Constructor from unexpected<G> — reference-E path. Allowed only when G is itself a
-  // reference, so e.error() refers to an external object and binding E& cannot dangle.
-  // No const_cast needed.
-  template<class G>
-    requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-             !reference_constructs_from_temporary_v<E, G>)
-  constexpr explicit(!is_convertible_v<G, E>) expected(const unexpected<G>& e) noexcept;
+    // Constructor from unexpected<G> — reference-E path. Allowed only when G is itself a
+    // reference, so e.error() refers to an external object and binding E& cannot dangle.
+    // No const_cast needed.
+    template<class G>
+      requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
+               !reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!is_convertible_v<G, E>) expected(const unexpected<G>& e) noexcept;
 
-  template<class G>
-    requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-             !reference_constructs_from_temporary_v<E, G>)
-  constexpr explicit(!is_convertible_v<G, E>) expected(unexpected<G>&& e) noexcept;
+    template<class G>
+      requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
+               !reference_constructs_from_temporary_v<E, G>)
+    constexpr explicit(!is_convertible_v<G, E>) expected(unexpected<G>&& e) noexcept;
 
-  // Deleted for reference E with value G: the referent lives inside the temporary
-  // unexpected<G>, so binding E& to it would dangle once the source is destroyed. Use
-  // (unexpect, lvalue) instead.
-  template<class G>
-    requires(is_reference_v<E> && !is_reference_v<G>)
-  constexpr expected(const unexpected<G>&) = BEMAN_EXPECTED_DELETE_MSG(
-      "expected<void,E&>: cannot construct from unexpected<value>; the value would "
-      "dangle — use unexpected<E&>");
+    // Deleted for reference E with value G: the referent lives inside the temporary
+    // unexpected<G>, so binding E& to it would dangle once the source is destroyed. Use
+    // (unexpect, lvalue) instead.
+    template<class G>
+      requires(is_reference_v<E> && !is_reference_v<G>)
+    constexpr expected(const unexpected<G>&) = BEMAN_EXPECTED_DELETE_MSG(
+        "expected<void,E&>: cannot construct from unexpected<value>; the value would "
+        "dangle — use unexpected<E&>");
 
-  template<class G>
-    requires(is_reference_v<E> && !is_reference_v<G>)
-  constexpr expected(unexpected<G>&&) = BEMAN_EXPECTED_DELETE_MSG(
-      "expected<void,E&>: cannot construct from unexpected<value>; the value would "
-      "dangle — use unexpected<E&>");
+    template<class G>
+      requires(is_reference_v<E> && !is_reference_v<G>)
+    constexpr expected(unexpected<G>&&) = BEMAN_EXPECTED_DELETE_MSG(
+        "expected<void,E&>: cannot construct from unexpected<value>; the value would "
+        "dangle — use unexpected<E&>");
 
-  // In-place constructor for value (no args, just marks has-value)
-  constexpr explicit expected(in_place_t) noexcept;
+    // In-place constructor for value (no args, just marks has-value)
+    constexpr explicit expected(in_place_t) noexcept;
 
-  // In-place constructor for error
-  template<class... Args>
-    requires(is_constructible_v<E, Args...> && !@\exposidnc{unexpect-dangles-v}@<E, Args...>)
-  constexpr explicit expected(unexpect_t, Args&&... args);
+    // In-place constructor for error
+    template<class... Args>
+      requires(is_constructible_v<E, Args...> && !@\exposidnc{unexpect-dangles-v}@<E, Args...>)
+    constexpr explicit expected(unexpect_t, Args&&... args);
 
-  // Deleted: single argument would bind E& to a temporary — dangling prevention
-  template<class... Args>
-    requires(@\exposidnc{unexpect-dangles-v}@<E, Args...>)
-  constexpr expected(unexpect_t, Args&&...) =
-      BEMAN_EXPECTED_DELETE_MSG("expected<void,E&>: unexpect argument would bind a "
-                                "temporary that dangles; pass an lvalue reference");
+    // Deleted: single argument would bind E& to a temporary — dangling prevention
+    template<class... Args>
+      requires(@\exposidnc{unexpect-dangles-v}@<E, Args...>)
+    constexpr expected(unexpect_t, Args&&...) =
+        BEMAN_EXPECTED_DELETE_MSG("expected<void,E&>: unexpect argument would bind a "
+                                  "temporary that dangles; pass an lvalue reference");
 
-  // Deleted catch-all: reference E, argument neither constructible nor a dangling case
-  // (e.g. binding a non-const E& from a const lvalue).
-  template<class... Args>
-    requires(is_reference_v<E> && !is_constructible_v<E, Args...> &&
-             !@\exposidnc{unexpect-dangles-v}@<E, Args...>)
-  constexpr expected(unexpect_t, Args&&...) = BEMAN_EXPECTED_DELETE_MSG(
-      "expected<void,E&>: no viable conversion from the given argument(s) to E&");
+    // Deleted catch-all: reference E, argument neither constructible nor a dangling case
+    // (e.g. binding a non-const E& from a const lvalue).
+    template<class... Args>
+      requires(is_reference_v<E> && !is_constructible_v<E, Args...> &&
+               !@\exposidnc{unexpect-dangles-v}@<E, Args...>)
+    constexpr expected(unexpect_t, Args&&...) = BEMAN_EXPECTED_DELETE_MSG(
+        "expected<void,E&>: no viable conversion from the given argument(s) to E&");
 
-  // In-place constructor for error with initializer_list
-  template<class U, class... Args>
-    requires(!is_reference_v<E> && is_constructible_v<E, initializer_list<U>&, Args...>)
-  constexpr explicit expected(unexpect_t, initializer_list<U> il, Args&&... args);
+    // In-place constructor for error with initializer_list
+    template<class U, class... Args>
+      requires(!is_reference_v<E> && is_constructible_v<E, initializer_list<U>&, Args...>)
+    constexpr explicit expected(unexpect_t, initializer_list<U> il, Args&&... args);
 
-  template<class U, class... Args>
-    requires is_reference_v<E>
-  constexpr expected(unexpect_t, initializer_list<U>, Args&&...) =
-      BEMAN_EXPECTED_DELETE_MSG(
-          "expected<void,E&>: initializer-list error construction cannot bind a "
-          "reference; pass an lvalue reference");
+    template<class U, class... Args>
+      requires is_reference_v<E>
+    constexpr expected(unexpect_t, initializer_list<U>, Args&&...) =
+        BEMAN_EXPECTED_DELETE_MSG(
+            "expected<void,E&>: initializer-list error construction cannot bind a "
+            "reference; pass an lvalue reference");
 
-  // Converting constructor from expected<void, G&> — reference-E path only. G is itself
-  // a reference to an external object, so binding E& to it cannot dangle regardless of
-  // the source's value category, provided the reference conversion itself does not
-  // materialize a temporary (e.g. a base-from-derived or qualification conversion is
-  // fine; a user-defined conversion that returns by value is not). Mirrors the
-  // unexpected<G> reference-E path above.
-  template<class G>
-    requires(is_reference_v<E> && is_convertible_v<G&, E> &&
-             !reference_constructs_from_temporary_v<E, G&>)
-  constexpr explicit(!is_convertible_v<G&, E>) expected(const expected<void, G&>& rhs);
+    // Converting constructor from expected<void, G&> — reference-E path only. G is itself
+    // a reference to an external object, so binding E& to it cannot dangle regardless of
+    // the source's value category, provided the reference conversion itself does not
+    // materialize a temporary (e.g. a base-from-derived or qualification conversion is
+    // fine; a user-defined conversion that returns by value is not). Mirrors the
+    // unexpected<G> reference-E path above.
+    template<class G>
+      requires(is_reference_v<E> && is_convertible_v<G&, E> &&
+               !reference_constructs_from_temporary_v<E, G&>)
+    constexpr explicit(!is_convertible_v<G&, E>) expected(const expected<void, G&>& rhs);
 
-  template<class G>
-    requires(is_reference_v<E> && is_convertible_v<G&, E> &&
-             !reference_constructs_from_temporary_v<E, G&>)
-  constexpr explicit(!is_convertible_v<G&, E>) expected(expected<void, G&>&& rhs);
+    template<class G>
+      requires(is_reference_v<E> && is_convertible_v<G&, E> &&
+               !reference_constructs_from_temporary_v<E, G&>)
+    constexpr explicit(!is_convertible_v<G&, E>) expected(expected<void, G&>&& rhs);
 
-  // -------------------------------------------------------------------------
-  // [expected.void.dtor] Destructor
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // [expected.void.dtor] Destructor
+    // -------------------------------------------------------------------------
 
-  constexpr ~expected()
-    requires(!is_trivially_destructible_v<E>);
+    constexpr ~expected();
 
-  // -------------------------------------------------------------------------
-  // [expected.void.assign] Assignment
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // [expected.void.assign] Assignment
+    // -------------------------------------------------------------------------
 
-  // Copy assignment (trivial path)
+    // Copy assignment (trivial path)
 
-  // Copy assignment (non-trivial path)
-  constexpr expected& operator=(const expected& rhs) noexcept(
-      is_nothrow_copy_constructible_v<E> && is_nothrow_copy_assignable_v<E>)
-    requires((is_reference_v<E> ||
-              (is_copy_constructible_v<E> && is_copy_assignable_v<E>)) &&
-             !(is_trivially_copy_constructible_v<E> &&
-               is_trivially_copy_assignable_v<E> && is_trivially_destructible_v<E>));
+    // Copy assignment (non-trivial path)
+    constexpr expected& operator=(const expected& rhs) noexcept(
+        is_nothrow_copy_constructible_v<E> && is_nothrow_copy_assignable_v<E>)
+      requires((is_reference_v<E> ||
+                (is_copy_constructible_v<E> && is_copy_assignable_v<E>)) &&
+               !(is_trivially_copy_constructible_v<E> &&
+                 is_trivially_copy_assignable_v<E> && is_trivially_destructible_v<E>));
 
-  // Move assignment (trivial path)
+    // Move assignment (trivial path)
 
-  // Move assignment (non-trivial path)
-  constexpr expected& operator=(expected&& rhs) noexcept(
-      is_nothrow_move_constructible_v<E> && is_nothrow_move_assignable_v<E>)
-    requires((is_reference_v<E> ||
-              (is_move_constructible_v<E> && is_move_assignable_v<E>)) &&
-             !(is_trivially_move_constructible_v<E> &&
-               is_trivially_move_assignable_v<E> && is_trivially_destructible_v<E>));
+    // Move assignment (non-trivial path)
+    constexpr expected& operator=(expected&& rhs) noexcept(
+        is_nothrow_move_constructible_v<E> && is_nothrow_move_assignable_v<E>)
+      requires((is_reference_v<E> ||
+                (is_move_constructible_v<E> && is_move_assignable_v<E>)) &&
+               !(is_trivially_move_constructible_v<E> &&
+                 is_trivially_move_assignable_v<E> && is_trivially_destructible_v<E>));
 
-  // Assignment from unexpected<G> — value-E path.
-  template<class G>
-    requires(!is_reference_v<E> && is_constructible_v<E, const G&> &&
-             is_assignable_v<E&, const G&>)
-  constexpr expected& operator=(const unexpected<G>& e);
+    // Assignment from unexpected<G> — value-E path.
+    template<class G>
+      requires(!is_reference_v<E> && is_constructible_v<E, const G&> &&
+               is_assignable_v<E&, const G&>)
+    constexpr expected& operator=(const unexpected<G>& e);
 
-  template<class G>
-    requires(!is_reference_v<E> && is_constructible_v<E, G> && is_assignable_v<E&, G>)
-  constexpr expected& operator=(unexpected<G>&& e);
+    template<class G>
+      requires(!is_reference_v<E> && is_constructible_v<E, G> && is_assignable_v<E&, G>)
+    constexpr expected& operator=(unexpected<G>&& e);
 
-  // Rebinding assignment for reference E from reference G — binds unex_ to the external
-  // referent.
-  template<class G>
-    requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-             !reference_constructs_from_temporary_v<E, G>)
-  constexpr expected& operator=(const unexpected<G>& e);
+    // Rebinding assignment for reference E from reference G — binds unex_ to the external
+    // referent.
+    template<class G>
+      requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
+               !reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(const unexpected<G>& e);
 
-  template<class G>
-    requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
-             !reference_constructs_from_temporary_v<E, G>)
-  constexpr expected& operator=(unexpected<G>&& e);
+    template<class G>
+      requires(is_reference_v<E> && is_reference_v<G> && is_constructible_v<E, G> &&
+               !reference_constructs_from_temporary_v<E, G>)
+    constexpr expected& operator=(unexpected<G>&& e);
 
-  // Deleted for reference E with value G: would bind E& to storage inside the temporary
-  // unexpected.
-  template<class G>
-    requires(is_reference_v<E> && !is_reference_v<G>)
-  constexpr expected& operator=(const unexpected<G>&) = BEMAN_EXPECTED_DELETE_MSG(
-      "expected<void,E&>: cannot assign from unexpected<value>; the value would dangle "
-      "— use unexpected<E&>");
+    // Deleted for reference E with value G: would bind E& to storage inside the temporary
+    // unexpected.
+    template<class G>
+      requires(is_reference_v<E> && !is_reference_v<G>)
+    constexpr expected& operator=(const unexpected<G>&) = BEMAN_EXPECTED_DELETE_MSG(
+        "expected<void,E&>: cannot assign from unexpected<value>; the value would dangle "
+        "— use unexpected<E&>");
 
-  template<class G>
-    requires(is_reference_v<E> && !is_reference_v<G>)
-  constexpr expected& operator=(unexpected<G>&&) = BEMAN_EXPECTED_DELETE_MSG(
-      "expected<void,E&>: cannot assign from unexpected<value>; the value would dangle "
-      "— use unexpected<E&>");
+    template<class G>
+      requires(is_reference_v<E> && !is_reference_v<G>)
+    constexpr expected& operator=(unexpected<G>&&) = BEMAN_EXPECTED_DELETE_MSG(
+        "expected<void,E&>: cannot assign from unexpected<value>; the value would dangle "
+        "— use unexpected<E&>");
 
-  constexpr void emplace() noexcept;
+    constexpr void emplace() noexcept;
 
-  // -------------------------------------------------------------------------
-  // [expected.void.swap] Swap
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // [expected.void.swap] Swap
+    // -------------------------------------------------------------------------
 
-  constexpr void swap(expected& rhs) noexcept(is_nothrow_move_constructible_v<E> &&
-                                              (is_reference_v<E> ||
-                                               is_nothrow_swappable_v<E>))
-    requires((is_reference_v<E> || is_swappable_v<E>) && is_move_constructible_v<E>);
+    constexpr void swap(expected& rhs) noexcept(is_nothrow_move_constructible_v<E> &&
+                                                (is_reference_v<E> ||
+                                                 is_nothrow_swappable_v<E>))
+      requires((is_reference_v<E> || is_swappable_v<E>) && is_move_constructible_v<E>);
 
-  friend constexpr void swap(expected& x, expected& y) noexcept(noexcept(x.swap(y)))
-    requires((is_reference_v<E> || is_swappable_v<E>) && is_move_constructible_v<E>);
+    friend constexpr void swap(expected& x, expected& y) noexcept(noexcept(x.swap(y)))
+      requires((is_reference_v<E> || is_swappable_v<E>) && is_move_constructible_v<E>);
 
-  // -------------------------------------------------------------------------
-  // [expected.void.obs] Observers
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // [expected.void.obs] Observers
+    // -------------------------------------------------------------------------
 
-  constexpr explicit operator bool() const noexcept;
-  constexpr bool has_value() const noexcept;
+    constexpr explicit operator bool() const noexcept;
+    constexpr bool has_value() const noexcept;
 
-  constexpr void operator*() const noexcept;
+    constexpr void operator*() const noexcept;
 
-  constexpr void value() const&;
-  constexpr void value() &&;
+    constexpr void value() const&;
+    constexpr void value() &&;
 
-  // error() — shallow const for reference E: always returns E& regardless of const on
-  // expected
-  constexpr const E& error() const& noexcept;
-  constexpr E& error() & noexcept;
-  constexpr const E&& error() const&& noexcept;
-  constexpr E&& error() && noexcept;
+    // error() — shallow const for reference E: always returns E& regardless of const on
+    // expected
+    constexpr const E& error() const& noexcept;
+    constexpr E& error() & noexcept;
+    constexpr const E&& error() const&& noexcept;
+    constexpr E&& error() && noexcept;
 
-  template<class G = @\exposidnc{error-value-type}@>
-    requires(is_copy_constructible_v<remove_cv_t<remove_reference_t<E>>> &&
-             is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>)
-  constexpr @\exposidnc{error-value-type}@ error_or(G&& def) const&;
+    template<class G = @\exposidnc{error-value-type}@>
+      requires(is_copy_constructible_v<remove_cv_t<remove_reference_t<E>>> &&
+               is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>)
+    constexpr @\exposidnc{error-value-type}@ error_or(G&& def) const&;
 
-  template<class G = @\exposidnc{error-value-type}@>
-    requires(is_move_constructible_v<remove_cv_t<remove_reference_t<E>>> &&
-             is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>)
-  constexpr @\exposidnc{error-value-type}@ error_or(G&& def) &&;
+    template<class G = @\exposidnc{error-value-type}@>
+      requires(is_move_constructible_v<remove_cv_t<remove_reference_t<E>>> &&
+               is_convertible_v<G, remove_cv_t<remove_reference_t<E>>>)
+    constexpr @\exposidnc{error-value-type}@ error_or(G&& def) &&;
 
-  // Deleted: value_or is not available for void expected. Gated to reference E only so
-  // that, for value E, no value_or overload is declared at all (there is nothing to
-  // delete against).
-  template<class U>
-    requires is_reference_v<E>
-  constexpr void value_or(U&&) const = BEMAN_EXPECTED_DELETE_MSG(
-      "expected<void,E>: value_or is not defined for void value_type; there is no "
-      "value to fall back from — use has_value()/error()");
+    // Deleted: value_or is not available for void expected. Gated to reference E only so
+    // that, for value E, no value_or overload is declared at all (there is nothing to
+    // delete against).
+    template<class U>
+      requires is_reference_v<E>
+    constexpr void value_or(U&&) const = BEMAN_EXPECTED_DELETE_MSG(
+        "expected<void,E>: value_or is not defined for void value_type; there is no "
+        "value to fall back from — use has_value()/error()");
 
-  // -------------------------------------------------------------------------
-  // [expected.void.monadic] Monadic operations
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // [expected.void.monadic] Monadic operations
+    // -------------------------------------------------------------------------
 
-  template<class F>
-    requires is_constructible_v<E, E&>
-  constexpr auto and_then(F&& f) &;
-  template<class F>
-    requires is_constructible_v<E, E&&>
-  constexpr auto and_then(F&& f) &&;
-  template<class F>
-    requires is_constructible_v<E, const E&>
-  constexpr auto and_then(F&& f) const&;
-  template<class F>
-    requires is_constructible_v<E, const E&&>
-  constexpr auto and_then(F&& f) const&&;
+    template<class F>
+      requires is_constructible_v<E, E&>
+    constexpr auto and_then(F&& f) &;
+    template<class F>
+      requires is_constructible_v<E, E&&>
+    constexpr auto and_then(F&& f) &&;
+    template<class F>
+      requires is_constructible_v<E, const E&>
+    constexpr auto and_then(F&& f) const&;
+    template<class F>
+      requires is_constructible_v<E, const E&&>
+    constexpr auto and_then(F&& f) const&&;
 
-  template<class F> constexpr auto or_else(F&& f) &;
-  template<class F> constexpr auto or_else(F&& f) &&;
-  template<class F> constexpr auto or_else(F&& f) const&;
-  template<class F> constexpr auto or_else(F&& f) const&&;
+    template<class F> constexpr auto or_else(F&& f) &;
+    template<class F> constexpr auto or_else(F&& f) &&;
+    template<class F> constexpr auto or_else(F&& f) const&;
+    template<class F> constexpr auto or_else(F&& f) const&&;
 
-  template<class F>
-    requires is_constructible_v<E, E&>
-  constexpr auto transform(F&& f) &;
-  template<class F>
-    requires is_constructible_v<E, E&&>
-  constexpr auto transform(F&& f) &&;
-  template<class F>
-    requires is_constructible_v<E, const E&>
-  constexpr auto transform(F&& f) const&;
-  template<class F>
-    requires is_constructible_v<E, const E&&>
-  constexpr auto transform(F&& f) const&&;
+    template<class F>
+      requires is_constructible_v<E, E&>
+    constexpr auto transform(F&& f) &;
+    template<class F>
+      requires is_constructible_v<E, E&&>
+    constexpr auto transform(F&& f) &&;
+    template<class F>
+      requires is_constructible_v<E, const E&>
+    constexpr auto transform(F&& f) const&;
+    template<class F>
+      requires is_constructible_v<E, const E&&>
+    constexpr auto transform(F&& f) const&&;
 
-  template<class F> constexpr auto transform_error(F&& f) &;
-  template<class F> constexpr auto transform_error(F&& f) &&;
-  template<class F> constexpr auto transform_error(F&& f) const&;
-  template<class F> constexpr auto transform_error(F&& f) const&&;
+    template<class F> constexpr auto transform_error(F&& f) &;
+    template<class F> constexpr auto transform_error(F&& f) &&;
+    template<class F> constexpr auto transform_error(F&& f) const&;
+    template<class F> constexpr auto transform_error(F&& f) const&&;
 
-  // -------------------------------------------------------------------------
-  // [expected.void.eq] Equality operators (hidden friends)
-  // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // [expected.void.eq] Equality operators (hidden friends)
+    // -------------------------------------------------------------------------
 
-  template<class T2, class E2>
-    requires is_void_v<T2>
-  friend constexpr bool operator==(const expected& x, const expected<T2, E2>& y);
+    template<class T2, class E2>
+      requires is_void_v<T2>
+    friend constexpr bool operator==(const expected& x, const expected<T2, E2>& y);
 
-  template<class E2>
-  friend constexpr bool operator==(const expected& x, const unexpected<E2>& e);
+    template<class E2>
+    friend constexpr bool operator==(const expected& x, const unexpected<E2>& e);
 
-private:
-  bool @\exposidnc{has-val}@; // exposition only
-  union {
-    unexpected<E> @\exposidnc{unex}@; // exposition only
+  private:
+    bool @\exposidnc{has-val}@; // exposition only
+    union {
+      unexpected<E> @\exposidnc{unex}@; // exposition only
+    };
   };
-};
+}
 \end{codeblock}
 
 \begin{itemdescr}
@@ -622,10 +623,6 @@ constexpr ~expected();
 \end{itemdecl}
 
 \begin{itemdescr}
-\pnum
-\constraints
-\tcode{is_trivially_destructible_v<E>} is \tcode{false}.
-
 \pnum
 \effects
 If \tcode{has_value()} is \tcode{false}, destroys \tcode{unex}.
