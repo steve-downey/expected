@@ -13,7 +13,7 @@ include_guard(GLOBAL)
 # ------
 #   beman_add_xfail_compile_test(<name>
 #     SOURCE <file>
-#     EXPECT <regex>
+#     [EXPECT <regex>]
 #     [LINK_LIBRARIES <target> ...]
 #     [COMPILE_DEFINITIONS <definition> ...]
 #     [TARGET_PREFIX <prefix>]
@@ -29,12 +29,23 @@ include_guard(GLOBAL)
 # SOURCE (required)
 #   The source file that must not compile.
 #
-# EXPECT (required)
+# EXPECT (optional)
 #   A regular expression matched against the compiler output. The test
 #   passes only when the output matches, which confirms the failure is the
 #   intended static_assert, deleted overload, or constraint, and not an
 #   unrelated build error. Alternations such as
 #   "use of deleted function|call to deleted" cover compiler phrasings.
+#
+#   When omitted, the regex is read from SOURCE, which must then contain
+#   one or more lines of the form
+#
+#     // EXPECT: "<regex>"
+#
+#   so the expectation lives next to the ill-formed code it describes.
+#   Several lines are joined with "|", so a long alternation can be split
+#   one compiler's wording per line and stay inside a formatter's column
+#   limit. Configuration re-runs when that file changes. Passing EXPECT
+#   overrides the comment, for sources that cannot carry one.
 #
 # LINK_LIBRARIES (optional)
 #   Targets whose usage requirements the source is compiled with, typically
@@ -93,10 +104,40 @@ function(beman_add_xfail_compile_test name)
             "beman_add_xfail_compile_test(${name}): SOURCE must be specified"
         )
     endif()
-    if(NOT BEMAN_XFAIL_EXPECT)
+    if(NOT DEFINED BEMAN_XFAIL_EXPECT)
+        file(
+            REAL_PATH "${BEMAN_XFAIL_SOURCE}"
+            _source_path
+            BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        )
+        set_property(
+            DIRECTORY
+            APPEND
+            PROPERTY CMAKE_CONFIGURE_DEPENDS "${_source_path}"
+        )
+        file(STRINGS "${_source_path}" _expect_lines REGEX "^// EXPECT: \"")
+        if(NOT _expect_lines)
+            message(
+                FATAL_ERROR
+                "beman_add_xfail_compile_test(${name}): no '// EXPECT: \"<regex>\"' line in ${_source_path}; add one or pass EXPECT"
+            )
+        endif()
+        set(_alternatives)
+        foreach(_line IN LISTS _expect_lines)
+            string(
+                REGEX REPLACE "^// EXPECT: \"(.*)\"[ \t]*$"
+                "\\1"
+                _alternative
+                "${_line}"
+            )
+            list(APPEND _alternatives "${_alternative}")
+        endforeach()
+        list(JOIN _alternatives "|" BEMAN_XFAIL_EXPECT)
+    endif()
+    if("${BEMAN_XFAIL_EXPECT}" STREQUAL "")
         message(
             FATAL_ERROR
-            "beman_add_xfail_compile_test(${name}): EXPECT must be specified"
+            "beman_add_xfail_compile_test(${name}): EXPECT must not be empty"
         )
     endif()
     string(FIND "${BEMAN_XFAIL_EXPECT}" ";" _semicolon)

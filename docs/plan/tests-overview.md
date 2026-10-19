@@ -37,7 +37,7 @@ the failure is the intended constraint/mandate, not an unrelated build error.
 
 #### Source file format
 
-Every `_fail.cpp` must have these comment lines near the top:
+Every `_fail.test.cpp` must have these comment lines near the top:
 
 ```cpp
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
@@ -45,44 +45,54 @@ Every `_fail.cpp` must have these comment lines near the top:
 // EXPECT: "<regex that matches the compiler diagnostic>"
 ```
 
-The `EXPECT` string is the same regex passed to `add_fail_test()` in CMake.
-It should match:
+**The `EXPECT` line is the regex.** CMake reads it at configure time; there
+is no second copy to keep in step. It is a CMake regular expression and
+must not contain `;`. A file may carry several `EXPECT` lines; they are
+joined with `|`, so split a long alternation one compiler's wording per
+line rather than let clang-format reflow a line past column 119 (which
+would also merge it into the comment after it). The regex should match:
 - The `static_assert` message string for **mandates**
   (e.g. `"E must not be void"`)
-- `"delete"` for **deleted function** diagnostics
-- `"no matching function"` for **SFINAE / constraint** failures where no
-  overload is viable
-- `"no matching function|delete"` when either form is possible depending
-  on compiler
+- The `= delete("...")` message, or `"use of deleted function|call to
+  deleted|attempting to reference"` (gcc, clang, MSVC) for deleted
+  overloads without one
+- `"no matching function|no matching constructor|no overloaded function
+  could convert"` for **SFINAE / constraint** failures where no overload is
+  viable
+- An alternation of those when either form is possible depending on the
+  compiler. Every alternative must be a wording some supported compiler
+  actually produces; the test passes on the first match.
 
 #### CMakeLists pattern
 
-Use the `add_fail_test(name source reason)` macro, which registers the
-test with `PASS_REGULAR_EXPRESSION`:
+Register the file with `beman_add_xfail_compile_test()` from
+`cmake/beman-xfail-compile.cmake`:
 
 ```cmake
-add_fail_test(expected_ref_e_void_fail expected_ref_e_void_fail.cpp
-    "E must not be void"
+beman_add_xfail_compile_test(
+    expected_ref_e_void_fail
+    SOURCE expected_ref_e_void_fail.test.cpp
+    LINK_LIBRARIES beman::expected
 )
 ```
 
-The macro expands to:
+The function builds an OBJECT library `beman.expected.tests.<name>` that is
+excluded from the default build, and registers a ctest named `<name>` that
+runs `cmake/beman-xfail-compile-driver.cmake`. The driver does a nested
+build of just that target and passes only when the build fails **and** its
+output matches `EXPECT`. It reports the two ways of failing separately:
 
-```cmake
-add_library(beman.expected.tests.<name> OBJECT)
-target_sources(beman.expected.tests.<name> PRIVATE <source>)
-target_link_libraries(beman.expected.tests.<name> PRIVATE beman::expected)
-set_target_properties(
-    beman.expected.tests.<name>
-    PROPERTIES EXCLUDE_FROM_ALL true EXCLUDE_FROM_DEFAULT_BUILD true
-)
-add_test(
-    NAME <name>
-    COMMAND ${CMAKE_COMMAND} --build "${CMAKE_BINARY_DIR}"
-            --target beman.expected.tests.<name> --config $<CONFIGURATION>
-)
-set_tests_properties(<name> PROPERTIES PASS_REGULAR_EXPRESSION "<reason>")
-```
+- *compiled, but was expected to fail* — the constraint or mandate is not
+  firing;
+- *failed to compile, but not for the expected reason* — a typo in the
+  test, or a compiler whose wording the regex does not yet cover. The
+  build output is echoed; add the new wording as an alternative.
+
+Every test carries the label `xfail-compile` (`ctest -L xfail-compile`
+runs just this suite, `-LE` skips it) and a resource lock so `ctest -j`
+never runs two nested builds at once. `EXPECT <regex>` may be passed
+explicitly to override the comment; the header of the module documents
+the full interface.
 
 ### 4. Type-trait / static_assert tests
 
