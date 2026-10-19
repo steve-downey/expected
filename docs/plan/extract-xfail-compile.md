@@ -202,6 +202,13 @@ module read the comment when `EXPECT` is omitted.
 Acceptance: 59/59 of the `_fail.test.cpp` files carry an EXPECT comment;
 removing one makes configure fail with a message naming the file.
 
+**Status:** DONE 2026-10-19. Log: a source may carry several `EXPECT`
+lines, joined with `|` by the module, because clang-format (column limit
+119, `ReflowComments: true`) rewraps a longer comment line and merges it
+into the comment after it. Eight files use this. Every regex ctest
+receives was checked byte-identical to the one the call site used to
+pass.
+
 ### Stage 4 — [infra-pr](#infra-pr)
 
 In `~/src/beman-infra/main`: add `upstream` → `bemanproject/infra`, branch,
@@ -304,6 +311,9 @@ cannot annotate (vendored sources) and for one-off overrides.
 **Log:** 2026-10-19 decided. Reconciliation goes toward the CMake regex,
 not the comment, because the CMake regex is the one proven on gcc, clang,
 and MSVC.
+2026-10-19: the comment is one *or more* `EXPECT` lines, OR-ed together.
+A single line was the plan, but clang-format reflows comments past column
+119, so a long alternation has to be split at an alternative boundary.
 
 ### concurrent-nested-builds
 
