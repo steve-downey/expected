@@ -178,6 +178,11 @@ Acceptance: same 59 pass; the three outcomes above each produce their
 message when provoked (a file that compiles, a file with a syntax error, a
 genuine mandate violation); `ctest -j 8 -L xfail-compile` is clean.
 
+**Status:** DONE 2026-10-19. Log: the driver omits `--config` when
+`$<CONFIG>` is empty (single-config generators). Catch2 tests are
+discovered at ctest time, so `ctest -LE xfail-compile -N` undercounts;
+`-LE` still runs the right set.
+
 ### Stage 3 — [expect-in-source](#expect-in-source)
 
 Make the source comment and the CMake regex agree again, then let the
