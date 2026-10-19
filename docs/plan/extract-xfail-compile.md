@@ -97,8 +97,8 @@ own modules; consumers are the test.
 (pinned in `infra/.beman_submodule` to `749c558`), so edits made under
 `infra/` here are overwritten by the next `beman-submodule update`. The
 module has to go upstream through a fork of `bemanproject/infra`
-(`~/src/beman-infra/main`, `origin` = `steve-downey/infra`; it needs an
-`upstream` remote added for the PR).
+(`~/src/beman-infra/main`, `origin` = `steve-downey/infra`, `upstream` =
+`bemanproject/infra`; worktrees live beside `main`, one per branch).
 
 ## Proposed interface
 
@@ -211,12 +211,20 @@ pass.
 
 ### Stage 4 — [infra-pr](#infra-pr)
 
-In `~/src/beman-infra/main`: add `upstream` → `bemanproject/infra`, branch,
-copy the module and driver into `cmake/`, add a README section modelled on
+From `~/src/beman-infra/main`: branch from `upstream/main` into a sibling
+worktree, copy the module and driver into `cmake/`, add a README section modelled on
 the `beman_install_library` one (usage snippet, argument list, what the
 test does, the label and lock, the EXPECT-from-source rule), run
 pre-commit, open the PR against `bemanproject/infra`. Point at this repo's
 59 uses and optional's one as the implementation experience.
+
+**Status:** IN PROGRESS 2026-10-19. Log: stages 1–3 are
+[bemanproject/expected#108](https://github.com/bemanproject/expected/pull/108).
+Worktree `~/src/beman-infra/xfail-compile` on branch `xfail-compile` from
+`upstream/main` (749c558) holds the module, driver, and README section as
+one commit; infra's pre-commit (gersemi 0.27.2) passes. Fork `main`,
+`upstream/main`, and the copy vendored here were all at 749c558, so there
+was no drift to fix. Not yet pushed; the PR is the next step.
 
 ### Stage 5 — [adopt-pin](#adopt-pin)
 
