@@ -153,6 +153,13 @@ deliberately broken regex on one test makes that one test fail.
 
 This stage is mergeable to `main` on its own and does not wait on infra.
 
+**Status:** DONE 2026-10-19. Log: call sites use gersemi's
+definition-aware layout (`--definitions cmake/beman-xfail-compile.cmake`),
+which also passes a plain `gersemi --check`. The `make lint` gate is read
+as "every hook except beman-tidy's pre-existing failures", which clean
+`main` shows too; they come from `.venv`/`.build` contents and the
+repository name, not from these files.
+
 ### Stage 2 — [driver-script](#driver-script)
 
 Add `cmake/beman-xfail-compile-driver.cmake` and have the module's
