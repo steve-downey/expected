@@ -12,19 +12,21 @@ An implementation-defined ntbs, which during constant evaluation is encoded with
 \end{itemdescr}
 
 \begin{codeblock}
-template<class E>
-class @\libglobal{bad_expected_access}@ : public bad_expected_access<void> {
-public:
-  BEMAN_EXPECTED_CONSTEXPR_EXCEPTION explicit bad_expected_access(E e);
-  BEMAN_EXPECTED_CONSTEXPR_EXCEPTION const char* what() const noexcept override;
-  constexpr E& error() & noexcept;
-  constexpr const E& error() const& noexcept;
-  constexpr E&& error() && noexcept;
-  constexpr const E&& error() const&& noexcept;
+namespace std {
+  template<class E>
+  class @\libglobal{bad_expected_access}@ : public bad_expected_access<void> {
+  public:
+    BEMAN_EXPECTED_CONSTEXPR_EXCEPTION explicit bad_expected_access(E e);
+    BEMAN_EXPECTED_CONSTEXPR_EXCEPTION const char* what() const noexcept override;
+    constexpr E& error() & noexcept;
+    constexpr const E& error() const& noexcept;
+    constexpr E&& error() && noexcept;
+    constexpr const E&& error() const&& noexcept;
 
-private:
-  E @\exposidnc{unex}@; // exposition only
-};
+  private:
+    E @\exposidnc{unex}@; // exposition only
+  };
+}
 \end{codeblock}
 
 \begin{itemdescr}

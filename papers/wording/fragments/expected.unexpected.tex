@@ -3,50 +3,52 @@
 \rSec3[expected.un.general]{General}
 
 \begin{codeblock}
-template<class E>
-class @\libglobal{unexpected}@ {
-  // [expected.un.general] para 2: ill-formed instantiations
+namespace std {
+  template<class E>
+  class @\libglobal{unexpected}@ {
+    // [expected.un.general] para 2: ill-formed instantiations
 
-public:
-  constexpr unexpected(const unexpected&) = default;
-  constexpr unexpected(unexpected&&) = default;
+  public:
+    constexpr unexpected(const unexpected&) = default;
+    constexpr unexpected(unexpected&&) = default;
 
-  template<class Err = E>
-    requires(!is_same_v<remove_cvref_t<Err>, unexpected> &&
-             !is_same_v<remove_cvref_t<Err>, in_place_t> && is_constructible_v<E, Err>)
-  constexpr explicit unexpected(Err&& e) noexcept(is_nothrow_constructible_v<E, Err>);
+    template<class Err = E>
+      requires(!is_same_v<remove_cvref_t<Err>, unexpected> &&
+               !is_same_v<remove_cvref_t<Err>, in_place_t> && is_constructible_v<E, Err>)
+    constexpr explicit unexpected(Err&& e) noexcept(is_nothrow_constructible_v<E, Err>);
 
-  template<class... Args>
-    requires is_constructible_v<E, Args...>
-  constexpr explicit unexpected(in_place_t, Args&&... args) noexcept(
-      is_nothrow_constructible_v<E, Args...>);
+    template<class... Args>
+      requires is_constructible_v<E, Args...>
+    constexpr explicit unexpected(in_place_t, Args&&... args) noexcept(
+        is_nothrow_constructible_v<E, Args...>);
 
-  template<class U, class... Args>
-    requires is_constructible_v<E, initializer_list<U>&, Args...>
-  constexpr explicit unexpected(
-      in_place_t, initializer_list<U> il,
-      Args&&... args) noexcept(is_nothrow_constructible_v<E, initializer_list<U>&,
-                                                          Args...>);
+    template<class U, class... Args>
+      requires is_constructible_v<E, initializer_list<U>&, Args...>
+    constexpr explicit unexpected(
+        in_place_t, initializer_list<U> il,
+        Args&&... args) noexcept(is_nothrow_constructible_v<E, initializer_list<U>&,
+                                                            Args...>);
 
-  constexpr unexpected& operator=(const unexpected&) = default;
-  constexpr unexpected& operator=(unexpected&&) = default;
+    constexpr unexpected& operator=(const unexpected&) = default;
+    constexpr unexpected& operator=(unexpected&&) = default;
 
-  constexpr const E& error() const& noexcept;
-  constexpr E& error() & noexcept;
-  constexpr const E&& error() const&& noexcept;
-  constexpr E&& error() && noexcept;
+    constexpr const E& error() const& noexcept;
+    constexpr E& error() & noexcept;
+    constexpr const E&& error() const&& noexcept;
+    constexpr E&& error() && noexcept;
 
-  constexpr void swap(unexpected& other) noexcept(is_nothrow_swappable_v<E>);
+    constexpr void swap(unexpected& other) noexcept(is_nothrow_swappable_v<E>);
 
-  template<class E2>
-  friend constexpr bool operator==(const unexpected& x, const unexpected<E2>& y);
+    template<class E2>
+    friend constexpr bool operator==(const unexpected& x, const unexpected<E2>& y);
 
-  friend constexpr void swap(unexpected& x, unexpected& y) noexcept(noexcept(x.swap(y)))
-    requires is_swappable_v<E>;
+    friend constexpr void swap(unexpected& x, unexpected& y) noexcept(noexcept(x.swap(y)))
+      requires is_swappable_v<E>;
 
-private:
-  E @\exposidnc{unex}@; // exposition only
-};
+  private:
+    E @\exposidnc{unex}@; // exposition only
+  };
+}
 \end{codeblock}
 
 \begin{itemdescr}
@@ -216,31 +218,33 @@ The expression \tcode{x.error() == y.error()} is well-formed and its result is c
 \rSec3[expected.un.ref]{Partial specialization unexpected<E&>}
 
 \begin{codeblock}
-template<class E>
-class unexpected<E&> {
-public:
-  constexpr unexpected(const unexpected&) = default;
-  constexpr unexpected(unexpected&&) = default;
-  template<class G = E>
-    constexpr explicit unexpected(G&&) noexcept;
-  template<class G = E>
-    constexpr explicit unexpected(in_place_t, G&&) noexcept;
+namespace std {
+  template<class E>
+  class unexpected<E&> {
+  public:
+    constexpr unexpected(const unexpected&) = default;
+    constexpr unexpected(unexpected&&) = default;
+    template<class G = E>
+      constexpr explicit unexpected(G&&) noexcept;
+    template<class G = E>
+      constexpr explicit unexpected(in_place_t, G&&) noexcept;
 
-  constexpr unexpected& operator=(const unexpected&) = default;
-  constexpr unexpected& operator=(unexpected&&) = default;
+    constexpr unexpected& operator=(const unexpected&) = default;
+    constexpr unexpected& operator=(unexpected&&) = default;
 
-  constexpr E& error() const noexcept;
+    constexpr E& error() const noexcept;
 
-  constexpr void swap(unexpected& other) noexcept;
+    constexpr void swap(unexpected& other) noexcept;
 
-  template<class E2>
-    friend constexpr bool operator==(const unexpected&, const unexpected<E2>&);
+    template<class E2>
+      friend constexpr bool operator==(const unexpected&, const unexpected<E2>&);
 
-  friend constexpr void swap(unexpected& x, unexpected& y) noexcept;
+    friend constexpr void swap(unexpected& x, unexpected& y) noexcept;
 
-private:
-  E* unex;              // exposition only
-};
+  private:
+    E* unex;              // exposition only
+  };
+}
 \end{codeblock}
 
 \begin{itemdescr}
