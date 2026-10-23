@@ -26,23 +26,23 @@
 \end{flushright}
 
 \begin{abstract}
-  We propose reference support for \tcode{std::expected}: the value type,
-  the error type, or both may be an lvalue reference. This takes one new
-  partial specialization, \tcode{expected<T\&, E>}, for a reference value; a
-  relaxation of the primary \tcode{expected<T, E>} and of
-  \tcode{expected<void, E>} to admit an lvalue-reference error type \tcode{E},
-  which today they reject; and a new \tcode{unexpected<E\&>} to carry one. All
-  four value/error reference combinations fall out; only the value-reference
-  case needs a specialization of its own.
+  A function that can fail and otherwise returns a reference has no good
+  return type today. \tcode{expected<T*, E>} lets a null pointer through as a
+  success, and \tcode{expected<reference_wrapper<T>, E>} exposes the wrapper
+  at every use. An error that is owned elsewhere, by a diagnostics engine or
+  an error registry, has the same problem in the error position. We propose
+  that \tcode{std::expected} hold an lvalue reference in the value position,
+  the error position, or both.
 
-  The reference support follows \tcode{optional<T\&>} \cite{P2988R12}
-  exactly where the shapes coincide. A reference is held as a pointer.
-  Assignment rebinds; it never assigns through to the referent. \tcode{const}
-  is shallow --- the binding is fixed, the referent is not. Constructors that
-  would bind a reference to a temporary are deleted, with a diagnostic. This
-  completes reference support across the standard library's principal
-  fallible sum type, and delivers the first of the two follow-ons that
-  \cite{P2988R12} named.
+  This takes one new partial specialization, \tcode{expected<T\&, E>}, for a
+  reference value; a relaxation of the primary \tcode{expected<T, E>} and of
+  \tcode{expected<void, E>} to admit an lvalue-reference error type, which
+  today they reject; and a new \tcode{unexpected<E\&>} to carry one. The
+  design follows \tcode{optional<T\&>} \cite{P2988R12}. A reference is held
+  as a pointer. Assignment rebinds; it never assigns through to the referent.
+  \tcode{const} is shallow: the binding is fixed, the referent is not.
+  Constructors that would bind a reference to a temporary are deleted, with a
+  diagnostic.
 \end{abstract}
 
 \tableofcontents*
@@ -228,12 +228,12 @@ specialization; reference errors do not. In full, the proposal is:
   \tcode{unexpected} can carry a reference error.
 \end{itemize}
 
-That is one new \tcode{expected} specialization, not four: an error you do not
-own is stored as the pointer already inside \tcode{unexpected<E\&>}, so
-permitting a reference \tcode{E} means relaxing a constraint. The primary
+An error you do not own is stored as the pointer already inside
+\tcode{unexpected<E\&>}, so permitting a reference \tcode{E} means relaxing a
+constraint. The primary
 \tcode{expected<T, E>} and \tcode{expected<void, E>} are otherwise unchanged.
-A reference is stored as a pointer --- \tcode{T\&} as a \tcode{T*}, a reference
-error as the pointer within \tcode{unexpected<E\&>} --- and there is no new
+A reference is stored as a pointer (\tcode{T\&} as a \tcode{T*}, a reference
+error as the pointer within \tcode{unexpected<E\&>}), and there is no new
 state and no new vocabulary; the observers, the modifiers, the monadic
 operations, and the comparisons keep their names and their meanings.
 
@@ -369,17 +369,8 @@ The Beman reference implementation is available online
 
 Functions that return a reference to an element of a container are common in
 performance-sensitive code, because they do not copy. When such a
-function can fail, there is no good return type today:
-
-\begin{itemize}
-\item A raw pointer drops the error value and the error type.
-\item \tcode{expected<T*, E>} needs two checks and two dereferences on the
-  happy path, and nothing stops a null \tcode{T*} from being returned as a
-  success.
-\item \tcode{expected<std::reference_wrapper<T>, E>} works, but requires
-  \tcode{.get()} at every use, exposes the wrapper type in the interface, and
-  does not thread through the monadic API as a reference would.
-\end{itemize}
+function can fail, there is no good return type today. The Before/After tables
+above show the three current spellings and what each loses.
 
 \tcode{expected<T\&, E>} fills the gap. It participates in \tcode{and_then},
 \tcode{transform}, \tcode{or_else}, and \tcode{transform_error} with no
@@ -397,7 +388,7 @@ This is the first of those two. It is also more than the sentence asked for:
 \tcode{E} is a template parameter exactly as \tcode{T} is, and an error you do
 not own is as ordinary as a value you do not own. Supporting references in the
 value position but not the error position would be an arbitrary asymmetry.
-So the proposal covers both --- the value position with a specialization, the
+So the proposal covers both: the value position with a specialization, the
 error position by letting \tcode{E} be a reference in every one of them.
 
 There is a principled reason the standard disallowed references in its sum
@@ -419,8 +410,8 @@ by following \tcode{optional<T\&>}.
 \chapter{Prior art and precedent}
 
 The design is not invented here. \tcode{optional<T\&>} \cite{P2988R12} settled
-the hard questions --- rebind versus assign-through, shallow versus deep
-\tcode{const}, dangling prevention --- after years of debate, and this paper
+the hard questions (rebind versus assign-through, shallow versus deep
+\tcode{const}, dangling prevention) after years of debate, and this paper
 copies its answers rather than relitigating them. Where the two designs
 diverge, it is only because \tcode{expected} carries an error where
 \tcode{optional} carries nothing.
@@ -438,10 +429,9 @@ is the other half, tracked separately.
 
 \chapter{Design choices and decisions}
 
-The implementation was built against a numbered decision log. The decisions
-that shape the interface are argued here, so LEWG can poll against the numbers.
+The decisions that shape the interface are argued here.
 
-\section{Rebind on assignment, never assign-through (D1)}
+\section{Rebind on assignment, never assign-through}
 
 Assignment to an engaged \tcode{expected<T\&, E>} rebinds the internal pointer.
 It does not assign through to the referent.
@@ -456,10 +446,10 @@ This matches \tcode{std::reference_wrapper::operator=}, which rebinds the
 wrapper rather than assigning through to its referent. \cite{P2988R12} settled
 the same question for \tcode{optional<T\&>}, and the survey behind it
 \cite{P1683R0} records assign-through implementations that were abandoned.
-\tcode{emplace} rebinds too --- it is the only thing it can do --- and
+\tcode{emplace} rebinds too, and
 \tcode{swap} exchanges the two pointers and leaves the referents alone.
 
-\section{Shallow \tcode{const} (D2)}
+\section{Shallow \tcode{const}}
 
 A \tcode{const expected<T\&, E>} yields a non-\tcode{const} \tcode{T\&} from
 \tcode{operator*}. The binding is \tcode{const}; the referent is not. The model
@@ -467,12 +457,12 @@ is \tcode{T* const}, not \tcode{const T*}, and it matches
 \tcode{reference_wrapper} and \tcode{optional<T\&>}. A caller who wants deep
 \tcode{const} spells \tcode{expected<const T\&, E>}.
 
-The concession here is that a \tcode{const\&} parameter of this type no longer
-promises ``I will not touch your data.'' But a reference never made that
-promise --- a \tcode{T* const} does not either --- and the mistake is in
-reading \tcode{const} on a handle as \tcode{const} on the referent.
+A \tcode{const\&} parameter of this type no longer promises ``I will not touch
+your data.'' A reference never made that promise, and neither does a
+\tcode{T* const}; the mistake is in reading \tcode{const} on a handle as
+\tcode{const} on the referent.
 
-\section{Dangling constructors are deleted, with a diagnostic (D3)}
+\section{Dangling constructors are deleted, with a diagnostic}
 
 Every constructor that would bind \tcode{T\&} (or \tcode{E\&}) to a temporary is
 deleted, guarded by \tcode{reference_constructs_from_temporary_v}
@@ -493,21 +483,21 @@ provenance is no longer available to the constraint. Accepting xvalues while
 rejecting prvalues would therefore require information this interface cannot
 recover, so both are conservatively rejected.
 
-\section{References in the error position, by relaxation not specialization (D4)}
+\section{References in the error position, by relaxation not specialization}
 
 The error type is a template parameter, and errors are routinely owned
-elsewhere --- a diagnostics engine, an error registry, a long-lived context
+elsewhere: a diagnostics engine, an error registry, a long-lived context
 object. So a reference error must be expressible. It does not, however, need a
 class of its own: an \tcode{expected} already stores its error as an
 \tcode{unexpected<E>}, and \tcode{unexpected<E\&>} holds a pointer, so
-admitting a reference \tcode{E} only requires relaxing a constraint. Every \tcode{expected} template --- the primary, the
-\tcode{void} specialization, and the new \tcode{expected<T\&, E>} --- changes
+admitting a reference \tcode{E} only requires relaxing a constraint. Every \tcode{expected} template (the primary, the
+\tcode{void} specialization, and the new \tcode{expected<T\&, E>}) changes
 its guard from ``\tcode{E} is not a reference'' to ``\tcode{E} is not an
 \emph{rvalue} reference,'' and reference errors work throughout. Not being able
 to express \tcode{expected<T, E\&>} while \tcode{expected<T\&, E>} works would
 be inconsistent, hostile, and strictly worse than disallowing both.
 
-\section{\tcode{unexpected<E\&>}, and the reference-only rule (D5)}
+\section{\tcode{unexpected<E\&>}, and the reference-only rule}
 
 To construct an \tcode{expected} with a reference error, \tcode{unexpected} has
 to be able to hold one, so \tcode{unexpected<E\&>} is part of the proposal. It
@@ -528,19 +518,19 @@ The reason is ownership. An \tcode{unexpected<E\&>} refers to an object it does
 not own, so binding \tcode{E\&} to its \tcode{error()} cannot dangle, even when
 the \tcode{unexpected} is a temporary. An \tcode{unexpected<G>} for a value
 \tcode{G} owns that \tcode{G}, and binding \tcode{E\&} to it dangles the instant
-that --- usually temporary --- \tcode{unexpected} is destroyed. So the safe case
+that, usually temporary, \tcode{unexpected} is destroyed. So the safe case
 is allowed and the dangling case is deleted.
 
-This supersedes an earlier, blunter design that deleted \emph{all}
-\tcode{unexpected<G>} construction for a reference \tcode{E}, and so threw out
-the safe \tcode{unexpected<E\&>} case with the dangerous one. Rebinding
+Deleting \emph{all} \tcode{unexpected<G>} construction for a reference
+\tcode{E} would throw out the safe \tcode{unexpected<E\&>} case with the
+dangerous one. Rebinding
 assignment from \tcode{unexpected<E\&>} follows the same reference-only rule,
 and repoints the stored pointer rather than assigning through to the old
-referent. The value-\tcode{G} cliff --- \tcode{unexpected<int\&>} works,
-\tcode{unexpected(42)} does not --- is a likely question, and the deleted
+referent. The value-\tcode{G} cliff (\tcode{unexpected<int\&>} works,
+\tcode{unexpected(42)} does not) is a likely question, and the deleted
 overload's message names it.
 
-\section{\tcode{value\_or} returns by value; \tcode{error\_or} mirrors it (D6)}
+\section{\tcode{value\_or} returns by value; \tcode{error\_or} mirrors it}
 
 \tcode{value_or} returns \tcode{T} by value, as
 \tcode{optional<T\&>::value_or} does \cite{P2988R12}: a reference return would
@@ -550,20 +540,19 @@ the same reasoning. Callers who genuinely want a reference-returning fallback
 have the free-function forms, \tcode{reference_or}, from the unpublished draft
 \cite{D4270R0}, which work over all the nullable types at once.
 
-For \tcode{expected<void, E\&>} there is no value, so \tcode{value_or} is
-\tcode{= delete}d with a message, not left absent, so the error names
-the reason instead of leaving the reader to infer it from ``no member named
-\tcode{value_or}.''
+For \tcode{expected<void, E\&>} there is no value. \tcode{value_or} is
+\tcode{= delete}d with a message, so the error names the reason instead of
+leaving the reader to infer it from ``no member named \tcode{value_or}.''
 
-\section{No default constructor, no in-place value, \tcode{emplace} rebinds (D7)}
+\section{No default constructor, no in-place value, \tcode{emplace} rebinds}
 
 An engaged \tcode{expected<T\&, E>} must hold a real reference; there is no null
 reference, so there is no default constructor. \tcode{expected(in_place, ...)}
-is deleted --- there is nowhere to construct a \tcode{T}. \tcode{emplace}
+is deleted; there is nowhere to construct a \tcode{T}. \tcode{emplace}
 rebinds the pointer, which is the only thing it can do; nothing is being
 ``emplaced,'' but the name is kept for parallelism with the primary template.
 
-\section{Monadic operations are uniform (D8)}
+\section{Monadic operations are uniform}
 
 \tcode{and_then}, \tcode{transform}, \tcode{or_else}, and
 \tcode{transform_error} are provided on every specialization. On a reference
@@ -574,12 +563,12 @@ not make the borrowed object an rvalue. The four ref-qualified overloads are
 kept for parity with the primary template even though, for a reference, they do
 the same work.
 
-\section{Shallow conversions must not steal (D9)}
+\section{Shallow conversions must not steal}
 
 Converting a reference-holding \tcode{expected} to a value-holding one copies
 the referent; it never moves out of it, even from an rvalue source.
-\tcode{std::move} on an \tcode{expected<T\&, E>} moves the handle --- a pointer
---- not the object it points at. This is the \tcode{boost::optional<T\&>}
+\tcode{std::move} on an \tcode{expected<T\&, E>} moves the handle, a pointer,
+not the object it points at. This is the \tcode{boost::optional<T\&>}
 pitfall, stated as a guarantee callers may rely on:
 
 \begin{minted}[fontsize=\small]{c++}
@@ -591,10 +580,9 @@ std::expected<std::string, int> v{std::move(r)};   // copies; s == "bar" afterwa
 The internal rule that secures this is move-the-wrapper-then-access. For
 example, use \tcode{*std::move(r)} or \tcode{std::move(r).error()}. Never use
 access-then-move: \tcode{std::move(*r)} would force an rvalue onto a reference
-the wrapper does not own, and steal from the caller's object. Because it is a
-guarantee and not merely an implementation habit, it belongs in the design.
+the wrapper does not own, and steal from the caller's object.
 
-\section{Deleted functions carry messages (D10)}
+\section{Deleted functions carry messages}
 
 Every deleted operation says what is wrong and what to do instead. For example,
 the deleted default constructor explains that \tcode{T\&} cannot be null.
@@ -603,11 +591,11 @@ implementation of this proposal has them. The wording does not specify the
 message text.
 
 \section{The held \tcode{unexpected<E>} is exposition-only; the observable
-  behavior is keyed on \tcode{E} (D11)}
+  behavior is keyed on \tcode{E}}
 
-Storing the error as \tcode{unexpected<E>} (D4) is a specification device, not a
-representation mandate. It supplies the reference case ---
-\tcode{unexpected<E\&>} holds a pointer --- without a new specialization, and
+Storing the error as \tcode{unexpected<E>} is a specification device, not a
+representation mandate. It supplies the reference case (\tcode{unexpected<E\&>} holds a pointer)
+without a new specialization, and
 that is its only purpose. In particular it must not reach an existing implementation and tell it to change
 what \tcode{expected<T, E>} stores.
 
@@ -633,26 +621,24 @@ If an observable
 difference between the \tcode{unexpected<E>} rendering and a rendering with
 separate \tcode{T} and \tcode{E} members is ever found, that is a defect in this
 proposal, and its resolution is already decided: the behavior is whatever the
-\tcode{T}-and-\tcode{E} rendering gives. The wrapper is how the error is
-described, never what the program is allowed to observe.
+\tcode{T}-and-\tcode{E} rendering gives.
 
 \section{\tcode{expected<T, E>} is trivially copyable when \tcode{T} and
-  \tcode{E} are (D12)}
+  \tcode{E} are}
 
 A drive-by. \tcode{expected<int, int>} is not trivially copyable today, because
 \tcode{expected}'s copy and move assignment are specified as non-trivial
 operations even when every component is trivial. There is no semantic reason for
 this. The assignment of a sum of trivially copyable, trivially assignable,
 trivially destructible types can be defaulted, and then the whole
-\tcode{expected} is trivially copyable --- it can be passed in registers and
+\tcode{expected} is trivially copyable: it can be passed in registers and
 relocated with \tcode{memcpy}.
 
 ``Non-trivial by specification'' is not a reason; it is the absence of one. This
 proposal specifies the special member functions of \tcode{expected} to be trivial
 when \tcode{T} and \tcode{E} make them trivial, matching the intuition that a sum
 of trivial types is trivial. The change is a widening: types that were trivially
-copyable stay so, and \tcode{expected<int, int>} joins them. Nothing that was
-trivially copyable becomes less so.
+copyable stay so, and \tcode{expected<int, int>} joins them.
 
 \chapter{Anticipated objections}
 
@@ -667,7 +653,7 @@ retires.
 \section{``References in sum types were banned for a reason''}
 
 They were, and the reason is real: assignment differs between a value and a
-reference. Granted --- and it differs for \tcode{int} versus \tcode{int*}, and
+reference. It also differs for \tcode{int} versus \tcode{int*}, and
 for \tcode{tuple<int>} versus \tcode{tuple<int\&>}, both of which the standard
 ships. The difference is a property of the type the programmer asked for, not a
 defect in the container. \tcode{optional<T\&>} decided this; \tcode{expected}
@@ -689,15 +675,13 @@ an unrelated one.
 
 \chapter{Impact on the standard}
 
-A pure library extension. No core-language change, and no existing well-formed
-program is made ill-formed. The change adds the \tcode{expected<T\&, E>} and
+A pure library extension. No core-language change. The only well-formed
+programs affected are those that asserted a reference error, or the
+\tcode{expected<T\&, E>} specialization, is rejected; those were excluding the
+feature on purpose. The change adds the \tcode{expected<T\&, E>} and
 \tcode{unexpected<E\&>} specializations, and widens the error type of the
 existing \tcode{expected} templates from an object type to an object type or an
-lvalue reference. Widening a constraint only ever admits more programs, so the
-only code affected is code that relied on a reference error, or the
-\tcode{expected<T\&, E>} specialization, being rejected --- a
-\tcode{static_assert} against them, say --- which was deliberately excluding the
-feature.
+lvalue reference.
 
 \chapter{Wording}
 
@@ -710,12 +694,12 @@ nothing else.
 
 The \tcode{[expected]} edits are of two kinds. A new \tcode{[expected.ref]} subclause specifies
 \tcode{expected<T\&, E>}, following the \tcode{optional<T\&>} wording of
-\cite{P2988R12} --- a synopsis with the value slot a pointer, the deleted
+\cite{P2988R12}: a synopsis with the value slot a pointer, the deleted
 default and in-place constructors, the rebind-semantics assignment, and the
 shallow-\tcode{const} observers. Marked edits in place widen the error type of
 the primary \tcode{expected<T, E>} and of \tcode{expected<void, E>} to admit an
 lvalue reference, and add \tcode{unexpected<E\&>} with the reference-only
-construction rule of D5. The marked edits included here are the proposed
+construction rule above. The marked edits included here are the proposed
 changes.
 
 In \tcode{[version.syn]}, header \tcode{<version>} synopsis, update the values
