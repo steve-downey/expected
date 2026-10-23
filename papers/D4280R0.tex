@@ -239,7 +239,7 @@ operations, and the comparisons keep their names and their meanings.
 
 An illustrative synopsis of the one new specialization follows. It is the
 primary template with the value slot turned into a pointer and the operations a
-reference cannot support deleted, and nothing else.
+reference cannot support deleted.
 
 \begin{codeblock}
 namespace std {
@@ -419,7 +419,7 @@ diverge, it is only because \tcode{expected} carries an error where
 The choice of rebind semantics rests on JeanHeyd Meneide's survey of
 reference-holding optionals \cite{P1683R0, REFBIND}: every production
 implementation that shipped assign-through was later withdrawn or rewritten.
-The result is not a matter of taste. All other semantics are worse.
+All other semantics are strictly worse.
 
 The wider precedent is that the standard already holds references in its
 product types. \tcode{tuple<int\&>}, \tcode{pair<int\&, int>}, and
@@ -470,14 +470,14 @@ deleted, guarded by \tcode{reference_constructs_from_temporary_v}
 the dangling call ill-formed, rather than silently dropping the candidate and
 letting a worse overload win.
 
-One wrinkle produces two diagnostics for what looks like one error. A non-\tcode{const} \tcode{int\&} simply cannot bind a
+One wrinkle produces two diagnostics for what looks like one error. A non-\tcode{const} \tcode{int\&} cannot bind a
 temporary at all, so \tcode{expected<int\&, E>(42)} fails as ``no matching
 function.'' A \tcode{const int\&} \emph{can} bind a prvalue, so
 \tcode{expected<const int\&, E>(42)} is where the deleted overload fires and the
 message is seen. Both are correct rejections. They do not read identically, and
 a reviewer should expect both forms.
 
-The detection is deliberately type-based. For a forwarding constructor, a
+The detection is type-based. For a forwarding constructor, a
 prvalue and an xvalue deduce the same source type; the source expression's
 provenance is no longer available to the constraint. Accepting xvalues while
 rejecting prvalues would therefore require information this interface cannot
@@ -536,7 +536,7 @@ overload's message names it.
 \tcode{optional<T\&>::value_or} does \cite{P2988R12}: a reference return would
 force the alternative to be a \tcode{T\&} or something convertible to one, which
 is too restrictive to be useful. \tcode{error_or} returns the error by value on
-the same reasoning. Callers who genuinely want a reference-returning fallback
+the same reasoning. Callers who want a reference-returning fallback
 have the free-function forms, \tcode{reference_or}, from the unpublished draft
 \cite{D4270R0}, which work over all the nullable types at once.
 
@@ -689,8 +689,7 @@ The proposed wording is a marked edit of the \tcode{[expected]} subclause of the
 current working draft, reproduced below, and of two feature-test macros in
 \tcode{[version.syn]}: additions are shown \added{like this}
 and deletions \removed{like this}. The baseline is checked in verbatim and
-edited only in the copy, so the marks are exactly the proposed change and
-nothing else.
+edited only in the copy, so the marks are exactly the proposed change.
 
 The \tcode{[expected]} edits are of two kinds. A new \tcode{[expected.ref]} subclause specifies
 \tcode{expected<T\&, E>}, following the \tcode{optional<T\&>} wording of
