@@ -37,7 +37,6 @@ var classbeman_1_1expected_1_1expected =
     [ "operator->", "classbeman_1_1expected_1_1expected.html#a007ed9086a61ee350029ee8499630abe", null ],
     [ "operator->", "classbeman_1_1expected_1_1expected.html#a9eeb2a99ef3756d1f5bb42693bc94393", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected.html#a14acbbd525db8376d456e070ef654352", null ],
-    [ "operator=", "classbeman_1_1expected_1_1expected.html#aa6938c2495532a2afc846bf9088736d2", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected.html#af8f4fb1030c2bbd064e7c5e7445972ca", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected.html#a034d3cf7ee90b95e0ce0b1fd63b82c9a", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected.html#a08b8ae82b1b6d76d82622bbac109f49a", null ],
@@ -66,7 +65,5 @@ var classbeman_1_1expected_1_1expected =
     [ "operator==", "classbeman_1_1expected_1_1expected.html#adccc44361cd8570bb5ffe0cd8f235d7e", null ],
     [ "operator==", "classbeman_1_1expected_1_1expected.html#a717bfb6dc1aebcc103892195c44d4c62", null ],
     [ "operator==", "classbeman_1_1expected_1_1expected.html#ad3607c2a681da911818087a166eba1a7", null ],
-    [ "swap", "classbeman_1_1expected_1_1expected.html#a91c1d5861fec665e3af6393a51709f33", null ],
-    [ "unex_", "classbeman_1_1expected_1_1expected.html#ac5de62af75cf043975d3c9e8f5fef4fb", null ],
-    [ "val_", "classbeman_1_1expected_1_1expected.html#a6eb2a411f15b9a5852f64fe29859be01", null ]
+    [ "swap", "classbeman_1_1expected_1_1expected.html#a91c1d5861fec665e3af6393a51709f33", null ]
 ];

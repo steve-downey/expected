@@ -123,13 +123,11 @@ requires (!std::is_same_v&lt;std::remove_cvref_t&lt;G&gt;, <a class="el" href="c
 template&lt;class G &gt; <br />
 requires (detail::reference_constructs_from_temporary_v&lt;E&amp;, G&gt;)</td></tr>
 <tr class="memitem:af6148211a337706a8e5ea0b60a2c9a53"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unexpected</b> (G &amp;&amp;)</td></tr>
-<tr class="memdesc:af6148211a337706a8e5ea0b60a2c9a53"><td class="mdescLeft">&#160;</td><td class="mdescRight">\merge <br /></td></tr>
 <tr class="separator:af6148211a337706a8e5ea0b60a2c9a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af153eb86c878e2782a582fbb5455d7c7"><td class="memTemplParams" colspan="2"><a id="af153eb86c878e2782a582fbb5455d7c7" name="af153eb86c878e2782a582fbb5455d7c7"></a>
 template&lt;class G &gt; <br />
 requires (!std::is_same_v&lt;std::remove_cvref_t&lt;G&gt;, <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&gt; &amp;&amp; !std::is_same_v&lt;std::remove_cvref_t&lt;G&gt;, std::in_place_t&gt; &amp;&amp; !std::is_constructible_v&lt;E&amp;, G&amp;&amp;&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E&amp;, G&gt;)</td></tr>
 <tr class="memitem:af153eb86c878e2782a582fbb5455d7c7"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unexpected</b> (G &amp;&amp;)</td></tr>
-<tr class="memdesc:af153eb86c878e2782a582fbb5455d7c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">\merge <br /></td></tr>
 <tr class="separator:af153eb86c878e2782a582fbb5455d7c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c14b62e4a7392aa30bb431ae67c4da0"><td class="memTemplParams" colspan="2">template&lt;class G  = E&gt; <br />
 requires (std::is_constructible_v&lt;E&amp;, G&amp;&amp;&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;E&amp;, G&gt;)</td></tr>
@@ -139,7 +137,6 @@ requires (std::is_constructible_v&lt;E&amp;, G&amp;&amp;&gt; &amp;&amp; !detail:
 template&lt;class G &gt; <br />
 requires (detail::reference_constructs_from_temporary_v&lt;E&amp;, G&gt;)</td></tr>
 <tr class="memitem:a438ee6c0210be812ad8e410f1d6dd332"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unexpected</b> (std::in_place_t, G &amp;&amp;)</td></tr>
-<tr class="memdesc:a438ee6c0210be812ad8e410f1d6dd332"><td class="mdescLeft">&#160;</td><td class="mdescRight">\merge <br /></td></tr>
 <tr class="separator:a438ee6c0210be812ad8e410f1d6dd332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b6eb713ef926e350f1719671ab84adb"><td class="memItemLeft" align="right" valign="top"><a id="a7b6eb713ef926e350f1719671ab84adb" name="a7b6eb713ef926e350f1719671ab84adb"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a> &amp;)=default</td></tr>
@@ -162,33 +159,8 @@ Friends</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class E&gt;<br />
-class beman::expected::unexpected&lt; E &amp; &gt;</div><p>\at expected.un.ref \mandates A program that instantiates the definition of <code>unexpected&lt;E&amp;&gt;</code> for a referenced type that is not an object type, an array type, or a specialization of <code>unexpected</code> is ill-formed. </p><dl class="section remark"><dt>Remarks</dt><dd>An object of type <code>unexpected&lt;E&amp;&gt;</code> holds a pointer to an object of type <code>E</code>. The referenced object is not owned by the <code>unexpected&lt;E&amp;&gt;</code> object. Unlike the primary template, <code>E</code> may be a cv-qualified type. <pre class="fragment">-synopsis
-template&lt;class E&gt;
-class unexpected&lt;E&amp;&gt; {
-public:
-  constexpr unexpected(const unexpected&amp;) = default;
-  constexpr unexpected(unexpected&amp;&amp;) = default;
-  template&lt;class G = E&gt;
-    constexpr explicit unexpected(G&amp;&amp;) noexcept;
-  template&lt;class G = E&gt;
-    constexpr explicit unexpected(in_place_t, G&amp;&amp;) noexcept;
-
-  constexpr unexpected&amp; operator=(const unexpected&amp;) = default;
-  constexpr unexpected&amp; operator=(unexpected&amp;&amp;) = default;
-
-  constexpr E&amp; error() const noexcept;
-
-  constexpr void swap(unexpected&amp; other) noexcept;
-
-  template&lt;class E2&gt;
-    friend constexpr bool operator==(const unexpected&amp;, const unexpected&lt;E2&gt;&amp;);
-
-  friend constexpr void swap(unexpected&amp; x, unexpected&amp; y) noexcept;
-
-private:
-  E* unex;              // exposition only
-}; 
-</pre></dd></dl>
+class beman::expected::unexpected&lt; E &amp; &gt;</div><p>An object of type <code>unexpected&lt;E&amp;&gt;</code> holds a pointer to an object of type <code>E</code>. The referenced object is not owned by the <code>unexpected&lt;E&amp;&gt;</code> object.</p>
+<p>A program that instantiates the definition of <code>unexpected&lt;E&amp;&gt;</code> for a referenced type that is not an object type, an array type, or a specialization of <code>unexpected</code> is ill-formed. Unlike the primary template, <code>E</code> may be a cv-qualified type. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a44dafd23b36dc3f5bbf21c2af0deb245" name="a44dafd23b36dc3f5bbf21c2af0deb245"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a44dafd23b36dc3f5bbf21c2af0deb245">&#9670;&#160;</a></span>unexpected() <span class="overload">[1/2]</span></h2>
@@ -218,7 +190,15 @@ requires (!std::is_same_v&lt;std::remove_cvref_t&lt;G&gt;, <a class="el" href="c
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\at expected.un.ref \constraints \item <code>is_same_v&lt;remove_cvref_t&lt;G&gt;, unexpected&gt;</code> is <code>false</code>, \item <code>is_same_v&lt;remove_cvref_t&lt;G&gt;, in_place_t&gt;</code> is <code>false</code>, \item <code>is_constructible_v&lt;E&amp;, G&gt;</code> is <code>true</code>, and \item <code>reference_constructs_from_temporary_v&lt;E&amp;, G&gt;</code> is <code>false</code>. \effects Initializes <code>unex</code> with <code>addressof(static_cast&lt;E&amp;&gt;(std::forward&lt;G&gt;(e)))</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>A constructor for which <code>reference_constructs_from_temporary_v&lt;E&amp;, G&gt;</code> is <code>true</code> — one that would bind <code>E&amp;</code> to a temporary — is defined as deleted. </dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><ul>
+<li><code>is_same_v&lt;remove_cvref_t&lt;G&gt;, unexpected&gt;</code> is <code>false</code>, </li>
+<li><code>is_same_v&lt;remove_cvref_t&lt;G&gt;, in_place_t&gt;</code> is <code>false</code>, </li>
+<li><code>is_constructible_v&lt;E&amp;, G&gt;</code> is <code>true</code>, and </li>
+<li><code>reference_constructs_from_temporary_v&lt;E&amp;, G&gt;</code> is <code>false</code>. </li>
+</ul>
+</dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Initializes <code>unex</code> with <code>addressof(static_cast&lt;E&amp;&gt;(std::forward&lt;G&gt;(e)))</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>A constructor for which <code>reference_constructs_from_temporary_v&lt;E&amp;, G&gt;</code> is <code>true</code> — one that would bind <code>E&amp;</code> to a temporary — is defined as deleted. </dd></dl>
 
 </div>
 </div>
@@ -260,7 +240,8 @@ requires (std::is_constructible_v&lt;E&amp;, G&amp;&amp;&gt; &amp;&amp; !detail:
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\at expected.un.ref \constraints <code>is_constructible_v&lt;E&amp;, G&gt;</code> is <code>true</code> and <code>reference_constructs_from_temporary_v&lt;E&amp;, G&gt;</code> is <code>false</code>. \effects Initializes <code>unex</code> with <code>addressof(static_cast&lt;E&amp;&gt;(std::forward&lt;G&gt;(e)))</code>. </p>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E&amp;, G&gt;</code> is <code>true</code> and <code>reference_constructs_from_temporary_v&lt;E&amp;, G&gt;</code> is <code>false</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Initializes <code>unex</code> with <code>addressof(static_cast&lt;E&amp;&gt;(std::forward&lt;G&gt;(e)))</code>. </dd></dl>
 
 </div>
 </div>
@@ -289,7 +270,7 @@ template&lt;class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\at expected.un.ref </p><dl class="section return"><dt>Returns</dt><dd><code>*unex</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*unex</code>. </dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>The reference returned is not <code>const</code>-qualified even when <code>*this</code> is <code>const</code>; the constness of the <code>unexpected&lt;E&amp;&gt;</code> object does not propagate to the referenced object. </dd></dl>
 
 </div>
@@ -319,7 +300,7 @@ template&lt;class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\at expected.un.ref \effects Exchanges <code>unex</code> and <code>other.unex</code>. </p>
+<dl class="section user"><dt>Effects:</dt><dd>Exchanges <code>unex</code> and <code>other.unex</code>. </dd></dl>
 
 </div>
 </div>
@@ -361,7 +342,8 @@ template&lt;class E2 &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\at expected.un.ref \mandates The expression <code>x.error() == y.error()</code> is well-formed and its result is convertible to <code>bool</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>x.error() == y.error()</code>. </dd></dl>
+<dl class="section user"><dt>Mandates:</dt><dd>The expression <code>x.error() == y.error()</code> is well-formed and its result is convertible to <code>bool</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>x.error() == y.error()</code>. </dd></dl>
 
 </div>
 </div>
@@ -400,7 +382,7 @@ template&lt;class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\at expected.un.ref \effects Equivalent to <code>x.swap(y)</code>. </p>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to <code>x.swap(y)</code>. </dd></dl>
 
 </div>
 </div>
@@ -412,7 +394,7 @@ template&lt;class E &gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>beman</b></li><li class="navelem"><b>expected</b></li><li class="navelem"><a class="el" href="classbeman_1_1expected_1_1unexpected_3_01E_01_6_01_4.html">unexpected&lt; E &amp; &gt;</a></li>
+    <li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><b>expected</b></li><li class="navelem"><a class="el" href="classbeman_1_1expected_1_1unexpected_3_01E_01_6_01_4.html">unexpected&lt; E &amp; &gt;</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>

@@ -32,7 +32,6 @@ var classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4 =
     [ "operator*", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#aa0ca2362c9aa076a3a2d35ca8d9b5a1a", null ],
     [ "operator->", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ad868ca8a3b9ceee85493fdae6b153458", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ae34317132f841912178d6a9dc0bffdc3", null ],
-    [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3d585f09ed88a3105963eb216684669a", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#acbfcdff762642dadabe28bb00181d5fd", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a184f07d62f107d2fb122180a5736be89", null ],
     [ "operator=", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#af1a202c7247ff8ad90d10237cf164004", null ],
@@ -58,7 +57,5 @@ var classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4 =
     [ "operator==", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#adccc44361cd8570bb5ffe0cd8f235d7e", null ],
     [ "operator==", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a717bfb6dc1aebcc103892195c44d4c62", null ],
     [ "operator==", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ad3607c2a681da911818087a166eba1a7", null ],
-    [ "swap", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a019c691367cd10f473e81488e9a46c7d", null ],
-    [ "unex_", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a55b1ba00a2f7efda3d6ff04a255fceb9", null ],
-    [ "val_", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a8416ac4f8fc5943eb826b0132b6db870", null ]
+    [ "swap", "classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a019c691367cd10f473e81488e9a46c7d", null ]
 ];

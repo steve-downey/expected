@@ -135,7 +135,6 @@ Public Member Functions</h2></td></tr>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;rhs) noexcept(std::is_nothrow_copy_constructible_v&lt; E &gt;)</td></tr>
 <tr class="separator:a8ee377a81fb79c3e7e3b37d377e4e821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60d01e3fcc6b953e3aa2646eb450acc2"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a60d01e3fcc6b953e3aa2646eb450acc2">expected</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;)=default</td></tr>
-<tr class="memdesc:a60d01e3fcc6b953e3aa2646eb450acc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-copy-move-ctor  <br /></td></tr>
 <tr class="separator:a60d01e3fcc6b953e3aa2646eb450acc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f0c876031b3b3ab9b6e5f60d08c69b8"><td class="memItemLeft" align="right" valign="top"><a id="a2f0c876031b3b3ab9b6e5f60d08c69b8" name="a2f0c876031b3b3ab9b6e5f60d08c69b8"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>expected</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt;)</td></tr>
@@ -198,7 +197,7 @@ requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)
 <tr class="memitem:a467b95903a2125a212bcde192d678331"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
 <tr class="memitem:a467b95903a2125a212bcde192d678331"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a467b95903a2125a212bcde192d678331">expected</a> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
-<tr class="memdesc:a467b95903a2125a212bcde192d678331"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-cvt-unexpected-ctor-deleted  <br /></td></tr>
+<tr class="memdesc:a467b95903a2125a212bcde192d678331"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts.  <br /></td></tr>
 <tr class="separator:a467b95903a2125a212bcde192d678331"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab53509b9b0816aa6f5f98c64cbc1c7ba"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; <br />
 requires (std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
@@ -212,7 +211,7 @@ requires (detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
 template&lt;class... Args&gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect_dangles_v&lt;E, Args...&gt;)</td></tr>
 <tr class="memitem:a5166f8f3b28cd0c65752f1341490dc49"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>expected</b> (<a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a>, Args &amp;&amp;...)</td></tr>
-<tr class="memdesc:a5166f8f3b28cd0c65752f1341490dc49"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-unexpect-ctor-deleted <br /></td></tr>
+<tr class="memdesc:a5166f8f3b28cd0c65752f1341490dc49"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a5166f8f3b28cd0c65752f1341490dc49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a435a4f46014357edb2489b767f77058e"><td class="memTemplParams" colspan="2">template&lt;class U , class... Args&gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, std::initializer_list&lt;U&gt;&amp;, Args...&gt;)</td></tr>
@@ -231,10 +230,8 @@ constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected<
 <tr class="separator:a4b977003f7640de3886c63ae14bd1843"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d585f09ed88a3105963eb216684669a"><td class="memItemLeft" align="right" valign="top"><a id="a3d585f09ed88a3105963eb216684669a" name="a3d585f09ed88a3105963eb216684669a"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;)=delete</td></tr>
-<tr class="memdesc:a3d585f09ed88a3105963eb216684669a"><td class="mdescLeft">&#160;</td><td class="mdescRight">\omit <br /></td></tr>
 <tr class="separator:a3d585f09ed88a3105963eb216684669a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1a202c7247ff8ad90d10237cf164004"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#af1a202c7247ff8ad90d10237cf164004">operator=</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="memdesc:af1a202c7247ff8ad90d10237cf164004"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-copy-move-assign  <br /></td></tr>
 <tr class="separator:af1a202c7247ff8ad90d10237cf164004"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a2c6df30fb2e94bdd45fec11e728a18"><td class="memItemLeft" align="right" valign="top"><a id="a8a2c6df30fb2e94bdd45fec11e728a18" name="a8a2c6df30fb2e94bdd45fec11e728a18"></a>
 constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&amp;rhs) noexcept(std::is_nothrow_move_constructible_v&lt; E &gt; &amp;&amp;std::is_nothrow_move_assignable_v&lt; E &gt;)</td></tr>
@@ -271,7 +268,7 @@ requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)
 template&lt;class G &gt; <br />
 requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)</td></tr>
 <tr class="memitem:aaf478f5b1f9fa71570826ee49691a1b4"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;)</td></tr>
-<tr class="memdesc:aaf478f5b1f9fa71570826ee49691a1b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-cvt-unexpected-assign-deleted <br /></td></tr>
+<tr class="memdesc:aaf478f5b1f9fa71570826ee49691a1b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:aaf478f5b1f9fa71570826ee49691a1b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabe54d0ece555327b5d27ec4be5dc7e8"><td class="memTemplParams" colspan="2">template&lt;class U  = T&gt; <br />
 requires (std::is_constructible_v&lt;T&amp;, U&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;T&amp;, U&gt;)</td></tr>
@@ -287,7 +284,7 @@ requires (std::is_constructible_v&lt;T&amp;, U&gt; &amp;&amp; !detail::reference
 <tr class="separator:a22f2770df0f0b785580d4df441e83f99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3121e626e1d459cf0af99a53d4cf31c1"><td class="memItemLeft" align="right" valign="top"><a id="a3121e626e1d459cf0af99a53d4cf31c1" name="a3121e626e1d459cf0af99a53d4cf31c1"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_value</b> () const noexcept</td></tr>
-<tr class="memdesc:a3121e626e1d459cf0af99a53d4cf31c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-obs-bool <br /></td></tr>
+<tr class="memdesc:a3121e626e1d459cf0af99a53d4cf31c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a3121e626e1d459cf0af99a53d4cf31c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f5bf212ff8cc225ee33af9b4d3a2b7c"><td class="memItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a6f5bf212ff8cc225ee33af9b4d3a2b7c">value</a> () const &amp;</td></tr>
 <tr class="separator:a6f5bf212ff8cc225ee33af9b4d3a2b7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -297,13 +294,13 @@ constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_value</
 <tr class="separator:ac6ea1910988ecc9a9c51c611c6a34fcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a219b5f15bbc66a4c6e8c52dca710d098"><td class="memItemLeft" align="right" valign="top"><a id="a219b5f15bbc66a4c6e8c52dca710d098" name="a219b5f15bbc66a4c6e8c52dca710d098"></a>
 constexpr E &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () &amp;noexcept</td></tr>
-<tr class="memdesc:a219b5f15bbc66a4c6e8c52dca710d098"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-obs-error-lval <br /></td></tr>
+<tr class="memdesc:a219b5f15bbc66a4c6e8c52dca710d098"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a219b5f15bbc66a4c6e8c52dca710d098"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a3c7ae443be6ef96c78facb2e114c19"><td class="memItemLeft" align="right" valign="top">constexpr const E &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a1a3c7ae443be6ef96c78facb2e114c19">error</a> () const &amp;&amp;noexcept</td></tr>
 <tr class="separator:a1a3c7ae443be6ef96c78facb2e114c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5607aae74759e04414978fa0e90d41c"><td class="memItemLeft" align="right" valign="top"><a id="ac5607aae74759e04414978fa0e90d41c" name="ac5607aae74759e04414978fa0e90d41c"></a>
 constexpr E &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> () &amp;&amp;noexcept</td></tr>
-<tr class="memdesc:ac5607aae74759e04414978fa0e90d41c"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-obs-error-rval <br /></td></tr>
+<tr class="memdesc:ac5607aae74759e04414978fa0e90d41c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:ac5607aae74759e04414978fa0e90d41c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac29b2c73563d3ac35e00ae59be6900e2"><td class="memTemplParams" colspan="2">template&lt;class U  = std::remove_cv_t&lt;T&gt;&gt; <br />
 requires (std::is_object_v&lt;T&gt; &amp;&amp; !std::is_array_v&lt;T&gt;)</td></tr>
@@ -398,16 +395,16 @@ requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;T&
 <tr class="memitem:a9177a9971d959ad30a4cd6ee12036d39"><td class="memTemplParams" colspan="2">template&lt;class U , class G &gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;T&amp;, U&amp;&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; !detail::reference_constructs_from_temporary_v&lt;T&amp;, U&amp;&gt;)</td></tr>
 <tr class="memitem:a9177a9971d959ad30a4cd6ee12036d39"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a9177a9971d959ad30a4cd6ee12036d39">expected</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; U &amp;, G &gt; &amp;&amp;rhs)</td></tr>
-<tr class="memdesc:a9177a9971d959ad30a4cd6ee12036d39"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-cvt-copy-ctor  <br /></td></tr>
 <tr class="separator:a9177a9971d959ad30a4cd6ee12036d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a184f07d62f107d2fb122180a5736be89"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, const G&amp;&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, const G&amp;&gt;)</td></tr>
 <tr class="memitem:a184f07d62f107d2fb122180a5736be89"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T &amp;, E &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a184f07d62f107d2fb122180a5736be89">operator=</a> (const <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;e)</td></tr>
 <tr class="separator:a184f07d62f107d2fb122180a5736be89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4fcba326d59c502c33f2c4196169f92"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
+<tr class="memitem:ae4fcba326d59c502c33f2c4196169f92"><td class="memTemplParams" colspan="2"><a id="ae4fcba326d59c502c33f2c4196169f92" name="ae4fcba326d59c502c33f2c4196169f92"></a>
+template&lt;class G &gt; <br />
 requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, G&gt;)</td></tr>
-<tr class="memitem:ae4fcba326d59c502c33f2c4196169f92"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T &amp;, E &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ae4fcba326d59c502c33f2c4196169f92">operator=</a> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e)</td></tr>
-<tr class="memdesc:ae4fcba326d59c502c33f2c4196169f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-cvt-unexpected-assign  <br /></td></tr>
+<tr class="memitem:ae4fcba326d59c502c33f2c4196169f92"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T &amp;, E &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;e)</td></tr>
+<tr class="memdesc:ae4fcba326d59c502c33f2c4196169f92"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:ae4fcba326d59c502c33f2c4196169f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0785af65b8d53f3303d0ca9ebb2ca9c3"><td class="memTemplParams" colspan="2">template&lt;class G &gt; <br />
 requires (std::is_copy_constructible_v&lt;std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt; &amp;&amp; std::is_convertible_v&lt;G, std::remove_cv_t&lt;std::remove_reference_t&lt;E&gt;&gt;&gt;)</td></tr>
@@ -429,13 +426,13 @@ requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</td></tr>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&gt;</td></tr>
 <tr class="memitem:adb6b40d4f4aa91bb25e7a262ae47f2cc"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>and_then</b> (F &amp;&amp;f) const &amp;</td></tr>
-<tr class="memdesc:adb6b40d4f4aa91bb25e7a262ae47f2cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-and-then-lval <br /></td></tr>
+<tr class="memdesc:adb6b40d4f4aa91bb25e7a262ae47f2cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:adb6b40d4f4aa91bb25e7a262ae47f2cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82445176870c132919035237dd66d18e"><td class="memTemplParams" colspan="2"><a id="a82445176870c132919035237dd66d18e" name="a82445176870c132919035237dd66d18e"></a>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&amp;&gt;</td></tr>
 <tr class="memitem:a82445176870c132919035237dd66d18e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>and_then</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
-<tr class="memdesc:a82445176870c132919035237dd66d18e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-and-then-rval <br /></td></tr>
+<tr class="memdesc:a82445176870c132919035237dd66d18e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a82445176870c132919035237dd66d18e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a445d60d6ab6528050182fa1d83326f06"><td class="memTemplParams" colspan="2">template&lt;class F &gt; </td></tr>
 <tr class="memitem:a445d60d6ab6528050182fa1d83326f06"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a445d60d6ab6528050182fa1d83326f06">or_else</a> (F &amp;&amp;f) &amp;</td></tr>
@@ -446,12 +443,12 @@ requires std::is_constructible_v&lt;E, const E&amp;&amp;&gt;</td></tr>
 <tr class="memitem:aeda318cda3a0f94f8cc7c624ee65e192"><td class="memTemplParams" colspan="2"><a id="aeda318cda3a0f94f8cc7c624ee65e192" name="aeda318cda3a0f94f8cc7c624ee65e192"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:aeda318cda3a0f94f8cc7c624ee65e192"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>or_else</b> (F &amp;&amp;f) const &amp;</td></tr>
-<tr class="memdesc:aeda318cda3a0f94f8cc7c624ee65e192"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-or-else-lval <br /></td></tr>
+<tr class="memdesc:aeda318cda3a0f94f8cc7c624ee65e192"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:aeda318cda3a0f94f8cc7c624ee65e192"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a972beed9d2206c9391227f5cda551efe"><td class="memTemplParams" colspan="2"><a id="a972beed9d2206c9391227f5cda551efe" name="a972beed9d2206c9391227f5cda551efe"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:a972beed9d2206c9391227f5cda551efe"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>or_else</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
-<tr class="memdesc:a972beed9d2206c9391227f5cda551efe"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-or-else-rval <br /></td></tr>
+<tr class="memdesc:a972beed9d2206c9391227f5cda551efe"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a972beed9d2206c9391227f5cda551efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71713efdf02e4c13d7dd444dd7514754"><td class="memTemplParams" colspan="2">template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, E&amp;&gt;</td></tr>
@@ -465,13 +462,13 @@ requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</td></tr>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&gt;</td></tr>
 <tr class="memitem:a8650b2ca05a2f1ea0c345d576260c31e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform</b> (F &amp;&amp;f) const &amp;</td></tr>
-<tr class="memdesc:a8650b2ca05a2f1ea0c345d576260c31e"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-transform-lval <br /></td></tr>
+<tr class="memdesc:a8650b2ca05a2f1ea0c345d576260c31e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a8650b2ca05a2f1ea0c345d576260c31e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a914330e17931f13c771b4d4d70f957e7"><td class="memTemplParams" colspan="2"><a id="a914330e17931f13c771b4d4d70f957e7" name="a914330e17931f13c771b4d4d70f957e7"></a>
 template&lt;class F &gt; <br />
 requires std::is_constructible_v&lt;E, const E&amp;&amp;&gt;</td></tr>
 <tr class="memitem:a914330e17931f13c771b4d4d70f957e7"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
-<tr class="memdesc:a914330e17931f13c771b4d4d70f957e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-transform-rval <br /></td></tr>
+<tr class="memdesc:a914330e17931f13c771b4d4d70f957e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a914330e17931f13c771b4d4d70f957e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26d8fc87cabe6af5f28ded813c0e8b45"><td class="memTemplParams" colspan="2">template&lt;class F &gt; </td></tr>
 <tr class="memitem:a26d8fc87cabe6af5f28ded813c0e8b45"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a26d8fc87cabe6af5f28ded813c0e8b45">transform_error</a> (F &amp;&amp;f) &amp;</td></tr>
@@ -482,12 +479,12 @@ requires std::is_constructible_v&lt;E, const E&amp;&amp;&gt;</td></tr>
 <tr class="memitem:a68f6758c4a5ff6953cc93534ddcd2567"><td class="memTemplParams" colspan="2"><a id="a68f6758c4a5ff6953cc93534ddcd2567" name="a68f6758c4a5ff6953cc93534ddcd2567"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:a68f6758c4a5ff6953cc93534ddcd2567"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_error</b> (F &amp;&amp;f) const &amp;</td></tr>
-<tr class="memdesc:a68f6758c4a5ff6953cc93534ddcd2567"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-transform-error-lval <br /></td></tr>
+<tr class="memdesc:a68f6758c4a5ff6953cc93534ddcd2567"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a68f6758c4a5ff6953cc93534ddcd2567"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fc8a0c9b83474d14b495d4027cafb46"><td class="memTemplParams" colspan="2"><a id="a0fc8a0c9b83474d14b495d4027cafb46" name="a0fc8a0c9b83474d14b495d4027cafb46"></a>
 template&lt;class F &gt; </td></tr>
 <tr class="memitem:a0fc8a0c9b83474d14b495d4027cafb46"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>transform_error</b> (F &amp;&amp;f) const &amp;&amp;</td></tr>
-<tr class="memdesc:a0fc8a0c9b83474d14b495d4027cafb46"><td class="mdescLeft">&#160;</td><td class="mdescRight">\also ref-monadic-transform-error-rval <br /></td></tr>
+<tr class="memdesc:a0fc8a0c9b83474d14b495d4027cafb46"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 <tr class="separator:a0fc8a0c9b83474d14b495d4027cafb46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -500,18 +497,14 @@ constexpr G &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>rhs
 <tr class="separator:ab049f5c3d4ad177668f9cc108fa2ebe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8416ac4f8fc5943eb826b0132b6db870"><td class="memItemLeft" align="right" valign="top"><a id="a8416ac4f8fc5943eb826b0132b6db870" name="a8416ac4f8fc5943eb826b0132b6db870"></a>
 T *&#160;</td><td class="memItemRight" valign="bottom"><b>val_</b></td></tr>
-<tr class="memdesc:a8416ac4f8fc5943eb826b0132b6db870"><td class="mdescLeft">&#160;</td><td class="mdescRight">\expos <br /></td></tr>
 <tr class="separator:a8416ac4f8fc5943eb826b0132b6db870"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55b1ba00a2f7efda3d6ff04a255fceb9"><td class="memItemLeft" align="right" valign="top"><a id="a55b1ba00a2f7efda3d6ff04a255fceb9" name="a55b1ba00a2f7efda3d6ff04a255fceb9"></a>
 <a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; E &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>unex_</b></td></tr>
-<tr class="memdesc:a55b1ba00a2f7efda3d6ff04a255fceb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">\expos <br /></td></tr>
 <tr class="separator:a55b1ba00a2f7efda3d6ff04a255fceb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a019c691367cd10f473e81488e9a46c7d"><td class="memItemLeft" align="right" valign="top"><a id="a019c691367cd10f473e81488e9a46c7d" name="a019c691367cd10f473e81488e9a46c7d"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;y) noexcept(noexcept(x.swap(y)))</td></tr>
-<tr class="memdesc:a019c691367cd10f473e81488e9a46c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">\effects Equivalent to <code>x.swap(y)</code>. <br /></td></tr>
+<tr class="memitem:a019c691367cd10f473e81488e9a46c7d"><td class="memItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a019c691367cd10f473e81488e9a46c7d">swap</a> (<a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;x, <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a> &amp;y) noexcept(noexcept(x.swap(y)))</td></tr>
 <tr class="separator:a019c691367cd10f473e81488e9a46c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adccc44361cd8570bb5ffe0cd8f235d7e"><td class="memTemplParams" colspan="2">template&lt;class T2 , class E2 &gt; <br />
 requires (!std::is_void_v&lt;T2&gt;)</td></tr>
@@ -527,7 +520,10 @@ requires (!detail::is_expected_specialization&lt;T2&gt;<a class="el" href="class
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T, class E&gt;<br />
-class beman::expected::expected&lt; T &amp;, E &gt;</div><p>\at expected.ref.general \mandates A program that instantiates the definition of <code>expected&lt;T&amp;, E&gt;</code> with an <code>E</code> that is not a valid template argument for <code>unexpected</code> is ill-formed. <code>T</code> shall be an object type that is not an array type, <code>in_place_t</code>, <code><a class="el" href="structbeman_1_1expected_1_1unexpect__t.html" title="\elsewhere">unexpect_t</a></code>, or a specialization of <code>unexpected</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>An object of type <code>expected&lt;T&amp;, E&gt;</code> either represents a reference to an object of type <code>T</code>, or holds an error. Member <code>has_val</code> indicates whether the object represents a reference. When it represents a reference, member <code>val</code> points to the referenced object, which is not owned by the <code>expected</code> object. Otherwise, the error is <code>unex.error()</code>. </dd></dl>
+class beman::expected::expected&lt; T &amp;, E &gt;</div><p>An object of type <code>expected&lt;T&amp;, E&gt;</code> either represents a reference to an object of type <code>T</code>, or holds an error. Member <code>has_val</code> indicates whether the object represents a reference. When it represents a reference, member <code>val</code> points to the referenced object, which is not owned by the <code>expected</code> object. Otherwise, the error is <code>unex.error()</code>.</p>
+<p>The error is held as an <code>unexpected&lt;E&gt;</code>, and not as an <code>E</code>, so that <code>E</code> can be an lvalue reference type: an <code>E&amp;</code> cannot be a union member, whereas <code>unexpected&lt;E&amp;&gt;</code> holds a pointer to an external object [expected.un.ref].</p>
+<p>A program that instantiates the definition of <code>expected&lt;T&amp;, E&gt;</code> with a type for the <code>E</code> parameter that is not a valid template argument for <code>unexpected</code> is ill-formed.</p>
+<p><code>T</code> shall be an object type that is not an array type, <code>in_place_t</code>, <code><a class="el" href="structbeman_1_1expected_1_1unexpect__t.html">unexpect_t</a></code>, or a specialization of <code>unexpected</code>. If <code>E</code> is not an lvalue reference type, <code>E</code> shall meet the <em>Cpp17Destructible</em> requirements ([cpp17.destructible]). </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7e56efd5bbd6c0826dc6e16c4c517c2a" name="a7e56efd5bbd6c0826dc6e16c4c517c2a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7e56efd5bbd6c0826dc6e16c4c517c2a">&#9670;&#160;</a></span>expected() <span class="overload">[1/13]</span></h2>
@@ -575,8 +571,10 @@ requires (std::is_copy_constructible_v&lt;E&gt; &amp;&amp; !std::is_trivially_co
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\effects If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>rhs.val</code>, so that <code>*this</code> and <code>rhs</code> refer to the same object; otherwise, initializes <code>unex</code> with <code>rhs.unex</code>. \ensures <code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code>. </p><dl class="section remark"><dt>Remarks</dt><dd>This constructor is trivial.</dd></dl>
-<p>\group ref-copy-move-ctor \effects If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>rhs.val</code>, so that <code>*this</code> and <code>rhs</code> refer to the same object; otherwise, initializes <code>unex</code> with <code>rhs.unex</code>. \ensures <code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code>. </p><dl class="section remark"><dt>Remarks</dt><dd>The exception specification of the move constructor is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt;</code>. Each of these constructors is trivial if the corresponding constructor of <code>E</code> is trivial. The copy constructor is defined as deleted unless <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code>, and the move constructor unless <code>is_move_constructible_v&lt;E&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd></dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>rhs.val</code>, so that <code>*this</code> and <code>rhs</code> refer to the same object; otherwise, initializes <code>unex</code> with <code>rhs.unex</code>. </dd></dl>
+<dl class="section user"><dt>Postconditions:</dt><dd><code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The exception specification of the move constructor is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt;</code>. Each of these constructors is trivial if the corresponding constructor of <code>E</code> is trivial. The copy constructor is defined as deleted unless <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code>, and the move constructor unless <code>is_move_constructible_v&lt;E&gt;</code> is <code>true</code>. </dd></dl>
 
 </div>
 </div>
@@ -606,9 +604,7 @@ requires (std::is_move_constructible_v&lt;E&gt; &amp;&amp; !std::is_trivially_mo
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>\also ref-copy-move-ctor </p>
-<p>\effects If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>rhs.val</code>, so that <code>*this</code> and <code>rhs</code> refer to the same object; otherwise, initializes <code>unex</code> with <code>std::move(rhs.unex)</code>. \ensures <code>rhs.has_value() == this-&gt;<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code>. </p><dl class="section remark"><dt>Remarks</dt><dd>This constructor is trivial. </dd></dl>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
 </div>
@@ -714,9 +710,14 @@ requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-cvt-unexpected-ctor-deleted </p><dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload taking <code>unexpected&lt;G&gt;</code> for a non-reference <code>G</code> is defined as deleted: the referent would live inside the (possibly temporary) source <code>unexpected&lt;G&gt;</code> object, and binding <code>E&amp;</code> to it would dangle. Use an <code>unexpected&lt;E&amp;&gt;</code> holding an external object instead.</dd></dl>
-<p>\group ref-cvt-unexpected-ctor \constraints <code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code>. \effects Initializes <code>unex</code> with the error of <code>e</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>.</p>
-<p>\group ref-cvt-unexpected-ctor-ref \constraints <code>is_reference_v&lt;G&gt;</code> is <code>true</code>; <code>is_constructible_v&lt;E, G&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;E, G&gt;</code> is <code>false</code>. \effects Initializes <code>unex</code> with the error of <code>e</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>This constructor never throws: the referent is bound, not copied. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload taking <code>unexpected&lt;G&gt;</code> for a non-reference <code>G</code> is defined as deleted: the referent would live inside the (possibly temporary) source <code>unexpected&lt;G&gt;</code> object, and binding <code>E&amp;</code> to it would dangle. Use an <code>unexpected&lt;E&amp;&gt;</code> holding an external object instead.</dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Initializes <code>unex</code> with the error of <code>e</code>. </dd></dl>
+<dl class="section user"><dt>Postconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>.</dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_reference_v&lt;G&gt;</code> is <code>true</code>; <code>is_constructible_v&lt;E, G&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;E, G&gt;</code> is <code>false</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Initializes <code>unex</code> with the error of <code>e</code>. </dd></dl>
+<dl class="section user"><dt>Postconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This constructor never throws: the referent is bound, not copied. </dd></dl>
 
 </div>
 </div>
@@ -750,9 +751,8 @@ requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)
 </table>
 </div><div class="memdoc">
 
-<p>\also ref-cvt-unexpected-ctor-deleted </p>
-<p>\also ref-cvt-unexpected-ctor-ref</p>
-<p>\also ref-cvt-unexpected-ctor </p>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
 </div>
@@ -795,7 +795,9 @@ requires (std::is_constructible_v&lt;E, Args...&gt; &amp;&amp; !detail::unexpect
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\constraints <code>is_constructible_v&lt;E, Args...&gt;</code> is <code>true</code>. \effects Direct-non-list-initializes <code>unex</code> with <code>in_place</code> and <code>std::forward&lt;Args&gt;(args)...</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>. </p>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E, Args...&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Direct-non-list-initializes <code>unex</code> with <code>in_place</code> and <code>std::forward&lt;Args&gt;(args)...</code>. </dd></dl>
+<dl class="section user"><dt>Postconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>. </dd></dl>
 
 </div>
 </div>
@@ -837,7 +839,7 @@ requires (detail::unexpect_dangles_v&lt;E, Args...&gt;)</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-unexpect-ctor-deleted </p><dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload with the same parameter types is defined as deleted if the single argument would bind <code>E&amp;</code> to a temporary, or if it is otherwise not usable to construct <code>E</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload with the same parameter types is defined as deleted if the single argument would bind <code>E&amp;</code> to a temporary, or if it is otherwise not usable to construct <code>E</code>. </dd></dl>
 
 </div>
 </div>
@@ -886,7 +888,10 @@ requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E,
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\constraints <code>is_reference_v&lt;E&gt;</code> is <code>false</code>, and <code>is_constructible_v&lt;E, initializer_list&lt;U&gt;&amp;, Args...&gt;</code> is <code>true</code>. \effects Direct-non-list-initializes <code>unex</code> with <code>in_place</code>, <code>il</code>, and <code>std::forward&lt;Args&gt;(args)...</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>An overload with the same parameter types is defined as deleted when <code>E</code> is an lvalue reference type. An initializer list cannot provide the required long-lived error referent. </dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_reference_v&lt;E&gt;</code> is <code>false</code>, and <code>is_constructible_v&lt;E, initializer_list&lt;U&gt;&amp;, Args...&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Direct-non-list-initializes <code>unex</code> with <code>in_place</code>, <code>il</code>, and <code>std::forward&lt;Args&gt;(args)...</code>. </dd></dl>
+<dl class="section user"><dt>Postconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>An overload with the same parameter types is defined as deleted when <code>E</code> is an lvalue reference type. An initializer list cannot provide the required long-lived error referent. </dd></dl>
 
 </div>
 </div>
@@ -960,8 +965,8 @@ requires std::is_trivially_destructible_v&lt;E&gt;</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\effects None: <code>*this</code> never owns the object it refers to; <code>T</code> is never destroyed. </p><dl class="section remark"><dt>Remarks</dt><dd>This destructor is trivial.</dd></dl>
-<p>\effects If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>, destroys <code>unex</code>. <code>T</code> is not destroyed; <code>*this</code> never owns the object it refers to. </p><dl class="section remark"><dt>Remarks</dt><dd>This destructor is trivial if <code>E</code> is trivially destructible. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>, destroys <code>unex</code>. <code>T</code> is not destroyed; <code>*this</code> never owns the object it refers to. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>This destructor is trivial if <code>E</code> is trivially destructible. </dd></dl>
 
 </div>
 </div>
@@ -994,8 +999,11 @@ requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;T&
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-cvt-copy-ctor \constraints <code>is_constructible_v&lt;T&amp;, U&amp;&gt;</code> is <code>true</code>; <code>reference_constructs_from_temporary_v&lt;T&amp;, U&amp;&gt;</code> is <code>false</code>; and <code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code>. \effects If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>addressof(*rhs)</code>, so that <code>*this</code> refers to the object referred to by <code>rhs</code>; otherwise, initializes <code>unex</code> with the error of <code>rhs</code>. No object referred to by <code>rhs</code> is moved from.</p>
-<p>\group ref-cvt-copy-ctor-ref \constraints <code>is_constructible_v&lt;T&amp;, U&amp;&gt;</code> is <code>true</code>; <code>reference_constructs_from_temporary_v&lt;T&amp;, U&amp;&gt;</code> is <code>false</code>; <code>G</code> is a reference type; and <code>is_convertible_v&lt;G, E&gt;</code> is <code>true</code>. \effects If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>addressof(*rhs)</code>, so that <code>*this</code> refers to the object referred to by <code>rhs</code>; otherwise, initializes <code>unex</code> with the error of <code>rhs</code>. No object referred to by <code>rhs</code> is moved from. </p><dl class="section remark"><dt>Remarks</dt><dd>Unlike the value-<code>E</code> overload above, this overload participates in overload resolution only when <code>E</code> and <code>G</code> are both reference types, so the referenced error object is never copied. </dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;T&amp;, U&amp;&gt;</code> is <code>true</code>; <code>reference_constructs_from_temporary_v&lt;T&amp;, U&amp;&gt;</code> is <code>false</code>; and <code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>addressof(*rhs)</code>, so that <code>*this</code> refers to the object referred to by <code>rhs</code>; otherwise, initializes <code>unex</code> with the error of <code>rhs</code>. No object referred to by <code>rhs</code> is moved from.</dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;T&amp;, U&amp;&gt;</code> is <code>true</code>; <code>reference_constructs_from_temporary_v&lt;T&amp;, U&amp;&gt;</code> is <code>false</code>; <code>G</code> is a reference type; and <code>is_convertible_v&lt;G, E&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>If <code>rhs.has_value()</code> is <code>true</code>, initializes <code>val</code> with <code>addressof(*rhs)</code>, so that <code>*this</code> refers to the object referred to by <code>rhs</code>; otherwise, initializes <code>unex</code> with the error of <code>rhs</code>. No object referred to by <code>rhs</code> is moved from. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Unlike the value-<code>E</code> overload above, this overload participates in overload resolution only when <code>E</code> and <code>G</code> are both reference types, so the referenced error object is never copied. </dd></dl>
 
 </div>
 </div>
@@ -1028,9 +1036,7 @@ requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;T&
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>\also ref-cvt-copy-ctor </p>
-<p>\also ref-cvt-copy-ctor-ref </p>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
 </div>
@@ -1063,7 +1069,10 @@ requires std::is_constructible_v&lt;E, E&amp;&gt;</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-and-then-lval \constraints <code>is_constructible_v&lt;E, decltype(error())&gt;</code> is <code>true</code>. \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>error_type</code> is the same type as <code>E</code>. \effects Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a>) return invoke(std::forward&lt;F&gt;(f), *val); else return U(unexpect, error());</code> where <code>U</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;</code>. </p><dl class="section remark"><dt>Remarks</dt><dd>The member templates <code>and_then</code>, <code>or_else</code>, <code>transform</code>, and <code>transform_error</code> behave as specified for the primary template, with one difference: the value is passed to the callable as <code>T&amp;</code> for every ref-qualification of <code>*this</code>. An rvalue <code>expected&lt;T&amp;, E&gt;</code> does not pass its referent as an rvalue; the object referred to is never moved from by these operations. </dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E, decltype(error())&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Mandates:</dt><dd><code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>error_type</code> is the same type as <code>E</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a>) return invoke(std::forward&lt;F&gt;(f), *val); else return U(unexpect, error());</code> where <code>U</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The member templates <code>and_then</code>, <code>or_else</code>, <code>transform</code>, and <code>transform_error</code> behave as specified for the primary template, with one difference: the value is passed to the callable as <code>T&amp;</code> for every ref-qualification of <code>*this</code>. An rvalue <code>expected&lt;T&amp;, E&gt;</code> does not pass its referent as an rvalue; the object referred to is never moved from by these operations. </dd></dl>
 
 </div>
 </div>
@@ -1095,7 +1104,9 @@ requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-and-then-rval \constraints <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code> is <code>true</code>. \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>error_type</code> is the same type as <code>E</code>. \effects Equivalent to: `if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a>) return invoke(std::forward&lt;F&gt;(f), *val); else return U(unexpect, std::move(error()));<code>where</code>U<code>is</code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;`. </p>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Mandates:</dt><dd><code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>error_type</code> is the same type as <code>E</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: `if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a>) return invoke(std::forward&lt;F&gt;(f), *val); else return U(unexpect, std::move(error()));<code>where</code>U<code>is</code>remove_cvref_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;`. </dd></dl>
 
 </div>
 </div>
@@ -1128,7 +1139,9 @@ requires (std::is_constructible_v&lt;T&amp;, U&gt; &amp;&amp; !detail::reference
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\constraints <code>is_constructible_v&lt;T&amp;, U&gt;</code> is <code>true</code> and <code>reference_constructs_from_temporary_v&lt;T&amp;, U&gt;</code> is <code>false</code>. \effects Rebinds <code>*this</code> to refer to the object bound by <code>T&amp; r = std::forward&lt;U&gt;(u);</code>: if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>, destroys <code>unex</code> first. Sets <code>val</code> to <code>addressof(r)</code> and <code>has_val</code> to <code>true</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>*val</code>. </dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;T&amp;, U&gt;</code> is <code>true</code> and <code>reference_constructs_from_temporary_v&lt;T&amp;, U&gt;</code> is <code>false</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Rebinds <code>*this</code> to refer to the object bound by <code>T&amp; r = std::forward&lt;U&gt;(u);</code>: if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>, destroys <code>unex</code> first. Sets <code>val</code> to <code>addressof(r)</code> and <code>has_val</code> to <code>true</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*val</code>. </dd></dl>
 
 </div>
 </div>
@@ -1156,7 +1169,8 @@ template&lt;class T , class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-obs-error-rval \expects <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>std::move(unex).<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a></code>. </dd></dl>
+<dl class="section user"><dt>Preconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>std::move(unex).<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a></code>. </dd></dl>
 
 </div>
 </div>
@@ -1184,7 +1198,8 @@ template&lt;class T , class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-obs-error-lval \expects <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>unex.error()</code>. </dd></dl>
+<dl class="section user"><dt>Preconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>unex.error()</code>. </dd></dl>
 
 </div>
 </div>
@@ -1216,7 +1231,7 @@ requires (std::is_move_constructible_v&lt;std::remove_cv_t&lt;std::remove_refere
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd><code>std::forward&lt;G&gt;(def)</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>, <code>std::move(error())</code> otherwise. The result is an object, never a reference. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>std::forward&lt;G&gt;(def)</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>, <code>std::move(error())</code> otherwise. The result is an object, never a reference. </dd></dl>
 
 </div>
 </div>
@@ -1248,7 +1263,7 @@ requires (std::is_copy_constructible_v&lt;std::remove_cv_t&lt;std::remove_refere
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd><code>std::forward&lt;G&gt;(def)</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>, <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a></code> otherwise. The result is an object, never a reference. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>std::forward&lt;G&gt;(def)</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>, <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a></code> otherwise. The result is an object, never a reference. </dd></dl>
 
 </div>
 </div>
@@ -1280,7 +1295,9 @@ requires (!std::is_same_v&lt;std::remove_cvref_t&lt;U&gt;, std::in_place_t&gt; &
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\constraints <code>remove_cvref_t&lt;U&gt;</code> is not <code>in_place_t</code>, <code>expected</code>, or a specialization of <code>unexpected</code>; <code>is_constructible_v&lt;T&amp;, U&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;T&amp;, U&gt;</code> is <code>false</code>. \effects Let <code>r</code> be the lvalue result of <code>T&amp; r = std::forward&lt;U&gt;(u);</code>. Initializes <code>val</code> with <code>addressof(r)</code>. \ensures <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>. </p>
+<dl class="section user"><dt>Constraints:</dt><dd><code>remove_cvref_t&lt;U&gt;</code> is not <code>in_place_t</code>, <code>expected</code>, or a specialization of <code>unexpected</code>; <code>is_constructible_v&lt;T&amp;, U&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;T&amp;, U&gt;</code> is <code>false</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Let <code>r</code> be the lvalue result of <code>T&amp; r = std::forward&lt;U&gt;(u);</code>. Initializes <code>val</code> with <code>addressof(r)</code>. </dd></dl>
+<dl class="section user"><dt>Postconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>. </dd></dl>
 
 </div>
 </div>
@@ -1305,7 +1322,7 @@ template&lt;class T , class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-obs-bool </p><dl class="section return"><dt>Returns</dt><dd><code>has_val</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>has_val</code>. </dd></dl>
 
 </div>
 </div>
@@ -1330,7 +1347,8 @@ template&lt;class T , class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\expects <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>*val</code>. </dd></dl>
+<dl class="section user"><dt>Preconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*val</code>. </dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>This is a <code>const</code> member function that returns a non-<code>const</code> <code>T&amp;</code>; the constness of <code>*this</code> does not propagate to the referenced object. For deep <code>const</code>, use <code>expected&lt;const T&amp;, E&gt;</code>. </dd></dl>
 
 </div>
@@ -1356,13 +1374,14 @@ template&lt;class T , class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\expects <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>val</code>. </dd></dl>
+<dl class="section user"><dt>Preconditions:</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>val</code>. </dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>This is a <code>const</code> member function that returns a non-<code>const</code> <code>T*</code>; the constness of <code>*this</code> does not propagate to the referenced object. For deep <code>const</code>, use <code>expected&lt;const T&amp;, E&gt;</code>. </dd></dl>
 
 </div>
 </div>
 <a id="ae34317132f841912178d6a9dc0bffdc3" name="ae34317132f841912178d6a9dc0bffdc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae34317132f841912178d6a9dc0bffdc3">&#9670;&#160;</a></span>operator=() <span class="overload">[1/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae34317132f841912178d6a9dc0bffdc3">&#9670;&#160;</a></span>operator=() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1387,15 +1406,15 @@ requires (std::is_trivially_copy_constructible_v&lt;E&gt; &amp;&amp; std::is_tri
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\effects If <code>rhs.has_value()</code> is <code>true</code>: if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>, assigns <code>rhs.val</code> to <code>val</code>; otherwise destroys <code>unex</code> and initializes <code>val</code> with <code>rhs.val</code>. If <code>rhs.has_value()</code> is <code>false</code>, the error of <code>rhs</code> is assigned to or used to initialize <code>unex</code>, as for the primary template. In every case <code>*this</code> comes to refer to the object <code>rhs</code> refers to, or to hold the error of <code>rhs</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>Assignment rebinds: assigning to an <code>expected&lt;T&amp;, E&gt;</code> that holds a value changes which object it refers to. It never assigns through to the referent. This operator is trivial.</dd></dl>
-<p>\group ref-copy-move-assign \effects If <code>rhs.has_value()</code> is <code>true</code>: if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>, assigns <code>rhs.val</code> to <code>val</code>; otherwise destroys <code>unex</code> and initializes <code>val</code> with <code>rhs.val</code>. If <code>rhs.has_value()</code> is <code>false</code>, the error of <code>rhs</code> is assigned to or used to initialize <code>unex</code>, as for the primary template. In every case <code>*this</code> comes to refer to the object <code>rhs</code> refers to, or to hold the error of <code>rhs</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>The exception specification of the move assignment operator is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt; &amp;&amp; is_nothrow_move_assignable_v&lt;E&gt;</code>. The copy assignment operator is defined as deleted unless <code>is_copy_assignable_v&lt;E&gt;</code> is <code>true</code> and <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code>, and the move assignment operator unless <code>is_move_assignable_v&lt;E&gt;</code> is <code>true</code> and <code>is_move_constructible_v&lt;E&gt;</code> is <code>true</code>. </dd></dl>
+<p>Assignment rebinds: assigning to an <code>expected&lt;T&amp;, E&gt;</code> that holds a value changes which object it refers to. It never assigns through to the referent. </p><dl class="section user"><dt>Constraints:</dt><dd></dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>If <code>rhs.has_value()</code> is <code>true</code>: if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>, assigns <code>rhs.val</code> to <code>val</code>; otherwise destroys <code>unex</code> and initializes <code>val</code> with <code>rhs.val</code>. If <code>rhs.has_value()</code> is <code>false</code>, the error of <code>rhs</code> is assigned to or used to initialize <code>unex</code>, as for the primary template. In every case <code>*this</code> comes to refer to the object <code>rhs</code> refers to, or to hold the error of <code>rhs</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The exception specification of the move assignment operator is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt; &amp;&amp; is_nothrow_move_assignable_v&lt;E&gt;</code>. The copy assignment operator is defined as deleted unless <code>is_copy_assignable_v&lt;E&gt;</code> is <code>true</code> and <code>is_copy_constructible_v&lt;E&gt;</code> is <code>true</code>, and the move assignment operator unless <code>is_move_assignable_v&lt;E&gt;</code> is <code>true</code> and <code>is_move_constructible_v&lt;E&gt;</code> is <code>true</code>. Each of these operators is trivial if the corresponding constructor and assignment operator of <code>E</code> are trivial and <code>is_trivially_destructible_v&lt;E&gt;</code> is <code>true</code>. </dd></dl>
 
 </div>
 </div>
 <a id="acbfcdff762642dadabe28bb00181d5fd" name="acbfcdff762642dadabe28bb00181d5fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbfcdff762642dadabe28bb00181d5fd">&#9670;&#160;</a></span>operator=() <span class="overload">[2/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acbfcdff762642dadabe28bb00181d5fd">&#9670;&#160;</a></span>operator=() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1422,12 +1441,12 @@ requires (std::is_reference_v&lt;E&gt; &amp;&amp; !std::is_reference_v&lt;G&gt;)
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-cvt-unexpected-assign-deleted </p><dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload taking <code>unexpected&lt;G&gt;</code> for a non-reference <code>G</code> is defined as deleted: it would rebind <code>unex</code> to <code>unexpected&lt;G&gt;</code>'s temporary storage. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>When <code>E</code> is a reference type, an overload taking <code>unexpected&lt;G&gt;</code> for a non-reference <code>G</code> is defined as deleted: it would rebind <code>unex</code> to <code>unexpected&lt;G&gt;</code>'s temporary storage. </dd></dl>
 
 </div>
 </div>
 <a id="a184f07d62f107d2fb122180a5736be89" name="a184f07d62f107d2fb122180a5736be89"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a184f07d62f107d2fb122180a5736be89">&#9670;&#160;</a></span>operator=() <span class="overload">[3/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a184f07d62f107d2fb122180a5736be89">&#9670;&#160;</a></span>operator=() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1455,14 +1474,18 @@ requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E,
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-cvt-unexpected-assign \constraints <code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code> and <code>is_assignable_v&lt;E&amp;, const G&amp;&gt;</code> is <code>true</code>. \effects Makes <code>*this</code> hold the error of <code>e</code>, reinitializing <code>unex</code> from <code>e</code> rather than assigning through it. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>.</dd></dl>
-<p>\group ref-cvt-unexpected-assign-ref \constraints <code>is_reference_v&lt;G&gt;</code> is <code>true</code>; <code>is_constructible_v&lt;E, G&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;E, G&gt;</code> is <code>false</code>. \effects Makes <code>*this</code> hold the error of <code>e</code>, reinitializing <code>unex</code> from <code>e</code> rather than assigning through it. <code>unex.error()</code> thereafter refers to the same object as <code>e.error()</code>; the previously referenced object, if any, is not modified. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E, const G&amp;&gt;</code> is <code>true</code> and <code>is_assignable_v&lt;E&amp;, const G&amp;&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Makes <code>*this</code> hold the error of <code>e</code>, reinitializing <code>unex</code> from <code>e</code> rather than assigning through it. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*this</code>.</dd></dl>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_reference_v&lt;G&gt;</code> is <code>true</code>; <code>is_constructible_v&lt;E, G&gt;</code> is <code>true</code>; and <code>reference_constructs_from_temporary_v&lt;E, G&gt;</code> is <code>false</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Makes <code>*this</code> hold the error of <code>e</code>, reinitializing <code>unex</code> from <code>e</code> rather than assigning through it. <code>unex.error()</code> thereafter refers to the same object as <code>e.error()</code>; the previously referenced object, if any, is not modified. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>This operator never throws: the referent is bound, not copied. </dd></dl>
 
 </div>
 </div>
 <a id="af1a202c7247ff8ad90d10237cf164004" name="af1a202c7247ff8ad90d10237cf164004"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1a202c7247ff8ad90d10237cf164004">&#9670;&#160;</a></span>operator=() <span class="overload">[4/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af1a202c7247ff8ad90d10237cf164004">&#9670;&#160;</a></span>operator=() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1487,15 +1510,12 @@ requires (std::is_trivially_move_constructible_v&lt;E&gt; &amp;&amp; std::is_tri
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>\also ref-copy-move-assign </p>
-<p>\effects If <code>rhs.has_value()</code> is <code>true</code>: if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>, assigns <code>rhs.val</code> to <code>val</code>; otherwise destroys <code>unex</code> and initializes <code>val</code> with <code>rhs.val</code>. If <code>rhs.has_value()</code> is <code>false</code>, the error of <code>rhs</code> is assigned to or used to initialize <code>unex</code>, as for the primary template. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
-<dl class="section remark"><dt>Remarks</dt><dd>This operator is trivial. </dd></dl>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
 
 </div>
 </div>
 <a id="ac11ab9c7ad76f61ffbf5ecd17d757266" name="ac11ab9c7ad76f61ffbf5ecd17d757266"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac11ab9c7ad76f61ffbf5ecd17d757266">&#9670;&#160;</a></span>operator=() <span class="overload">[5/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac11ab9c7ad76f61ffbf5ecd17d757266">&#9670;&#160;</a></span>operator=() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1522,42 +1542,9 @@ requires (!std::is_same_v&lt;std::remove_cvref_t&lt;U&gt;, <a class="el" href="c
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\constraints <code>remove_cvref_t&lt;U&gt;</code> is neither <code>expected</code> nor a specialization of <code>unexpected</code>, <code>is_constructible_v&lt;T&amp;, U&gt;</code> is <code>true</code>, and <code>reference_constructs_from_temporary_v&lt;T&amp;, U&gt;</code> is <code>false</code>. \effects Let <code>r</code> be the lvalue result of <code>T&amp; r = std::forward&lt;U&gt;(u);</code>. If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>, assigns <code>addressof(r)</code> to <code>val</code>. Otherwise, destroys <code>unex</code>, initializes <code>val</code> with <code>addressof(r)</code>, and sets <code>has_val</code> to <code>true</code>; if binding <code>r</code> throws, <code>*this</code> is left unchanged. </p><dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
-
-</div>
-</div>
-<a id="ae4fcba326d59c502c33f2c4196169f92" name="ae4fcba326d59c502c33f2c4196169f92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4fcba326d59c502c33f2c4196169f92">&#9670;&#160;</a></span>operator=() <span class="overload">[6/6]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , class E &gt; <br />
-requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, G&gt;)</div>
-<div class="memtemplate">
-template&lt;class G &gt; <br />
-requires (!std::is_reference_v&lt;E&gt; &amp;&amp; std::is_constructible_v&lt;E, G&gt; &amp;&amp; std::is_assignable_v&lt;E&amp;, G&gt;)</div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr <a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T &amp;, E &gt; &amp; <a class="el" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a>&lt; T &amp;, E &gt;::operator= </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1unexpected.html">unexpected</a>&lt; G &gt; &amp;&amp;&#160;</td>
-          <td class="paramname"><em>e</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>\also ref-cvt-unexpected-assign </p>
-<p>\also ref-cvt-unexpected-assign-ref </p>
+<dl class="section user"><dt>Constraints:</dt><dd><code>remove_cvref_t&lt;U&gt;</code> is neither <code>expected</code> nor a specialization of <code>unexpected</code>, <code>is_constructible_v&lt;T&amp;, U&gt;</code> is <code>true</code>, and <code>reference_constructs_from_temporary_v&lt;T&amp;, U&gt;</code> is <code>false</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Let <code>r</code> be the lvalue result of <code>T&amp; r = std::forward&lt;U&gt;(u);</code>. If <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>, assigns <code>addressof(r)</code> to <code>val</code>. Otherwise, destroys <code>unex</code>, initializes <code>val</code> with <code>addressof(r)</code>, and sets <code>has_val</code> to <code>true</code>; if binding <code>r</code> throws, <code>*this</code> is left unchanged. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*this</code>. </dd></dl>
 
 </div>
 </div>
@@ -1588,7 +1575,8 @@ template&lt;class F &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-or-else-lval \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>value_type</code> is the same type as <code>T&amp;</code>. \effects Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a>) return G(*val); else return invoke(std::forward&lt;F&gt;(f), <a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a>);</code> where <code>G</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code>. </p>
+<dl class="section user"><dt>Mandates:</dt><dd><code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>value_type</code> is the same type as <code>T&amp;</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a>) return G(*val); else return invoke(std::forward&lt;F&gt;(f), <a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a>);</code> where <code>G</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code>. </dd></dl>
 
 </div>
 </div>
@@ -1619,7 +1607,8 @@ template&lt;class F &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-or-else-rval \mandates <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>value_type</code> is the same type as <code>T&amp;</code>. \effects Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a>) return G(*val); else return invoke(std::forward&lt;F&gt;(f), std::move(error()));</code> where <code>G</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;</code>. </p>
+<dl class="section user"><dt>Mandates:</dt><dd><code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;</code> is a specialization of <code>expected</code> and its <code>value_type</code> is the same type as <code>T&amp;</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a>) return G(*val); else return invoke(std::forward&lt;F&gt;(f), std::move(error()));</code> where <code>G</code> is <code>remove_cvref_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;</code>. </dd></dl>
 
 </div>
 </div>
@@ -1649,7 +1638,8 @@ requires ((std::is_reference_v&lt;E&gt; || std::is_swappable_v&lt;E&gt;) &amp;&a
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\effects Exchanges the states of <code>*this</code> and <code>rhs</code>. When both hold values, exchanges <code>val</code> and <code>rhs.val</code> — the referenced objects are not swapped. Otherwise behaves as the primary template's <code>swap</code> does for the error. </p><dl class="section remark"><dt>Remarks</dt><dd>The exception specification is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt; &amp;&amp; (is_reference_v&lt;E&gt; || is_nothrow_swappable_v&lt;E&gt;)</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Exchanges the states of <code>*this</code> and <code>rhs</code>. When both hold values, exchanges <code>val</code> and <code>rhs.val</code> — the referenced objects are not swapped. Otherwise behaves as the primary template's <code>swap</code> does for the error. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The exception specification is equivalent to <code>is_nothrow_move_constructible_v&lt;E&gt; &amp;&amp; (is_reference_v&lt;E&gt; || is_nothrow_swappable_v&lt;E&gt;)</code>. </dd></dl>
 
 </div>
 </div>
@@ -1681,8 +1671,9 @@ requires std::is_constructible_v&lt;E, E&amp;&gt;</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-transform-lval \constraints <code>is_constructible_v&lt;E, decltype(error())&gt;</code> is <code>true</code>. \effects Equivalent to: `if (!has_value()) return U(unexpect,
-error()); else return expected&lt;U2, E&gt;(in_place, invoke(std::forward&lt;F&gt;(f), *val));<code>where</code>U2<code>is </code>remove_cv_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;<code>and</code>U<code>is</code>expected&lt;U2, E&gt;`. </p>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E, decltype(error())&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: `if (!has_value()) return U(unexpect,
+error()); else return expected&lt;U2, E&gt;(in_place, invoke(std::forward&lt;F&gt;(f), *val));<code>where</code>U2<code>is </code>remove_cv_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;<code>and</code>U<code>is</code>expected&lt;U2, E&gt;`. </dd></dl>
 
 </div>
 </div>
@@ -1714,7 +1705,8 @@ requires std::is_constructible_v&lt;E, E&amp;&amp;&gt;</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-transform-rval \constraints <code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code> is <code>true</code>. \effects Equivalent to: `if (!has_value()) return U(unexpect, std::move(error())); else return expected&lt;U2, E&gt;(in_place, invoke(std::forward&lt;F&gt;(f), *val));<code>where</code>U2<code>is </code>remove_cv_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;<code>and</code>U<code>is</code>expected&lt;U2, E&gt;`. </p>
+<dl class="section user"><dt>Constraints:</dt><dd><code>is_constructible_v&lt;E, decltype(std::move(error()))&gt;</code> is <code>true</code>. </dd></dl>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: `if (!has_value()) return U(unexpect, std::move(error())); else return expected&lt;U2, E&gt;(in_place, invoke(std::forward&lt;F&gt;(f), *val));<code>where</code>U2<code>is </code>remove_cv_t&lt;invoke_result_t&lt;F, T&amp;&gt;&gt;<code>and</code>U<code>is</code>expected&lt;U2, E&gt;`. </dd></dl>
 
 </div>
 </div>
@@ -1745,7 +1737,7 @@ template&lt;class F &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-transform-error-lval \effects Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a>) return G(*val); else return expected&lt;T&amp;, G2&gt;(unexpect, invoke(std::forward&lt;F&gt;(f), <a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a>));</code> where <code>G2</code> is <code>remove_cv_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code> and <code>G</code> is <code>expected&lt;T&amp;, G2&gt;</code>. </p>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: <code>if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a>) return G(*val); else return expected&lt;T&amp;, G2&gt;(unexpect, invoke(std::forward&lt;F&gt;(f), <a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a>));</code> where <code>G2</code> is <code>remove_cv_t&lt;invoke_result_t&lt;F, decltype(error())&gt;&gt;</code> and <code>G</code> is <code>expected&lt;T&amp;, G2&gt;</code>. </dd></dl>
 
 </div>
 </div>
@@ -1776,7 +1768,7 @@ template&lt;class F &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\group ref-monadic-transform-error-rval \effects Equivalent to: `if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a>) return G(*val); else return expected&lt;T&amp;, G2&gt;(unexpect, invoke(std::forward&lt;F&gt;(f), std::move(error())));<code>where</code>G2<code>is </code>remove_cv_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;<code>and </code>G<code>is</code>expected&lt;T&amp;, G2&gt;`. </p>
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to: `if (<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a>) return G(*val); else return expected&lt;T&amp;, G2&gt;(unexpect, invoke(std::forward&lt;F&gt;(f), std::move(error())));<code>where</code>G2<code>is </code>remove_cv_t&lt;invoke_result_t&lt;F, decltype(std::move(error()))&gt;&gt;<code>and </code>G<code>is</code>expected&lt;T&amp;, G2&gt;`. </dd></dl>
 
 </div>
 </div>
@@ -1804,10 +1796,10 @@ template&lt;class T , class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd><code>*val</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*val</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">`bad_expected_access(std::move(error()))`</td><td>if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>. </td></tr>
+    <tr><td class="paramname">`bad_expected_access(std::move(error()))`</td><td>if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1838,10 +1830,10 @@ template&lt;class T , class E &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd><code>*val</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>true</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>*val</code> if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>true</code>. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">`bad_expected_access(as_const(error()))`</td><td>if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a></code> is <code>false</code>. </td></tr>
+    <tr><td class="paramname">`bad_expected_access(as_const(error()))`</td><td>if <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a></code> is <code>false</code>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1877,7 +1869,8 @@ requires (std::is_object_v&lt;T&gt; &amp;&amp; !std::is_array_v&lt;T&gt;)</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\mandates <code>is_convertible_v&lt;T&amp;, remove_cv_t&lt;T&gt;&gt;</code> and <code>is_convertible_v&lt;U, remove_cv_t&lt;T&gt;&gt;</code> are <code>true</code>. </p><dl class="section return"><dt>Returns</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a> ? static_cast&lt;remove_cv_t&lt;T&gt;&gt;(*val) : static_cast&lt;remove_cv_t&lt;T&gt;&gt;(std::forward&lt;U&gt;(def))</code>. The result is an object, never a reference. </dd></dl>
+<dl class="section user"><dt>Mandates:</dt><dd><code>is_convertible_v&lt;T&amp;, remove_cv_t&lt;T&gt;&gt;</code> and <code>is_convertible_v&lt;U, remove_cv_t&lt;T&gt;&gt;</code> are <code>true</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a> ? static_cast&lt;remove_cv_t&lt;T&gt;&gt;(*val) : static_cast&lt;remove_cv_t&lt;T&gt;&gt;(std::forward&lt;U&gt;(def))</code>. The result is an object, never a reference. </dd></dl>
 
 </div>
 </div>
@@ -1920,7 +1913,8 @@ requires (!std::is_void_v&lt;T2&gt;)</div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\mandates <code>!is_void_v&lt;T2&gt;</code> is <code>true</code>. The expression <code>*x == *y</code> is well-formed and its result is convertible to <code>bool</code>. The expression <code>x.error() == y.error()</code> is well-formed and its result is convertible to <code>bool</code>. </p><dl class="section return"><dt>Returns</dt><dd>If <code>x.has_value() != y.has_value()</code>, <code>false</code>; otherwise, if <code>x.has_value()</code> is <code>true</code>, <code>*x == *y</code>; otherwise <code>x.error() == y.error()</code>. </dd></dl>
+<dl class="section user"><dt>Mandates:</dt><dd>The expression <code>*x == *y</code> is well-formed and its result is convertible to <code>bool</code>. The expression <code>x.error() == y.error()</code> is well-formed and its result is convertible to <code>bool</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>If <code>x.has_value() != y.has_value()</code>, <code>false</code>; otherwise, if <code>x.has_value()</code> is <code>true</code>, <code>*x == *y</code>; otherwise <code>x.error() == y.error()</code>. </dd></dl>
 <dl class="section remark"><dt>Remarks</dt><dd>The equality operators behave as specified for the primary template, comparing referents through <code>operator*</code> and errors through <code><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#ac6ea1910988ecc9a9c51c611c6a34fcd">error()</a></code>. </dd></dl>
 
 </div>
@@ -1963,7 +1957,8 @@ requires (!detail::is_expected_specialization&lt;T2&gt;<a class="el" href="class
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\mandates <code>T2</code> is not a specialization of <code>expected</code>. The expression <code>*x == val</code> is well-formed and its result is convertible to <code>bool</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>x.has_value() &amp;&amp; static_cast&lt;bool&gt;(*x == val)</code>. </dd></dl>
+<dl class="section user"><dt>Mandates:</dt><dd><code>T2</code> is not a specialization of <code>expected</code>. The expression <code>*x == val</code> is well-formed and its result is convertible to <code>bool</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>x.has_value() &amp;&amp; static_cast&lt;bool&gt;(*x == val)</code>. </dd></dl>
 
 </div>
 </div>
@@ -2004,7 +1999,47 @@ template&lt;class E2 &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>\mandates The expression <code>x.error() == e.error()</code> is well-formed and its result is convertible to <code>bool</code>. </p><dl class="section return"><dt>Returns</dt><dd><code>!x.<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="\also ref-obs-bool">has_value()</a> &amp;&amp; static_cast&lt;bool&gt;(x.error() == e.error())</code>. </dd></dl>
+<dl class="section user"><dt>Mandates:</dt><dd>The expression <code>x.error() == e.error()</code> is well-formed and its result is convertible to <code>bool</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>!x.<a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html#a3121e626e1d459cf0af99a53d4cf31c1" title="This is an overloaded member function, provided for convenience. It differs from the above function o...">has_value()</a> &amp;&amp; static_cast&lt;bool&gt;(x.error() == e.error())</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a019c691367cd10f473e81488e9a46c7d" name="a019c691367cd10f473e81488e9a46c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a019c691367cd10f473e81488e9a46c7d">&#9670;&#160;</a></span>swap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T , class E &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void swap </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T &amp;, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classbeman_1_1expected_1_1expected.html">expected</a>&lt; T &amp;, E &gt; &amp;&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section user"><dt>Effects:</dt><dd>Equivalent to <code>x.swap(y)</code>. </dd></dl>
 
 </div>
 </div>
@@ -2016,7 +2051,7 @@ template&lt;class E2 &gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>beman</b></li><li class="navelem"><b>expected</b></li><li class="navelem"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html">expected&lt; T &amp;, E &gt;</a></li>
+    <li class="navelem"><a class="el" href="namespacebeman.html">beman</a></li><li class="navelem"><b>expected</b></li><li class="navelem"><a class="el" href="classbeman_1_1expected_1_1expected_3_01T_01_6_00_01E_01_4.html">expected&lt; T &amp;, E &gt;</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
 </div>

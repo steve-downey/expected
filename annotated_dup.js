@@ -1,6 +1,6 @@
 var annotated_dup =
 [
-    [ "beman", null, [
+    [ "beman", "namespacebeman.html", [
       [ "expected", null, [
         [ "bad_expected_access", "classbeman_1_1expected_1_1bad__expected__access.html", "classbeman_1_1expected_1_1bad__expected__access" ],
         [ "bad_expected_access< void >", "classbeman_1_1expected_1_1bad__expected__access_3_01void_01_4.html", "classbeman_1_1expected_1_1bad__expected__access_3_01void_01_4" ],

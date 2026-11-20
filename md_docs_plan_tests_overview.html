@@ -102,17 +102,17 @@ $(document).ready(function(){initNavTree('md_docs_plan_tests_overview.html','');
 <div class="contents">
 <div class="textblock"><p>This document summarises the testing approach across all 10 implementation steps. Agents working a specific step should read this file and the corresponding <code>tests-stepN.md</code> file for that step.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md452"></a>
+<h1><a class="anchor" id="autotoc_md451"></a>
 Test Framework</h1>
 <p><b>Catch2</b> (<code>catch2/catch_test_macros.hpp</code>, <code>Catch2::Catch2WithMain</code>).</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md454"></a>
+<h1><a class="anchor" id="autotoc_md453"></a>
 Standard Testing Conventions</h1>
-<h2><a class="anchor" id="autotoc_md455"></a>
+<h2><a class="anchor" id="autotoc_md454"></a>
 1. Header idempotence</h2>
 <p>Every test file includes the header under test <b>twice</b>: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;beman/expected/unexpected.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;beman/expected/unexpected.hpp&gt;</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md456"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md455"></a>
 2. Three tiers of negative testing</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -124,10 +124,10 @@ Standard Testing Conventions</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b>Hardened precondition</b>   </td><td class="markdownTableBodyNone">"Hardened preconditions: X"   </td><td class="markdownTableBodyNone">Runtime UB without contracts; if the implementation enforces contracts, use <code>REQUIRE_THROWS</code> under <code>#if defined(BEMAN_EXPECTED_HARDENED)</code>   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md457"></a>
+<h2><a class="anchor" id="autotoc_md456"></a>
 3. Negative compile test pattern</h2>
 <p>Each negative compile test is a <code>.cpp</code> file that <b>must not compile</b>, and its failure must be verified against a <b>specific diagnostic</b> to confirm the failure is the intended constraint/mandate, not an unrelated build error.</p>
-<h3><a class="anchor" id="autotoc_md458"></a>
+<h3><a class="anchor" id="autotoc_md457"></a>
 Source file format</h3>
 <p>Every <code>_fail.test.cpp</code> must have these comment lines near the top:</p>
 <div class="fragment"><div class="line"><span class="comment">// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception</span></div>
@@ -141,7 +141,7 @@ Source file format</h3>
   could convert"</code> for <b>SFINAE / constraint</b> failures where no overload is viable</li>
 <li>An alternation of those when either form is possible depending on the compiler. Every alternative must be a wording some supported compiler actually produces; the test passes on the first match.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md459"></a>
+<h3><a class="anchor" id="autotoc_md458"></a>
 CMakeLists pattern</h3>
 <p>Register the file with <code>beman_add_xfail_compile_test()</code> from <code>cmake/beman-xfail-compile.cmake</code>:</p>
 <div class="fragment"><div class="line">beman_add_xfail_compile_test(</div>
@@ -155,7 +155,7 @@ CMakeLists pattern</h3>
 <li><em>failed to compile, but not for the expected reason</em> — a typo in the test, or a compiler whose wording the regex does not yet cover. The build output is echoed; add the new wording as an alternative.</li>
 </ul>
 <p>Every test carries the label <code>xfail-compile</code> (<code>ctest -L xfail-compile</code> runs just this suite, <code>-LE</code> skips it) and a resource lock so <code>ctest -j</code> never runs two nested builds at once. <code>EXPECT &lt;regex&gt;</code> may be passed explicitly to override the comment; the header of the module documents the full interface.</p>
-<h2><a class="anchor" id="autotoc_md460"></a>
+<h2><a class="anchor" id="autotoc_md459"></a>
 4. Type-trait / static_assert tests</h2>
 <p>Use <code>static_assert</code> outside any <code>TEST_CASE</code> for type-level requirements that are checkable without runtime execution:</p>
 <div class="fragment"><div class="line"><span class="comment">// Positive: type IS constructible</span></div>
@@ -169,7 +169,7 @@ CMakeLists pattern</h3>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Triviality</span></div>
 <div class="line"><span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;expected&lt;int, int&gt;&gt;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md461"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md460"></a>
 5. Hardened precondition tests</h2>
 <p>The standard marks several observers with "Hardened preconditions:" — these are UB when the condition is violated unless the implementation enforces contracts:</p>
 <table class="markdownTable">
@@ -193,7 +193,7 @@ CMakeLists pattern</h3>
 <div class="line">}</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md463"></a>
+<h1><a class="anchor" id="autotoc_md462"></a>
 Files per Step</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -219,10 +219,10 @@ Files per Step</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">10   </td><td class="markdownTableBodyNone"><code>expected&lt;void,E&amp;&gt;</code>   </td><td class="markdownTableBodyNone"><code>expected_void_ref_e.test.cpp</code>   </td><td class="markdownTableBodyNone"><code>expected_void_ref_e_temporary_fail.cpp</code>, <code>expected_void_ref_e_const_lvalue_fail.cpp</code>, <code>expected_void_ref_e_no_value_or_fail.cpp</code>   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md464"></a>
+<h2><a class="anchor" id="autotoc_md463"></a>
 6. Constraint and mandate coverage requirement</h2>
 <p><b>Every <code>requires</code> clause, concept constraint, and <code>static_assert</code> mandate in the implementation must have a corresponding negative test.</b> This is a standing rule — not optional per step.</p>
-<h3><a class="anchor" id="autotoc_md465"></a>
+<h3><a class="anchor" id="autotoc_md464"></a>
 How to cover each kind:</h3>
 <p><b>Constraints (requires clauses / SFINAE-friendly):</b></p>
 <p>Write <code>static_assert(!trait_v&lt;...&gt;)</code> in a <code>*_constraints.test.cpp</code> file. For operations that need a callable argument (monadic ops, etc.), use a concept detector:</p>
@@ -243,10 +243,10 @@ How to cover each kind:</h3>
 <div class="line"><span class="keywordtype">void</span> test() {</div>
 <div class="line">    <a class="code hl_class" href="classbeman_1_1expected_1_1expected.html">beman::expected::expected&lt;int&amp;, void&gt;</a> e; <span class="comment">// must not compile</span></div>
 <div class="line">}</div>
-<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:140</div></div>
+<div class="ttc" id="aclassbeman_1_1expected_1_1expected_html"><div class="ttname"><a href="classbeman_1_1expected_1_1expected.html">beman::expected::expected</a></div><div class="ttdef"><b>Definition:</b> expected.hpp:164</div></div>
 </div><!-- fragment --><p><b>Hardened preconditions:</b></p>
 <p>Write runtime tests under <code>#if defined(BEMAN_EXPECTED_HARDENED)</code> in a <code>*_hardened.test.cpp</code> file compiled with <code>-DBEMAN_EXPECTED_HARDENED</code>.</p>
-<h3><a class="anchor" id="autotoc_md466"></a>
+<h3><a class="anchor" id="autotoc_md465"></a>
 What to cover for each step:</h3>
 <ul>
 <li>Class-level <code>static_assert</code>s (E/T type requirements) → negative compile tests</li>
@@ -256,7 +256,7 @@ What to cover for each step:</h3>
 <li>Triviality (<code>= default</code> paths) → <code>static_assert(is_trivially_*_v&lt;...&gt;)</code></li>
 <li>Non-triviality → <code>static_assert(!is_trivially_*_v&lt;...&gt;)</code> with non-trivial E/T</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md467"></a>
+<h3><a class="anchor" id="autotoc_md466"></a>
 Naming convention:</h3>
 <ul>
 <li><code>&lt;specialization&gt;_constraints.test.cpp</code> — SFINAE/requires tests</li>
@@ -264,7 +264,7 @@ Naming convention:</h3>
 <li><code>&lt;specialization&gt;_hardened.test.cpp</code> — runtime precondition tests</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md469"></a>
+<h1><a class="anchor" id="autotoc_md468"></a>
 Standard Reference Summary</h1>
 <p>Key sections from the C++26 standard (docs/standard/expected.txt):</p>
 <table class="markdownTable">
@@ -295,7 +295,7 @@ Standard Reference Summary</h1>
 </table>
 <p>Steps 7–10 (reference specializations) are not in the standard; they follow the P2988 design (rebind semantics, dangling prevention, shallow const).</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md471"></a>
+<h1><a class="anchor" id="autotoc_md470"></a>
 CMakeLists Structure</h1>
 <p>Each step adds to <code>tests/beman/expected/CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line"># Normal test target</div>
