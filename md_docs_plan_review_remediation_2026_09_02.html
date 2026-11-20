@@ -100,10 +100,10 @@ $(document).ready(function(){initNavTree('md_docs_plan_review_remediation_2026_0
   <div class="headertitle"><div class="title">Review Remediation Plan </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md277"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md304"></a>
 Objective</h1>
 <p>Resolve every confirmed code, proposal, documentation, citation, packaging, and CI issue found in the 2026-09-02 repository review. Preserve <code>docs/review-findings-2026-08-06.md</code> unchanged.</p>
-<h1><a class="anchor" id="autotoc_md278"></a>
+<h1><a class="anchor" id="autotoc_md305"></a>
 Implementation</h1>
 <ol type="1">
 <li>Reject initializer-list error construction whenever <code>E</code> is a reference in all three <code>expected</code> class-template forms. Apply matching constraints to declarations and definitions, provide a clear deleted-overload diagnostic, and update proposal wording so the unsafe form is explicitly unavailable.</li>
@@ -111,7 +111,7 @@ Implementation</h1>
 <li>Add a global module fragment that includes <code>&lt;version&gt;</code> before <code>export module beman.expected</code>, ensuring feature-test-dependent declarations such as constexpr exception support match textual-header mode.</li>
 <li>Preserve the current type-based rejection of xvalues and the current conservative exception specifications for reference-error assignment. Add rationale and tests rather than changing those semantics.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md279"></a>
+<h1><a class="anchor" id="autotoc_md306"></a>
 Proposal and Citations</h1>
 <ol type="1">
 <li>Correct every statement claiming <code>std::reference_wrapper::operator=</code> assigns through. Describe its actual rebinding semantics and retain only the valid objections: <code>.get()</code> friction, wrapper type identity, and monadic adaptation.</li>
@@ -124,7 +124,7 @@ Proposal and Citations</h1>
 <li>Label D4270R0 as an unpublished draft and pin its citation to commit <code>5060f1e5c22db1e36db0bdb270e4e0efdcbd575d</code>.</li>
 <li>Reflow wording and code blocks until significant overfull-box warnings are removed without changing normative meaning.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md280"></a>
+<h1><a class="anchor" id="autotoc_md307"></a>
 Documentation and Infrastructure</h1>
 <ol type="1">
 <li>Reconcile README platform guidance by retaining Windows setup information while clearly marking MSVC builds unsupported and unverified. Repair the malformed installed-tree code fence.</li>
@@ -136,7 +136,7 @@ Documentation and Infrastructure</h1>
 <li>Refresh both review guides to describe three <code>expected</code> class-template forms, <code>unexpected&lt;E&gt;</code> storage, current assignment behavior, 3,405 implementation lines, 19 positive test files, 688 Catch2 <code>TEST_CASE</code>s, and 56 negative compile tests.</li>
 <li>Delete <code>docs/optional_references.md</code> and replace any in-repository links to it with stable P2988 references.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md281"></a>
+<h1><a class="anchor" id="autotoc_md308"></a>
 Tests and Acceptance Criteria</h1>
 <ol type="1">
 <li>Add negative compile tests for initializer-list reference errors in <code>expected&lt;T, E&amp;&gt;</code>, <code>expected&lt;void, E&amp;&gt;</code>, and <code>expected&lt;T&amp;, E&amp;&gt;</code>.</li>
@@ -149,7 +149,7 @@ Tests and Acceptance Criteria</h1>
 <li>Run <code>clang-format --dry-run</code>, <code>gersemi --check</code>, <code>codespell</code>, Markdown/link checks, and workflow syntax validation.</li>
 <li>Confirm final repository status contains only intended changes plus the untouched pre-existing untracked review document.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md282"></a>
+<h1><a class="anchor" id="autotoc_md309"></a>
 Public Interface Effects</h1>
 <ul>
 <li>Remove <code>__cpp_lib_expected_ref</code>.</li>
